@@ -26,9 +26,12 @@ import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.image.Image;
 import com.qxcmp.web.view.elements.message.InfoMessage;
 import com.qxcmp.web.view.elements.segment.Segment;
+import com.qxcmp.web.view.elements.statistic.Statistic;
+import com.qxcmp.web.view.elements.statistic.Statistics;
 import com.qxcmp.web.view.modules.pagination.Pagination;
 import com.qxcmp.web.view.modules.table.dictionary.CollectionValueCell;
 import com.qxcmp.web.view.support.AnchorTarget;
+import com.qxcmp.web.view.support.ItemCount;
 import com.qxcmp.web.view.support.Size;
 import com.qxcmp.web.view.support.Wide;
 import com.qxcmp.web.view.views.Overview;
@@ -71,13 +74,16 @@ public class AdminUserPageController extends QxcmpController {
 
     @GetMapping("")
     public ModelAndView userPage() {
-        return page().addComponent(new PageHeader(HeaderType.H2, "用户管理"))
-                .addComponent(convertToTable(objectObjectMap -> {
+        return page().addComponent(new PageHeader(HeaderType.H2, "用户管理").setDividing())
+                .addComponent(() -> {
+
                     Date dateTarget = DateTime.now().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate();
-                    objectObjectMap.put("用户总数", userService.count());
-                    objectObjectMap.put("今日新增", userService.findByDateCreate(dateTarget).size());
-                    objectObjectMap.put("今日登陆", userService.findByDateLogin(dateTarget).size());
-                }))
+
+                    return new Statistics().setCount(ItemCount.THREE)
+                            .addStatistic(new Statistic("用户总数", userService.count().toString()))
+                            .addStatistic(new Statistic("今日新增", Long.toString(userService.findByDateCreate(dateTarget).size())))
+                            .addStatistic(new Statistic("今日登陆", Long.toString(userService.findByDateLogin(dateTarget).size())));
+                })
                 .setBreadcrumb("控制台", "", "用户管理")
                 .setVerticalNavigation(NAVIGATION_ADMIN_USER, "")
                 .build();
