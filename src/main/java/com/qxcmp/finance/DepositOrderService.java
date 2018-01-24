@@ -52,6 +52,18 @@ public class DepositOrderService extends AbstractEntityService<DepositOrder, Str
     }
 
     /**
+     * 查询用户的完成订单
+     *
+     * @param userId   用户ID
+     * @param pageable 分页信息
+     *
+     * @return 用户已完成的订单
+     */
+    public Page<DepositOrder> findByUserId(String userId, Pageable pageable) {
+        return repository.findByUserIdAndStatusOrderByDateFinishedDesc(userId, OrderStatusEnum.FINISHED, pageable);
+    }
+
+    /**
      * 创建一个充值订单
      * <p>
      * 需要设置订单的金额，货币类型可选
@@ -64,6 +76,7 @@ public class DepositOrderService extends AbstractEntityService<DepositOrder, Str
      * @return 保存后的充值订单
      */
     @Override
+
     public <S extends DepositOrder> Optional<S> create(Supplier<S> supplier) {
         S order = supplier.get();
         order.setId(IDGenerator.order());

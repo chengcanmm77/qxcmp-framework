@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+
 /**
  * 平台充值订单
  * <p>
@@ -38,7 +40,7 @@ public class DepositOrder {
     /**
      * 订单对应的用户ID
      */
-    @TableField(value = "用户ID", enableUrl = true, urlPrefix = "/user/", urlSuffix = "/deposit", urlTarget = AnchorTarget.BLANK)
+    @TableField(value = "用户ID", enableUrl = true, urlPrefix = QXCMP_BACKEND_URL + "/user/", urlSuffix = "/details", urlTarget = AnchorTarget.BLANK)
     private String userId;
 
     /**
