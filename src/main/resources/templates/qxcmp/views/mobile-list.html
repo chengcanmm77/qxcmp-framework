@@ -10,7 +10,7 @@
 </div>
 
 <!--/*@thymesVar id="component" type="com.qxcmp.web.view.views.MobileListItem"*/-->
-<a th:fragment="item(component)" th:class="${component.getClassName()}" th:href="@{${component.url}}">
+<a th:fragment="item(component)" th:class="${component.getClassName()}" th:href="@{${#strings.isEmpty(component.url)} ? '#' : ${component.url}}">
     <div th:if="${component.icon ne null}" class="pre-content">
         <div th:replace="~{qxcmp/globals/components :: component(${component.icon})}"></div>
     </div>
