@@ -15,6 +15,8 @@ import lombok.Setter;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * 概览视图组件
@@ -62,6 +64,16 @@ public class Overview extends AbstractComponent {
 
     public Overview addComponent(Component component) {
         components.add(component);
+        return this;
+    }
+
+    public Overview addComponent(Supplier<Component> componentSupplier) {
+        Component component = componentSupplier.get();
+
+        if (Objects.nonNull(component)) {
+            components.add(component);
+        }
+
         return this;
     }
 
