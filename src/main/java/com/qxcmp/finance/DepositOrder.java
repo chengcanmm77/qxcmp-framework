@@ -2,10 +2,10 @@ package com.qxcmp.finance;
 
 import com.qxcmp.mall.OrderStatusEnum;
 import com.qxcmp.web.view.annotation.table.EntityTable;
-import com.qxcmp.web.view.annotation.table.RowAction;
 import com.qxcmp.web.view.annotation.table.TableField;
 import com.qxcmp.web.view.annotation.table.TableFieldRender;
 import com.qxcmp.web.view.modules.table.TableData;
+import com.qxcmp.web.view.support.AnchorTarget;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,8 +15,6 @@ import javax.persistence.Table;
 import java.text.DecimalFormat;
 import java.util.Date;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
-
 /**
  * 平台充值订单
  * <p>
@@ -25,8 +23,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
  *
  * @author aaric
  */
-@EntityTable(value = "充值订单", action = QXCMP_BACKEND_URL + "/finance/deposit/",
-        rowActions = @RowAction(value = "详情", action = "details"))
+@EntityTable(value = "充值订单")
 @Entity
 @Table
 @Data
@@ -41,7 +38,7 @@ public class DepositOrder {
     /**
      * 订单对应的用户ID
      */
-    @TableField(value = "用户ID", enableUrl = true, urlPrefix = "/user/", urlSuffix = "/deposit")
+    @TableField(value = "用户ID", enableUrl = true, urlPrefix = "/user/", urlSuffix = "/deposit", urlTarget = AnchorTarget.BLANK)
     private String userId;
 
     /**

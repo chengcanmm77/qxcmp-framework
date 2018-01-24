@@ -1,6 +1,7 @@
 package com.qxcmp.web.view.modules.table;
 
 import com.qxcmp.web.view.support.Alignment;
+import com.qxcmp.web.view.support.AnchorTarget;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,6 +37,8 @@ public class EntityTableField {
     private String urlEntityIndex;
 
     private String urlSuffix;
+
+    private AnchorTarget urlTarget;
 
     private Alignment alignment;
 }

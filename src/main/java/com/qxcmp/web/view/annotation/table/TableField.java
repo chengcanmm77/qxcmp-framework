@@ -1,6 +1,7 @@
 package com.qxcmp.web.view.annotation.table;
 
 import com.qxcmp.web.view.support.Alignment;
+import com.qxcmp.web.view.support.AnchorTarget;
 
 import java.lang.annotation.*;
 
@@ -69,6 +70,11 @@ public @interface TableField {
      * 超链接后缀
      */
     String urlSuffix() default "";
+
+    /**
+     * 超链接打开方式
+     */
+    AnchorTarget urlTarget() default AnchorTarget.SELF;
 
     /**
      * 单元格对齐

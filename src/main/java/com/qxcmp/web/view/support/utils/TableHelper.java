@@ -10,6 +10,7 @@ import com.qxcmp.web.view.elements.button.Button;
 import com.qxcmp.web.view.elements.button.Buttons;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.PageHeader;
+import com.qxcmp.web.view.elements.html.Anchor;
 import com.qxcmp.web.view.elements.image.Avatar;
 import com.qxcmp.web.view.elements.input.Input;
 import com.qxcmp.web.view.elements.label.BasicLabel;
@@ -59,6 +60,7 @@ public class TableHelper {
      * 字典表格视图包含两列，第一列为键，第二列为值
      *
      * @param dictionary 渲染的字典对象
+     *
      * @return 表格视图
      */
     public Table convert(Map<Object, Object> dictionary) {
@@ -278,6 +280,7 @@ public class TableHelper {
                 }
 
                 entityTableField.setUrlSuffix(tableField.urlSuffix());
+                entityTableField.setUrlTarget(tableField.urlTarget());
                 entityTableField.setAlignment(tableField.alignment());
 
                 Arrays.stream(tClass.getDeclaredMethods())
@@ -494,16 +497,18 @@ public class TableHelper {
             } else {
                 if (entityTableField.isImage()) {
                     tableData.setCollapsing().addComponent(new Avatar(Objects.nonNull(value) ? value.toString() : "").setCentered());
+                } else if (entityTableField.isEnableUrl()) {
+                    String textValue = getTableCellTextValue(typeDescriptor, value);
+
+                    String url = entityTableField.getUrlPrefix() +
+                            beanWrapper.getPropertyValue(StringUtils.isNotBlank(entityTableField.getUrlEntityIndex()) ? entityTableField.getUrlEntityIndex() : entityTableField.getField().getName()) +
+                            entityTableField.getUrlSuffix();
+
+                    tableData.addComponent(new Anchor(textValue, url, entityTableField.getUrlTarget().toString()));
+
                 } else {
 
-                    String textValue;
-
-                    try {
-                        final TypeDescriptor strTypeDescriptor = TypeDescriptor.valueOf(String.class);
-                        textValue = (String) conversionService.convert(value, typeDescriptor, strTypeDescriptor);
-                    } catch (Exception e) {
-                        textValue = value.toString();
-                    }
+                    String textValue = getTableCellTextValue(typeDescriptor, value);
 
                     tableData.setContent(StringUtils.isNotBlank(textValue) ? textValue : "");
                 }
@@ -513,6 +518,18 @@ public class TableHelper {
         tableData.setAlignment(entityTableField.getAlignment());
 
         return tableData;
+    }
+
+    private String getTableCellTextValue(TypeDescriptor typeDescriptor, Object value) {
+        String textValue;
+
+        try {
+            final TypeDescriptor strTypeDescriptor = TypeDescriptor.valueOf(String.class);
+            textValue = (String) conversionService.convert(value, typeDescriptor, strTypeDescriptor);
+        } catch (Exception e) {
+            textValue = value.toString();
+        }
+        return textValue;
     }
 
     private <T> void renderTableActionCell(com.qxcmp.web.view.modules.table.EntityTable table, TableData tableData, List<EntityTableRowAction> rowActions, Class<T> tClass, T t) {
