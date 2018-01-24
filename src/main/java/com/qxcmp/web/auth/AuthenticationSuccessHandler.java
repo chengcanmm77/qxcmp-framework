@@ -1,6 +1,7 @@
 package com.qxcmp.web.auth;
 
 import com.qxcmp.config.SystemConfigService;
+import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -47,8 +48,12 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 
         request.getSession().setMaxInactiveInterval(systemConfigService.getInteger(SYSTEM_CONFIG_SESSION_TIMEOUT).orElse(SYSTEM_CONFIG_SESSION_TIMEOUT_DEFAULT_VALUE));
 
-        String username = request.getParameter("username");
-        userService.update(username, user -> user.setDateLogin(new Date()));
+        try {
+            String username = request.getParameter("username");
+            userService.update(userService.findByUsername(username).map(User::getId).orElse(""), user -> user.setDateLogin(new Date()));
+        } catch (Exception ignored) {
+
+        }
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

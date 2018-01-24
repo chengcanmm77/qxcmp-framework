@@ -76,6 +76,7 @@ public class UserService extends AbstractEntityService<User, String, UserReposit
      *
      * @param user       用户
      * @param privileges 要判定的权限
+     *
      * @return 如果用户拥有任意一个权限将返回真
      */
     public boolean hasRole(User user, String... privileges) {
@@ -102,6 +103,7 @@ public class UserService extends AbstractEntityService<User, String, UserReposit
      * 通过用户ID，用户名，邮箱，手机，OpenId来查询一个用户
      *
      * @param userId 查询键
+     *
      * @return 查询后的用户
      */
     public Optional<User> findById(String userId) {
@@ -183,6 +185,7 @@ public class UserService extends AbstractEntityService<User, String, UserReposit
      * 为用户生成一个认证Token
      *
      * @param userId 用户ID
+     *
      * @return 生成以后的Token
      */
     public String generateLoginToken(String userId) {
@@ -200,6 +203,7 @@ public class UserService extends AbstractEntityService<User, String, UserReposit
      *
      * @param userId 要认证用户ID
      * @param token  认证Token
+     *
      * @return 认证结果
      */
     public boolean tokenAuthentication(String userId, String token) {
@@ -223,6 +227,28 @@ public class UserService extends AbstractEntityService<User, String, UserReposit
             update(user.getId(), u -> u.setDateLogin(new Date()));
             return true;
         }).orElse(false);
+    }
+
+    /**
+     * 查询某日期之后加入的用户
+     *
+     * @param date 日期
+     *
+     * @return 日期之后加入的用户
+     */
+    public List<User> findByDateCreate(Date date) {
+        return repository.findAllByDateCreatedAfterOrderByDateCreatedDesc(date);
+    }
+
+    /**
+     * 查询某日期之后登陆的用户
+     *
+     * @param date 日期
+     *
+     * @return 日期之后登陆的用户
+     */
+    public List<User> findByDateLogin(Date date) {
+        return repository.findAllByDateLoginAfterOrderByDateCreatedDesc(date);
     }
 
     @Override

@@ -34,6 +34,7 @@ import com.qxcmp.web.view.support.Wide;
 import com.qxcmp.web.view.views.Overview;
 import com.qxcmp.weixin.WeixinService;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +52,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
@@ -71,7 +73,10 @@ public class AdminUserPageController extends QxcmpController {
     public ModelAndView userPage() {
         return page().addComponent(new PageHeader(HeaderType.H2, "用户管理"))
                 .addComponent(convertToTable(objectObjectMap -> {
+                    Date dateTarget = DateTime.now().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate();
                     objectObjectMap.put("用户总数", userService.count());
+                    objectObjectMap.put("今日新增", userService.findByDateCreate(dateTarget).size());
+                    objectObjectMap.put("今日登陆", userService.findByDateLogin(dateTarget).size());
                 }))
                 .setBreadcrumb("控制台", "", "用户管理")
                 .setVerticalNavigation(NAVIGATION_ADMIN_USER, "")
