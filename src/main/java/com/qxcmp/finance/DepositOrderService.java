@@ -7,6 +7,8 @@ import com.qxcmp.exception.OrderExpiredException;
 import com.qxcmp.exception.OrderStatusException;
 import com.qxcmp.mall.OrderStatusEnum;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -39,6 +41,17 @@ public class DepositOrderService extends AbstractEntityService<DepositOrder, Str
     }
 
     /**
+     * 查询已完成的订单
+     *
+     * @param pageable 分页信息
+     *
+     * @return 已完成的订单
+     */
+    public Page<DepositOrder> findFinishedOrder(Pageable pageable) {
+        return repository.findByStatusOrderByDateFinishedDesc(OrderStatusEnum.FINISHED, pageable);
+    }
+
+    /**
      * 创建一个充值订单
      * <p>
      * 需要设置订单的金额，货币类型可选
@@ -47,6 +60,7 @@ public class DepositOrderService extends AbstractEntityService<DepositOrder, Str
      *
      * @param supplier 提单提供者
      * @param <S>      订单类型
+     *
      * @return 保存后的充值订单
      */
     @Override
@@ -64,6 +78,7 @@ public class DepositOrderService extends AbstractEntityService<DepositOrder, Str
      * 处理一个订单，为用户钱包增加相应金额
      *
      * @param orderID 订单号
+     *
      * @throws FinanceException 如果订单不存在，或者状态不正确，抛出该异常
      */
     public void process(String orderID) throws FinanceException {
@@ -83,7 +98,10 @@ public class DepositOrderService extends AbstractEntityService<DepositOrder, Str
 
         try {
             walletService.changeBalance(depositOrder.getUserId(), depositOrder.getFee(), "钱包充值", "");
-            update(depositOrder.getId(), order -> order.setStatus(OrderStatusEnum.FINISHED)).ifPresent(order -> applicationContext.publishEvent(new DepositEvent(order)));
+            update(depositOrder.getId(), order -> {
+                order.setDateFinished(new Date());
+                order.setStatus(OrderStatusEnum.FINISHED);
+            }).ifPresent(order -> applicationContext.publishEvent(new DepositEvent(order)));
         } catch (Exception e) {
             update(depositOrder.getId(), order -> order.setStatus(OrderStatusEnum.EXCEPTION));
         }

@@ -123,7 +123,8 @@ public class QxcmpNavigationConfiguration implements NavigationConfigurator {
      * */
 
     public static final String NAVIGATION_ADMIN_FINANCE = "ADMIN-FINANCE";
-    public static final String NAVIGATION_ADMIN_FINANCE_WALLET_MANAGMENT = NAVIGATION_ADMIN_FINANCE + "-WALLET-MANAGEMENT";
+    public static final String NAVIGATION_ADMIN_FINANCE_DEPOSIT = NAVIGATION_ADMIN_FINANCE + "-WALLET-DEPOSIT";
+    public static final String NAVIGATION_ADMIN_FINANCE_WALLET_MANAGEMENT = NAVIGATION_ADMIN_FINANCE + "-WALLET-MANAGEMENT";
     public static final String NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS = NAVIGATION_ADMIN_FINANCE + "-WEIXIN-SETTINGS";
 
     /*
@@ -259,8 +260,9 @@ public class QxcmpNavigationConfiguration implements NavigationConfigurator {
         );
 
         navigationService.add(new Navigation(NAVIGATION_ADMIN_FINANCE, "财务管理导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_WALLET_MANAGMENT, "用户钱包管理", QXCMP_BACKEND_URL + "/finance/wallet").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WALLET_MANAGEMENT)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS, "微信支付配置", QXCMP_BACKEND_URL + "/finance/weixin").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WEIXIN)))
+                .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_DEPOSIT, "充值订单管理", QXCMP_BACKEND_URL + "/finance/deposit").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_DEPOSIT)))
+                .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_WALLET_MANAGEMENT, "用户钱包管理", QXCMP_BACKEND_URL + "/finance/wallet").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WALLET_MANAGEMENT)))
+                .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS, "微信支付配置", QXCMP_BACKEND_URL + "/finance/weixin").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WEIXIN)))
         );
 
         navigationService.add(new Navigation(NAVIGATION_ADMIN_MESSAGE, "消息服务导航栏")
