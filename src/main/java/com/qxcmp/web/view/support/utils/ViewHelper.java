@@ -3,9 +3,11 @@ package com.qxcmp.web.view.support.utils;
 import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.message.ErrorMessage;
 import com.qxcmp.web.view.modules.form.AbstractForm;
+import com.qxcmp.web.view.modules.pagination.Pagination;
 import com.qxcmp.web.view.support.Color;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
@@ -62,5 +64,9 @@ public class ViewHelper {
 
     public Overview nextWarningOverview(String title, String subTitle) {
         return nextOverview(new Icon("warning circle").setColor(Color.ORANGE), title, subTitle);
+    }
+
+    public Pagination nextPagination(Page<?> page) {
+        return new Pagination("", page.getNumber() + 1, (int) page.getTotalElements(), page.getSize());
     }
 }
