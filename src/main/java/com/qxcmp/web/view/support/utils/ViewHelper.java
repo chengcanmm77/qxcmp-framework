@@ -36,12 +36,28 @@ public class ViewHelper {
         return overviewHelper.nextOverview(icon, title, subTitle);
     }
 
+    public Overview nextOverview(String icon, String title, String subTitle) {
+        return overviewHelper.nextOverview(new Icon(icon), title, subTitle);
+    }
+
+    public Overview nextInfoOverview(String title) {
+        return nextInfoOverview(title, "");
+    }
+
     public Overview nextInfoOverview(String title, String subTitle) {
         return nextOverview(new Icon("info circle"), title, subTitle);
     }
 
+    public Overview nextSuccessOverview(String title) {
+        return nextSuccessOverview(title, "");
+    }
+
     public Overview nextSuccessOverview(String title, String subTitle) {
         return nextOverview(new Icon("check circle").setColor(Color.GREEN), title, subTitle);
+    }
+
+    public Overview nextWarningOverview(String title) {
+        return nextWarningOverview(title, "");
     }
 
     public Overview nextWarningOverview(String title, String subTitle) {
