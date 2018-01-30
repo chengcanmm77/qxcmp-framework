@@ -48,6 +48,11 @@ public class CommodityOrder {
     private int actualPayment;
 
     /**
+     * 订单总积分
+     */
+    private int actualPoint;
+
+    /**
      * 订单项目
      */
     @OneToMany(mappedBy = "commodityOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)

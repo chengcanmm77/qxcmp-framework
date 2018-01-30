@@ -63,7 +63,7 @@ public class CashierController extends QxcmpController {
         try {
             commodityOrderService.pay(id);
             return page().addComponent(new Grid().setVerticallyPadded().setContainer().addItem(new Row().addCol(new Col()
-                    .addComponent(new Overview(new IconHeader("支付成功", new Icon("info circle").setColor(Color.GREEN))).addLink("我的订单", "/mall/order" + id).setAlignment(Alignment.CENTER)))))
+                    .addComponent(new Overview(new IconHeader("支付成功", new Icon("info circle").setColor(Color.GREEN))).addLink("我的订单", "/mall/order/" + id).setAlignment(Alignment.CENTER)))))
                     .setTitle("收银台")
                     .build();
         } catch (NoBalanceException e) {

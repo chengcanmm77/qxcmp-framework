@@ -41,6 +41,12 @@ public class AdminMallUserStoreCommodityNewForm {
     @NumberField(value = "商品售价", section = "商品价格", tooltip = "单位：分")
     private int sellPrice;
 
+    @BooleanField(value = "积分兑换", section = "商品价格", tooltip = "该商品将使用积分兑换方式")
+    private boolean pointOnly;
+
+    @NumberField(value = "兑换积分", section = "商品价格", tooltip = "兑换需要积分")
+    private int point;
+
     @TextSelectionField(value = "商品类别", section = "商品属性")
     private Set<String> catalogs = Sets.newLinkedHashSet();
 

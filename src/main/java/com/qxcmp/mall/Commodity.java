@@ -150,6 +150,16 @@ public class Commodity {
     @OneToMany(mappedBy = "commodity", fetch = FetchType.EAGER)
     private List<CommodityVersion> versions = Lists.newArrayList();
 
+    /**
+     * 该商品是否为积分兑换商品
+     */
+    private boolean pointOnly;
+
+    /**
+     * 兑换该商品需要的积分
+     */
+    private int point;
+
     @RowActionCheck("下架")
     public boolean canPerformDisable() {
         return !disabled;

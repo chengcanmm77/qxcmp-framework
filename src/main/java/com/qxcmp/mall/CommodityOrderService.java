@@ -53,6 +53,7 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
      * @param userId       用户ID
      * @param items        用户选择的购物车项目
      * @param shoppingCart 用户购物车
+     *
      * @return 创建好的商品订单
      */
     public Optional<CommodityOrder> order(String userId, List<ShoppingCartItem> items, ShoppingCart shoppingCart) {
@@ -65,6 +66,7 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
             CommodityOrder commodityOrder = next();
             commodityOrder.setUserId(userId);
             commodityOrder.setActualPayment(getTotalItemPrice(items));
+            commodityOrder.setActualPoint(getTotalItemPoint(items));
             consigneeService.findOne(shoppingCart.getConsigneeId()).ifPresent(consignee -> {
                 commodityOrder.setConsigneeName(consignee.getConsigneeName());
                 commodityOrder.setConsigneePhone(consignee.getTelephone());
@@ -96,7 +98,9 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
      * 订单支付成功以后会发送订单完成事件
      *
      * @param orderId 订单号
+     *
      * @return 支付后的订单
+     *
      * @throws FinanceException 如果用户余额不足，或者其他异常，抛出该异常
      */
     public Optional<CommodityOrder> pay(String orderId) throws FinanceException {
@@ -121,16 +125,25 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
         Wallet wallet = walletOptional.get();
 
         int orderPrice = commodityOrder.getActualPayment();
+        int orderPoint = commodityOrder.getActualPoint();
 
         if (wallet.getBalance() < orderPrice) {
             throw new NoBalanceException("No balance");
         }
 
-        walletService.update(wallet.getId(), w -> w.setBalance(w.getBalance() - orderPrice));
+        if (wallet.getPoints() < orderPoint) {
+            throw new NoBalanceException("No point");
+        }
+
+        walletService.update(wallet.getId(), w -> {
+            w.setBalance(w.getBalance() - orderPrice);
+            w.setPoints(w.getPoints() - orderPoint);
+        });
 
         Optional<CommodityOrder> updatedCommodity = update(commodityOrder.getId(), order -> {
             order.setStatus(OrderStatusEnum.PAYED);
             order.setActualPayment(orderPrice);
+            order.setActualPoint(orderPoint);
         });
 
 
@@ -147,6 +160,7 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
      *
      * @param userId   用户ID
      * @param pageable 分页信息
+     *
      * @return 查询结果
      */
     public Page<CommodityOrder> findByUserId(String userId, Pageable pageable) {
@@ -160,6 +174,7 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
      * @param userId   用户ID
      * @param status   订单状态
      * @param pageable 分页信息
+     *
      * @return 查询结果
      */
     public Page<CommodityOrder> findByUserIdAndStatus(String userId, OrderStatusEnum status, Pageable pageable) {
@@ -186,7 +201,11 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
         return entity.getId();
     }
 
-    private int getTotalItemPrice(List<ShoppingCartItem> selectedItems) {
-        return selectedItems.stream().map(shoppingCartItem -> shoppingCartItem.getCommodity().getSellPrice() * shoppingCartItem.getQuantity()).reduce(0, (sum, price) -> sum + price);
+    private int getTotalItemPrice(List<ShoppingCartItem> items) {
+        return items.stream().map(shoppingCartItem -> shoppingCartItem.getCommodity().getSellPrice() * shoppingCartItem.getQuantity()).reduce(0, (sum, price) -> sum + price);
+    }
+
+    private int getTotalItemPoint(List<ShoppingCartItem> items) {
+        return items.stream().map(shoppingCartItem -> shoppingCartItem.getCommodity().getPoint() * shoppingCartItem.getQuantity()).reduce(0, (sum, price) -> sum + price);
     }
 }

@@ -52,6 +52,7 @@ public class MallPageHelper {
      * 商品详情移动端页面组件
      *
      * @param commodity
+     *
      * @return
      */
     public Component nextMobileCommodityDetails(Commodity commodity) {
@@ -144,6 +145,7 @@ public class MallPageHelper {
 
         dictionary.put("订单号", commodityOrder.getId());
         dictionary.put("实付款", new DecimalFormat("￥0.00").format((double) commodityOrder.getActualPayment() / 100));
+        dictionary.put("实付积分", commodityOrder.getActualPoint());
 
         return new Grid().setVerticallyPadded().setContainer()
                 .addItem(new Row().addCol(new Col()

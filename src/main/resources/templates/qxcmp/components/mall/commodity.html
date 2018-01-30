@@ -4,8 +4,11 @@
 
 <!--/*@thymesVar id="component" type="com.qxcmp.web.view.components.mall.CommodityPrice"*/-->
 <span th:fragment="price(component)" class="price">
-    <span>￥</span>
-    <span class="sell-price" th:utext="${new java.text.DecimalFormat('0.00').format(new java.lang.Double(component.commodity.sellPrice) / 100)}"></span>
+    <span th:unless="${component.commodity.pointOnly}">￥</span>
+    <span th:unless="${component.commodity.pointOnly}" class="sell-price"
+          th:utext="${new java.text.DecimalFormat('0.00').format(new java.lang.Double(component.commodity.sellPrice) / 100)}"></span>
+    <span th:if="${component.commodity.pointOnly}" class="sell-price" th:utext="${component.commodity.point}"></span>
+    <span th:if="${component.commodity.pointOnly}">积分</span>
 </span>
 
 <!--/*@thymesVar id="component" type="com.qxcmp.web.view.components.mall.CommodityActionBar"*/-->

@@ -153,6 +153,6 @@ public class MallPageController extends QxcmpController {
 
             return versions.stream().allMatch(commodityVersion -> StringUtils.equals(targetVersions.get(commodityVersion.getName()), commodityVersion.getValue()));
 
-        }).map(commodity -> String.format("/mall/item/version-select?id=" + commodity.getId())).findAny().orElse("");
+        }).map(commodity -> "/mall/item/version-select?id=" + commodity.getId()).findAny().orElse("");
     }
 }

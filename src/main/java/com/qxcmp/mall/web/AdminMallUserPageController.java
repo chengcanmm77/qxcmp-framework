@@ -238,6 +238,8 @@ public class AdminMallUserPageController extends QxcmpController {
                     commodity.setSellPrice(form.getSellPrice());
                     commodity.setInventory(form.getInventory());
                     commodity.setDisabled(form.isDisabled());
+                    commodity.setPointOnly(form.isPointOnly());
+                    commodity.setPoint(form.getPoint());
 
                     commodity.getCustomProperties().clear();
                     form.getCustomProperties().forEach(keyValueEntity -> commodity.getCustomProperties().put(keyValueEntity.getKey(), keyValueEntity.getValue()));
@@ -285,6 +287,8 @@ public class AdminMallUserPageController extends QxcmpController {
                     form.setSellPrice(commodity.getSellPrice());
                     form.setInventory(commodity.getInventory());
                     form.setDisabled(commodity.isDisabled());
+                    form.setPointOnly(commodity.isPointOnly());
+                    form.setPoint(commodity.getPoint());
                     form.setCustomProperties(commodity.getCustomProperties().entrySet().stream().map(stringStringEntry -> {
                         KeyValueEntity keyValueEntity = new KeyValueEntity();
                         keyValueEntity.setKey(stringStringEntry.getKey());
@@ -366,6 +370,8 @@ public class AdminMallUserPageController extends QxcmpController {
                             c.setSellPrice(form.getSellPrice());
                             c.setInventory(form.getInventory());
                             c.setDisabled(form.isDisabled());
+                            c.setPointOnly(form.isPointOnly());
+                            c.setPoint(form.getPoint());
                             c.getCustomProperties().clear();
                             form.getCustomProperties().forEach(keyValueEntity -> c.getCustomProperties().put(keyValueEntity.getKey(), keyValueEntity.getValue()));
 
