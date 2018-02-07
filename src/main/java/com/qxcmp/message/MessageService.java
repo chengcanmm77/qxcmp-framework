@@ -2,11 +2,10 @@ package com.qxcmp.message;
 
 import com.qxcmp.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.function.Consumer;
 
 /**
@@ -58,10 +57,9 @@ public class MessageService {
      *
      * @param feed 要生成的Feed
      */
-    @Async
     public void feed(Feed feed) {
         feed.setId(null);
-        feed.setDateCreated(new Date());
+        feed.setDateCreated(DateTime.now().toDate());
         feedService.save(feed);
     }
 
@@ -73,7 +71,6 @@ public class MessageService {
      *
      * @param feedConsumer Feed消费者
      */
-    @Async
     public void feed(Consumer<Feed> feedConsumer) {
         Feed feed = feedService.next();
         feedConsumer.accept(feed);
