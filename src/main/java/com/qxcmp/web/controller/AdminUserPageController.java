@@ -3,6 +3,7 @@ package com.qxcmp.web.controller;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.core.event.AdminUserRoleEditEvent;
 import com.qxcmp.core.event.AdminUserStatusEditEvent;
+import com.qxcmp.core.extension.AdminUserDetailsPageToolbarExtensionPoint;
 import com.qxcmp.finance.DepositOrder;
 import com.qxcmp.finance.DepositOrderService;
 import com.qxcmp.security.RoleService;
@@ -30,7 +31,6 @@ import com.qxcmp.web.view.elements.statistic.Statistic;
 import com.qxcmp.web.view.elements.statistic.Statistics;
 import com.qxcmp.web.view.modules.pagination.Pagination;
 import com.qxcmp.web.view.modules.table.dictionary.CollectionValueCell;
-import com.qxcmp.web.view.support.AnchorTarget;
 import com.qxcmp.web.view.support.ItemCount;
 import com.qxcmp.web.view.support.Size;
 import com.qxcmp.web.view.support.Wide;
@@ -71,6 +71,7 @@ public class AdminUserPageController extends QxcmpController {
     private final RoleService roleService;
     private final WeixinService weixinService;
     private final DepositOrderService depositOrderService;
+    private final AdminUserDetailsPageToolbarExtensionPoint userDetailsPageToolbarExtensionPoint;
 
     @GetMapping("")
     public ModelAndView userPage() {
@@ -138,13 +139,13 @@ public class AdminUserPageController extends QxcmpController {
 
                     Page<DepositOrder> depositOrders = depositOrderService.findByUserId(user.getId(), pageable);
 
+            Buttons toolbar = new Buttons();
+
+            userDetailsPageToolbarExtensionPoint.getExtensions().forEach(extension -> toolbar.addButton(new Button(extension.getTitle(), QXCMP_BACKEND_URL + "/" + id + "/" + extension.getSuffix(), extension.getTarget()).setBasic().setSecondary()));
+
                     return page()
                             .addComponent(new VerticallyDividedGrid().setVerticallyPadded()
-                                    .addItem(new Row().addCol(new Col().setGeneralWide(Wide.SIXTEEN)
-                                            .addComponent(new Buttons()
-                                                    .addButton(new Button("编辑用户角色", QXCMP_BACKEND_URL + "/user/" + id + "/role", AnchorTarget.BLANK).setBasic().setSecondary())
-                                                    .addButton(new Button("编辑用户状态", QXCMP_BACKEND_URL + "/user/" + id + "/status", AnchorTarget.BLANK).setBasic().setSecondary())
-                                            )))
+                                    .addItem(new Row().addCol(new Col(Wide.SIXTEEN).setGeneralWide(Wide.SIXTEEN).addComponent(toolbar)))
                                     .addItem(new Row()
                                             .addCol(new Col().setComputerWide(Wide.FIVE).setMobileWide(Wide.SIXTEEN)
                                                     .addComponent(new ContentHeader("基本资料", Size.NONE).setDividing())
