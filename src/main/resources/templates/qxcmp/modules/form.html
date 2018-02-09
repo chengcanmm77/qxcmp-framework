@@ -419,7 +419,7 @@
 <div th:fragment="field-album(component)"
      th:id="${component.id}" th:class="${component.getClassName()}">
     <input th:field="*{__${component.name}__}" type="hidden"/>
-    <input type="file" style="display: none"
+    <input type="file" style="display: none" th:multiple="${true}"
            th:attr="data-max-size=${component.maxSize},data-max-count=${component.maxCount}"/>
     <label th:replace="~{:: field-label(${component})}"></label>
     <div class="album upload component"></div>
@@ -491,8 +491,13 @@
                     $(file).off("change");
                     $(file).on("change", function () {
 
-                        if (this.files.length > 0) {
-                            var file = this.files[0];
+                        var finishCount = 0;
+                        var totalCount = this.files.length;
+
+                        for (var i = 0; i < this.files.length; i++) {
+                            var index = i + 1;
+                            var file = this.files[i];
+                            $(progressDimmer).find(".ui.text.loader").text("上传第" + index + "张图");
 
                             if (file.size > 1024 * maxSize) {
                                 $(errorDimmer).find(".ui.header span").text("图片大小不能超过" + maxSize + "KB");
@@ -500,7 +505,7 @@
                                 setTimeout(function () {
                                     $(errorDimmer).dimmer("hide");
                                 }, 3000);
-                                return;
+                                break;
                             }
 
                             var formData = new FormData();
@@ -517,7 +522,6 @@
                                             if (e.lengthComputable) {
                                                 var percentComplete = e.loaded / e.total;
                                                 percentComplete = parseInt(percentComplete * 100);
-                                                $(progressDimmer).find(".ui.text.loader").text(percentComplete + "%");
                                             }
                                         }, false);
                                     }
@@ -536,7 +540,12 @@
                                         $(input).val($(input).val() + "," + response);
                                     }
                                     $(progressDimmer).dimmer("hide");
-                                    refreshAlbumField();
+
+                                    finishCount++;
+
+                                    if (totalCount === finishCount) {
+                                        refreshAlbumField();
+                                    }
                                 },
                                 error: function (response) {
                                     $(progressDimmer).dimmer("hide");
