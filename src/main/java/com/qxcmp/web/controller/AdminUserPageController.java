@@ -91,7 +91,7 @@ public class AdminUserPageController extends QxcmpController {
 
     @GetMapping("/all")
     public ModelAndView userAllPage(Pageable pageable) {
-        return page().addComponent(convertToTable("all", pageable, userService))
+        return page().addComponent(convertToTable("all", new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.DESC, "dateCreated"), userService))
                 .setBreadcrumb("控制台", "", "用户管理", "user", "全部用户")
                 .setVerticalNavigation(NAVIGATION_ADMIN_USER, NAVIGATION_ADMIN_USER_ALL)
                 .build();

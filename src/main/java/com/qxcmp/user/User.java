@@ -155,6 +155,7 @@ public class User implements UserDetails {
      * 账户创建时间
      */
     @TableField(value = "注册时间", name = "all")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dateCreated = new Date();
 
     /**
