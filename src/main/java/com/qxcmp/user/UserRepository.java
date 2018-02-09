@@ -74,6 +74,19 @@ interface UserRepository extends JpaRepository<User, String>, JpaSpecificationEx
     List<User> findByAuthority(@Param("privilege") String privilege);
 
     /**
+     * 查找拥有指定权限的用户
+     * <p>
+     * 结果不包括Root用户
+     *
+     * @param privilege 权限
+     * @param pageable  分页信息
+     *
+     * @return 拥有该权限的用户列表
+     */
+    @Query("select user from User user join user.roles role inner join role.privileges privilege where privilege.name = :privilege and user.username <> 'administrator'")
+    Page<User> findByAuthority(@Param("privilege") String privilege, Pageable pageable);
+
+    /**
      * 查找拥有指定角色的用户
      * 结果不包括Root用户
      *
