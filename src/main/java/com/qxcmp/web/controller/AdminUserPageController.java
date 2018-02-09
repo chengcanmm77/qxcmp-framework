@@ -141,7 +141,7 @@ public class AdminUserPageController extends QxcmpController {
 
             Buttons toolbar = new Buttons();
 
-            userDetailsPageToolbarExtensionPoint.getExtensions().forEach(extension -> toolbar.addButton(new Button(extension.getTitle(), QXCMP_BACKEND_URL + "/" + id + "/" + extension.getSuffix(), extension.getTarget()).setBasic().setSecondary()));
+            userDetailsPageToolbarExtensionPoint.getExtensions().forEach(extension -> toolbar.addButton(new Button(extension.getTitle(), QXCMP_BACKEND_URL + "/user/" + id + "/" + extension.getSuffix(), extension.getTarget()).setBasic().setSecondary()));
 
                     return page()
                             .addComponent(new VerticallyDividedGrid().setVerticallyPadded()
