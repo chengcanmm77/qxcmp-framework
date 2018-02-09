@@ -90,6 +90,12 @@
     <div th:replace="~{qxcmp/globals/components :: component(${component.item})}"></div>
 </div>
 
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.menu.item.LogoutItem"*/-->
+<form th:fragment="item-logout(component)" th:class="${component.getClassName()}" onclick="this.submit()"
+      th:action="@{/logout}" th:method="post">
+    <button type="submit" style="background: none;border: none" th:utext="${component.text}">退出</button>
+</form>
+
 <!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.menu.item.LabeledIconItem"*/-->
 <th:block th:fragment="item-labeled-icon(component)">
     <th:block th:if="${component.anchor eq null}">
