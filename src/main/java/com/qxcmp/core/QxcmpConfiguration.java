@@ -85,7 +85,6 @@ public class QxcmpConfiguration {
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.timeout", "5000");
         properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.socketFactory.fallback", "false");
 
         javaMailSender.setJavaMailProperties(properties);
         return javaMailSender;

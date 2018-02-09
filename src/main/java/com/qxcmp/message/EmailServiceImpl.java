@@ -57,7 +57,6 @@ public class EmailServiceImpl implements EmailService {
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.timeout", "5000");
         properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.socketFactory.fallback", "false");
 
         sender.setJavaMailProperties(properties);
     }
