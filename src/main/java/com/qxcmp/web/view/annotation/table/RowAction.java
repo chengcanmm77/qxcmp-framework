@@ -48,12 +48,12 @@ public @interface RowAction {
     /**
      * 当开启确认对话框时，对话框的标题
      */
-    String confirmDialogTitle() default "";
+    String confirmDialogTitle() default "确认";
 
     /**
      * 当开启确认对话框时，对话框的文本
      */
-    String confirmDialogDescription() default "";
+    String confirmDialogDescription() default "确定要执行该操作？";
 
     /**
      * 按钮颜色
