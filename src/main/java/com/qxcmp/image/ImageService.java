@@ -1,9 +1,5 @@
 package com.qxcmp.image;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 import com.qxcmp.core.entity.AbstractEntityService;
 import com.qxcmp.core.support.IDGenerator;
 import net.coobird.thumbnailator.Thumbnails;
@@ -153,24 +149,6 @@ public class ImageService extends AbstractEntityService<Image, String, ImageRepo
 
             }
         });
-    }
-
-    /**
-     * 创建一个二维码图片
-     *
-     * @param text   二维码文本
-     * @param width  图片宽度
-     * @param height 图片高度
-     *
-     * @return 二维码位图
-     */
-    public BitMatrix createQrCode(String text, int width, int height) {
-        try {
-            return new QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, width, height);
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private Optional<Image> createImage(String type, byte[] content) {
