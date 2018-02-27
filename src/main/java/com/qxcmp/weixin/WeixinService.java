@@ -56,7 +56,12 @@ public class WeixinService {
             WxMpOAuth2AccessToken accessToken = wxMpService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(accessToken, null);
             Optional<User> userOptional = userService.findByOpenID(wxMpUser.getOpenId());
-            userOptional.ifPresent(user -> {
+
+            if (!userOptional.isPresent()) {
+                syncService.syncUser(wxMpUser);
+            }
+
+            userService.findByOpenID(wxMpUser.getOpenId()).ifPresent(user -> {
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()));
                 userService.update(user.getId(), u -> u.setDateLogin(new Date()));
             });
