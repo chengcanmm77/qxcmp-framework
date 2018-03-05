@@ -3,8 +3,8 @@ package com.qxcmp.account;
 import com.google.common.collect.Lists;
 import com.qxcmp.config.SiteService;
 import com.qxcmp.config.SystemConfigService;
-import com.qxcmp.core.QxcmpConfigurator;
 import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.init.QxcmpInitailizer;
 import com.qxcmp.message.EmailService;
 import com.qxcmp.user.User;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class AccountService implements QxcmpConfigurator {
+public class AccountService implements QxcmpInitailizer {
 
     public static final String ACCOUNT_PAGE = "qxcmp-account";
 
@@ -140,10 +140,5 @@ public class AccountService implements QxcmpConfigurator {
     @Override
     public void config() {
         loadConfig();
-    }
-
-    @Override
-    public int order() {
-        return Integer.MAX_VALUE - 2;
     }
 }

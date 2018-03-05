@@ -1,11 +1,13 @@
 package com.qxcmp.spdier;
 
-import com.qxcmp.core.QxcmpConfigurator;
 import com.qxcmp.core.event.AdminSpiderFinishEvent;
+import com.qxcmp.core.init.QxcmpInitailizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -23,10 +25,11 @@ import java.util.stream.Collectors;
  *
  * @author aaric
  */
-@Component
+@Order(Ordered.LOWEST_PRECEDENCE - 2)
 @Slf4j
+@Component
 @RequiredArgsConstructor
-public class SpiderRunner implements QxcmpConfigurator {
+public class SpiderRunner implements QxcmpInitailizer {
 
     private final ApplicationContext applicationContext;
     private final TaskExecutor taskExecutor;
@@ -139,10 +142,5 @@ public class SpiderRunner implements QxcmpConfigurator {
     public void config() {
         loadSpiderDefinition();
         start();
-    }
-
-    @Override
-    public int order() {
-        return Integer.MAX_VALUE - 1;
     }
 }

@@ -2,10 +2,12 @@ package com.qxcmp.security;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.qxcmp.core.QxcmpConfigurator;
+import com.qxcmp.core.init.QxcmpInitailizer;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +20,10 @@ import static com.qxcmp.core.QxcmpSecurityConfiguration.*;
  *
  * @author aaric
  */
+@Order(Ordered.LOWEST_PRECEDENCE - 1)
 @Component
 @AllArgsConstructor
-public class SecurityConfigurator implements QxcmpConfigurator {
+public class SecurityConfigurator implements QxcmpInitailizer {
 
     private UserService userService;
 
@@ -92,10 +95,5 @@ public class SecurityConfigurator implements QxcmpConfigurator {
                 return role;
             });
         }
-    }
-
-    @Override
-    public int order() {
-        return Integer.MAX_VALUE - 1;
     }
 }

@@ -1,10 +1,12 @@
 package com.qxcmp.config;
 
-import com.qxcmp.core.QxcmpConfigurator;
+import com.qxcmp.core.init.QxcmpInitailizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -25,10 +27,11 @@ import java.util.Objects;
  * @see SystemConfigAutowired
  * @see SystemConfig
  */
+@Order(Ordered.HIGHEST_PRECEDENCE + 1)
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j
-public class SystemConfigLoader implements QxcmpConfigurator {
+public class SystemConfigLoader implements QxcmpInitailizer {
 
     private final ApplicationContext applicationContext;
 
@@ -37,11 +40,6 @@ public class SystemConfigLoader implements QxcmpConfigurator {
     @Override
     public void config() {
         applicationContext.getBeansWithAnnotation(SystemConfigAutowired.class).forEach((s, o) -> loadFromClass(o));
-    }
-
-    @Override
-    public int order() {
-        return Integer.MIN_VALUE + 1;
     }
 
     private void loadFromClass(Object bean) {

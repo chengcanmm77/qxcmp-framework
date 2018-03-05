@@ -1,7 +1,7 @@
 package com.qxcmp.calendar;
 
 import com.google.common.collect.Maps;
-import com.qxcmp.core.QxcmpConfigurator;
+import com.qxcmp.core.init.QxcmpInitailizer;
 import org.apache.commons.csv.CSVFormat;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
-public class CalendarServiceImpl implements CalendarService, QxcmpConfigurator {
+public class CalendarServiceImpl implements CalendarService, QxcmpInitailizer {
 
     private Map<String, CalendarDate> calendarDateMap = Maps.newConcurrentMap();
 

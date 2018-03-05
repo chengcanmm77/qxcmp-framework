@@ -1,4 +1,4 @@
-package com.qxcmp.core;
+package com.qxcmp.core.init;
 
 /**
  * 清醒内容管理平台配置接口
@@ -7,7 +7,7 @@ package com.qxcmp.core;
  *
  * @author aaric
  */
-public interface QxcmpConfigurator {
+public interface QxcmpInitailizer {
 
     /**
      * 执行相应配置
@@ -23,16 +23,5 @@ public interface QxcmpConfigurator {
      */
     default String name() {
         return this.getClass().getSimpleName();
-    }
-
-    /**
-     * 配置执行顺序
-     * <p>
-     * 值越小越先执行
-     *
-     * @return 配置执行顺序
-     */
-    default int order() {
-        return 0;
     }
 }

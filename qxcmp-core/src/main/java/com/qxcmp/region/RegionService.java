@@ -1,9 +1,9 @@
 package com.qxcmp.region;
 
 import com.qxcmp.config.SystemConfigService;
-import com.qxcmp.core.QxcmpConfigurator;
 import com.qxcmp.core.QxcmpSystemConfigConfiguration;
 import com.qxcmp.core.entity.AbstractEntityService;
+import com.qxcmp.core.init.QxcmpInitailizer;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RegionService extends AbstractEntityService<Region, String, RegionRepository> implements QxcmpConfigurator {
+public class RegionService extends AbstractEntityService<Region, String, RegionRepository> implements QxcmpInitailizer {
 
     private final SystemConfigService systemConfigService;
 

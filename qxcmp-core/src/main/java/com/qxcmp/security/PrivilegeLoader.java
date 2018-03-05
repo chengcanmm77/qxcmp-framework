@@ -1,10 +1,12 @@
 package com.qxcmp.security;
 
-import com.qxcmp.core.QxcmpConfigurator;
+import com.qxcmp.core.init.QxcmpInitailizer;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -25,10 +27,11 @@ import static com.google.common.base.Preconditions.checkState;
  * @see PrivilegeAutowired
  * @see Privilege
  */
+@Order(Ordered.HIGHEST_PRECEDENCE)
+@Slf4j
 @Component
 @AllArgsConstructor
-@Slf4j
-public class PrivilegeLoader implements QxcmpConfigurator {
+public class PrivilegeLoader implements QxcmpInitailizer {
 
     private ApplicationContext applicationContext;
 
@@ -37,11 +40,6 @@ public class PrivilegeLoader implements QxcmpConfigurator {
     @Override
     public void config() {
         applicationContext.getBeansWithAnnotation(PrivilegeAutowired.class).forEach((s, o) -> loadFromClass(o));
-    }
-
-    @Override
-    public int order() {
-        return Integer.MIN_VALUE;
     }
 
     private void loadFromClass(Object bean) {

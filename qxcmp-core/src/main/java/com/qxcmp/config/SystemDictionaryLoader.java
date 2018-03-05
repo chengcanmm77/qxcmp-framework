@@ -1,12 +1,14 @@
 package com.qxcmp.config;
 
 import com.google.common.collect.Lists;
-import com.qxcmp.core.QxcmpConfigurator;
 import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.init.QxcmpInitailizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -23,10 +25,11 @@ import java.util.Optional;
  *
  * @author aaric
  */
+@Order(Ordered.HIGHEST_PRECEDENCE + 2)
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j
-public class SystemDictionaryLoader implements QxcmpConfigurator {
+public class SystemDictionaryLoader implements QxcmpInitailizer {
 
     private final SystemConfigService systemConfigService;
 
@@ -94,10 +97,5 @@ public class SystemDictionaryLoader implements QxcmpConfigurator {
         }
 
         systemDictionaryService.refresh();
-    }
-
-    @Override
-    public int order() {
-        return Integer.MIN_VALUE + 2;
     }
 }

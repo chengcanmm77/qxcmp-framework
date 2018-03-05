@@ -1,9 +1,10 @@
 package com.qxcmp.core.extension;
 
-import com.qxcmp.core.QxcmpConfigurator;
+import com.qxcmp.core.init.QxcmpInitailizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,10 +12,11 @@ import org.springframework.stereotype.Component;
  *
  * @author Aaric
  */
-@Component
+@Order
 @Slf4j
+@Component
 @RequiredArgsConstructor
-public class ExtensionConfigurator implements QxcmpConfigurator {
+public class ExtensionConfigurator implements QxcmpInitailizer {
 
     private final ApplicationContext applicationContext;
 
@@ -37,10 +39,5 @@ public class ExtensionConfigurator implements QxcmpConfigurator {
                 log.error("Can't load extension for {}, cause {}", extensionPoint.getClass().getName(), e.getMessage());
             }
         });
-    }
-
-    @Override
-    public int order() {
-        return Integer.MAX_VALUE;
     }
 }
