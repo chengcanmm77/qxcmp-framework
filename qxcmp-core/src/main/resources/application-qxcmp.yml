@@ -1,6 +1,10 @@
 # Platform Settings
 platform:
-  admin-url: /admin
+  pages:
+    admin:
+      home: /admin
+      about: /about
+
 # Common Server Settings
 server:
   port: 8443

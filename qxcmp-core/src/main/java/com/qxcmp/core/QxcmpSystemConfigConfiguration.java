@@ -1,6 +1,6 @@
 package com.qxcmp.core;
 
-import com.qxcmp.config.SystemConfigAutowired;
+import com.qxcmp.config.QxcmpSystemConfig;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,15 +10,14 @@ import org.springframework.context.annotation.Configuration;
  * @author Aaric
  */
 @Configuration
-@SystemConfigAutowired
-public class QxcmpSystemConfigConfiguration {
+public class QxcmpSystemConfigConfiguration implements QxcmpSystemConfig {
 
     /*
      * 系统核心相关配置
      * */
     public static String SYSTEM_CONFIG_FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION = "";
     /* 上传临时文件保留时间（分）, 默认为1天 */
-    public static int SYSTEM_CONFIG_FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION_DEFAULT_VALE = 3600 * 24;
+    public static int SYSTEM_CONFIG_FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION_DEFAULT_VALUE = 3600 * 24;
 
     /*
      * 账户注册相关配置

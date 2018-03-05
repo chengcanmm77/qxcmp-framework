@@ -23,7 +23,6 @@ public interface QxcmpPage {
      * 设置页面标题
      *
      * @param title 标题
-     *
      * @return 页面本身
      */
     QxcmpPage setTitle(String title);
@@ -32,7 +31,6 @@ public interface QxcmpPage {
      * 添加一个视图组件
      *
      * @param component 要添加的视图
-     *
      * @return 页面本身
      */
     QxcmpPage addComponent(Component component);
@@ -41,7 +39,6 @@ public interface QxcmpPage {
      * 添加一个视图组件
      *
      * @param supplier 要添加的视图
-     *
      * @return 页面本身
      */
     QxcmpPage addComponent(Supplier<Component> supplier);
@@ -50,7 +47,6 @@ public interface QxcmpPage {
      * 添加一组视图组件
      *
      * @param components 要添加的组件
-     *
      * @return 页面本身
      */
     QxcmpPage addComponents(Collection<Component> components);
@@ -59,7 +55,6 @@ public interface QxcmpPage {
      * 添加一个CSS样式表
      *
      * @param stylesheet 样式表路径 如 {@code "/assets/styles/qxcmp.css"}
-     *
      * @return 页面本身
      */
     QxcmpPage addStylesheet(String stylesheet);
@@ -68,7 +63,6 @@ public interface QxcmpPage {
      * 添加一个JS脚本到 {@code <head></head>}
      *
      * @param javascript 脚本路径 如 {@code "/assets/scripts/qxcmp.js"}
-     *
      * @return 页面本身
      */
     QxcmpPage addJavascript(String javascript);
@@ -77,7 +71,6 @@ public interface QxcmpPage {
      * 添加一个JS脚本到{@code <body></body>}
      *
      * @param javascript 脚本路径 如 {@code "/assets/scripts/qxcmp.js"}
-     *
      * @return 页面本身
      */
     QxcmpPage addJavascriptToBody(String javascript);

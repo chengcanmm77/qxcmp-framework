@@ -37,7 +37,7 @@ public class FileUploadCleanupJob {
     public void cleanUp() {
         log.info("Clean up upload file tmp folder...");
         long currentTimeMillis = System.currentTimeMillis();
-        int duration = systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION_DEFAULT_VALE) * 60 * 1000;
+        int duration = systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION_DEFAULT_VALUE) * 60 * 1000;
 
         FileUtils.listFilesAndDirs(new File(QXCMP_FILE_UPLOAD_TEMP_FOLDER), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE).stream().filter(File::isDirectory).forEach(file -> {
             try {

@@ -1,6 +1,7 @@
 package com.qxcmp.web.view.page;
 
 import com.qxcmp.config.*;
+import com.qxcmp.core.Platform;
 import com.qxcmp.core.navigation.NavigationService;
 import com.qxcmp.message.InnerMessageService;
 import com.qxcmp.message.SiteNotification;
@@ -63,7 +64,7 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
     protected SystemDictionaryService systemDictionaryService;
     protected SiteService siteService;
     protected NavigationService navigationService;
-    protected PlatformConfig platformConfig;
+    protected Platform platformConfig;
 
     private AbstractSidebar sidebar = new AccordionMenuSidebar().setAttachEventsSelector(".ui.bottom.fixed.menu .sidebar.item");
     private AbstractBreadcrumb breadcrumb;
@@ -326,7 +327,7 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
     }
 
     @Autowired
-    public void setPlatformConfig(PlatformConfig platformConfig) {
+    public void setPlatformConfig(Platform platformConfig) {
         this.platformConfig = platformConfig;
     }
 

@@ -5,12 +5,11 @@ import com.qxcmp.core.QxcmpConfiguration;
 import com.qxcmp.web.view.elements.container.TextContainer;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.PageHeader;
+import com.qxcmp.web.view.modules.table.Table;
 import com.qxcmp.web.view.page.QxcmpAdminPage;
-import com.qxcmp.web.view.support.utils.TableHelper;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +32,13 @@ public class AdminAboutPage extends QxcmpAdminPage {
 
     @Override
     public void render() {
-        addComponent(new TextContainer().addComponent(new Overview(new PageHeader(HeaderType.H1, QXCMP)).addComponent(tableHelper.convert(stringObjectMap -> {
+        setBreadcrumb("控制台", "", "关于");
+
+        addComponent(new TextContainer().addComponent(new Overview(new PageHeader(HeaderType.H1, QXCMP)).addComponent(getTableView()).addLink("返回", QXCMP_BACKEND_URL)));
+    }
+
+    private Table getTableView() {
+        return tableHelper.convert(stringObjectMap -> {
             String appVersion = QxcmpConfiguration.class.getPackage().getImplementationVersion();
             String appBuildDate = "development";
             String appStartUpDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(applicationContext.getStartupDate()));
@@ -52,8 +57,7 @@ public class AdminAboutPage extends QxcmpAdminPage {
             stringObjectMap.put("构建日期", appBuildDate);
             stringObjectMap.put("启动日期", appStartUpDate);
             stringObjectMap.put("软件版本", System.getProperty("java.version"));
-        })).addLink("返回", QXCMP_BACKEND_URL)))
-                .setBreadcrumb("控制台", "", "关于");
+        });
     }
 
 }

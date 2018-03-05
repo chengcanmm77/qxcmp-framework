@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 系统配置加载器
@@ -33,38 +34,44 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SystemConfigLoader implements QxcmpInitializer {
 
+    private static final String DEFAULT_CONFIG_PREFIX = "SYSTEM_CONFIG_";
+    private static final String DEFAULT_VALUE_SUFFIX = "_DEFAULT_VALUE";
     private final ApplicationContext applicationContext;
-
     private final SystemConfigService systemConfigService;
+    private final AtomicInteger counter = new AtomicInteger();
 
     @Override
     public void init() {
-        applicationContext.getBeansWithAnnotation(SystemConfigAutowired.class).forEach((s, o) -> loadFromClass(o));
+        log.info("Start loading system config");
+        applicationContext.getBeansOfType(QxcmpSystemConfig.class).forEach((s, o) -> loadFromClass(o));
+        log.info("Finish loading system config, total {}", counter.intValue());
     }
 
     private void loadFromClass(Object bean) {
 
-        SystemConfigAutowired systemConfigAutowired = bean.getClass().getAnnotation(SystemConfigAutowired.class);
-
-        Arrays.stream(bean.getClass().getFields()).filter(field -> field.getName().startsWith(systemConfigAutowired.prefix()) && !field.getName().endsWith(systemConfigAutowired.suffix())).forEach(field -> {
+        Arrays.stream(bean.getClass().getFields()).filter(field -> StringUtils.startsWith(field.getName(), DEFAULT_CONFIG_PREFIX) && !field.getName().endsWith(DEFAULT_VALUE_SUFFIX)).forEach(field -> {
             try {
                 field.setAccessible(true);
 
                 String systemConfigName = Objects.isNull(field.get(bean)) ? "" : field.get(bean).toString();
 
                 if (StringUtils.isBlank(systemConfigName)) {
-                    systemConfigName = field.getName().replaceAll(systemConfigAutowired.prefix(), "").toLowerCase().replaceAll("_", ".");
+                    systemConfigName = field.getName().replaceAll(DEFAULT_CONFIG_PREFIX, "").toLowerCase().replaceAll("_", ".");
                     field.set(this, systemConfigName);
                 }
 
+                log.info("Loading {}", systemConfigName);
+                counter.incrementAndGet();
+
                 try {
-                    Field defaultValueField = bean.getClass().getField(field.getName() + systemConfigAutowired.suffix());
+                    Field defaultValueField = bean.getClass().getField(field.getName() + DEFAULT_VALUE_SUFFIX);
                     defaultValueField.setAccessible(true);
                     String systemConfigDefaultValue = defaultValueField.get(bean).toString();
                     systemConfigService.create(systemConfigName, systemConfigDefaultValue);
                 } catch (NoSuchFieldException e) {
                     systemConfigService.create(systemConfigName, "");
                 }
+
             } catch (IllegalAccessException e) {
                 log.error("Can't get system init information {}:{}", bean.getClass().getSimpleName(), field.getName());
             }
