@@ -5,6 +5,7 @@ import com.qxcmp.core.support.IDGenerator;
 import com.qxcmp.exception.FinanceException;
 import com.qxcmp.exception.NoBalanceException;
 import com.qxcmp.exception.OrderStatusException;
+import com.qxcmp.finance.OrderStatusEnum;
 import com.qxcmp.finance.Wallet;
 import com.qxcmp.finance.WalletService;
 import lombok.RequiredArgsConstructor;

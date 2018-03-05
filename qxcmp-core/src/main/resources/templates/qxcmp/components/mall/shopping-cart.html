@@ -2,7 +2,7 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <body>
 
-<!--/*@thymesVar id="component" type="com.qxcmp.web.view.components.mall.ShoppingCart"*/-->
+<!--/*@thymesVar id="component" type="com.qxcmp.shoppingmall.view.ShoppingCart"*/-->
 <th:block th:fragment="shopping-cart(component)">
     <div class="ui inverted page dimmer">
         <div class="ui text loader"></div>
@@ -112,7 +112,7 @@
     </script>
 </th:block>
 
-<!--/*@thymesVar id="component" type="com.qxcmp.web.view.components.mall.ShoppingCartOrderActionBar"*/-->
+<!--/*@thymesVar id="component" type="com.qxcmp.shoppingmall.view.ShoppingCartOrderActionBar"*/-->
 <div th:fragment="action-bar(component)" class="ui bottom fixed two item menu">
     <div class="ui button item">
         实付款：
@@ -133,7 +133,7 @@
     </script>
 </div>
 
-<!--/*@thymesVar id="component" type="com.qxcmp.web.view.components.mall.Cashier"*/-->
+<!--/*@thymesVar id="component" type="com.qxcmp.shoppingmall.view.Cashier"*/-->
 <th:block th:fragment="cashier(component)">
     <form class="ui form shopping-cart-cashier" th:action="@{/mall/cashier}" method="post">
         <input name="id" th:value="${component.commodityOrder.id}" type="hidden"/>

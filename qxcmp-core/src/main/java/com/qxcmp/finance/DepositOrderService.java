@@ -5,7 +5,6 @@ import com.qxcmp.core.support.IDGenerator;
 import com.qxcmp.exception.FinanceException;
 import com.qxcmp.exception.OrderExpiredException;
 import com.qxcmp.exception.OrderStatusException;
-import com.qxcmp.mall.OrderStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;

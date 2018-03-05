@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
 <body>
 
-<!--/*@thymesVar id="component" type="com.qxcmp.web.view.components.mall.CommodityPrice"*/-->
+<!--/*@thymesVar id="component" type="com.qxcmp.shoppingmall.view.CommodityPrice"*/-->
 <span th:fragment="price(component)" class="price">
     <span th:unless="${component.commodity.pointOnly}">￥</span>
     <span th:unless="${component.commodity.pointOnly}" class="sell-price"
@@ -11,7 +11,7 @@
     <span th:if="${component.commodity.pointOnly}">积分</span>
 </span>
 
-<!--/*@thymesVar id="component" type="com.qxcmp.web.view.components.mall.CommodityActionBar"*/-->
+<!--/*@thymesVar id="component" type="com.qxcmp.shoppingmall.view.CommodityActionBar"*/-->
 <div th:fragment="action-bar(component)" class="ui bottom fixed two item menu">
     <a class="ui button item" th:href="@{/mall/cart}">我的购物车</a>
     <button class="ui button item add-shopping-cart" th:href="@{/mall/cart}">加入购物车</button>

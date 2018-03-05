@@ -1,6 +1,6 @@
-package com.qxcmp.web.view.components.mall;
+package com.qxcmp.shoppingmall.view;
 
-import com.qxcmp.mall.CommodityOrder;
+import com.qxcmp.shoppingmall.CommodityOrder;
 import com.qxcmp.web.view.AbstractComponent;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,7 @@
 package com.qxcmp.shoppingmall;
 
 import com.google.common.collect.Lists;
+import com.qxcmp.finance.OrderStatusEnum;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 

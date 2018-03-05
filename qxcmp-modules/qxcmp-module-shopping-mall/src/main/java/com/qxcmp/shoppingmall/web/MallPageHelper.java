@@ -2,9 +2,9 @@ package com.qxcmp.shoppingmall.web;
 
 import com.google.common.collect.Maps;
 import com.qxcmp.shoppingmall.*;
+import com.qxcmp.shoppingmall.view.*;
+import com.qxcmp.shoppingmall.view.ShoppingCart;
 import com.qxcmp.web.view.Component;
-import com.qxcmp.web.view.components.mall.*;
-import com.qxcmp.web.view.components.mall.ShoppingCart;
 import com.qxcmp.web.view.elements.button.Button;
 import com.qxcmp.web.view.elements.container.Container;
 import com.qxcmp.web.view.elements.divider.Divider;

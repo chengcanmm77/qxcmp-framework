@@ -1,6 +1,5 @@
 package com.qxcmp.finance;
 
-import com.qxcmp.mall.OrderStatusEnum;
 import com.qxcmp.web.view.annotation.table.EntityTable;
 import com.qxcmp.web.view.annotation.table.TableField;
 import com.qxcmp.web.view.annotation.table.TableFieldRender;

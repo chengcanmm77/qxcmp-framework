@@ -1,17 +1,22 @@
-package com.qxcmp.web.view.components.mall;
+package com.qxcmp.shoppingmall.view;
 
-import com.qxcmp.mall.Commodity;
+import com.qxcmp.shoppingmall.Commodity;
 import com.qxcmp.web.view.AbstractComponent;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 商品价格组件
+ *
+ * @author Aaric
+ */
 @Getter
 @Setter
-public class CommodityActionBar extends AbstractComponent {
+public class CommodityPrice extends AbstractComponent {
 
     private Commodity commodity;
 
-    public CommodityActionBar(Commodity commodity) {
+    public CommodityPrice(Commodity commodity) {
         this.commodity = commodity;
     }
 
@@ -22,6 +27,6 @@ public class CommodityActionBar extends AbstractComponent {
 
     @Override
     public String getFragmentName() {
-        return "action-bar";
+        return "price";
     }
 }

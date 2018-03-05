@@ -1,4 +1,4 @@
-package com.qxcmp.shoppingmall;
+package com.qxcmp.finance;
 
 /**
  * 平台订单状态枚举类型

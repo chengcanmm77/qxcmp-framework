@@ -9,7 +9,7 @@ import com.qxcmp.exception.FinanceException;
 import com.qxcmp.exception.OrderStatusException;
 import com.qxcmp.finance.DepositOrder;
 import com.qxcmp.finance.DepositOrderService;
-import com.qxcmp.mall.OrderStatusEnum;
+import com.qxcmp.finance.OrderStatusEnum;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.view.components.weixin.WeixinPayScript;
