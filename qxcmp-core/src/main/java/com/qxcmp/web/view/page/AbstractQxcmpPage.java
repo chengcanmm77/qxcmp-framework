@@ -2,7 +2,10 @@ package com.qxcmp.web.view.page;
 
 import com.google.common.collect.Lists;
 import com.qxcmp.web.view.Component;
+import com.qxcmp.web.view.support.utils.TableHelper;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
@@ -16,6 +19,9 @@ import java.util.function.Supplier;
  * @author Aaric
  */
 public abstract class AbstractQxcmpPage implements QxcmpPage {
+
+    protected ApplicationContext applicationContext;
+    protected TableHelper tableHelper;
 
     private static final String PAGE = "qxcmp";
     private static final String BASE_MODEL_OBJECT = "page";
@@ -95,5 +101,15 @@ public abstract class AbstractQxcmpPage implements QxcmpPage {
     @Override
     public void renderToMobile() {
         render();
+    }
+
+    @Autowired
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    @Autowired
+    public void setTableHelper(TableHelper tableHelper) {
+        this.tableHelper = tableHelper;
     }
 }

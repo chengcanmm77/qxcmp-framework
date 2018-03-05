@@ -1,7 +1,6 @@
 package com.qxcmp.web.view.page;
 
-import com.qxcmp.config.PlatformConfig;
-import com.qxcmp.config.SiteService;
+import com.qxcmp.config.*;
 import com.qxcmp.core.navigation.NavigationService;
 import com.qxcmp.message.InnerMessageService;
 import com.qxcmp.message.SiteNotification;
@@ -10,11 +9,15 @@ import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import com.qxcmp.web.view.Component;
 import com.qxcmp.web.view.elements.breadcrumb.AbstractBreadcrumb;
+import com.qxcmp.web.view.elements.breadcrumb.Breadcrumb;
+import com.qxcmp.web.view.elements.breadcrumb.BreadcrumbItem;
 import com.qxcmp.web.view.elements.container.Container;
 import com.qxcmp.web.view.elements.grid.AbstractGrid;
 import com.qxcmp.web.view.elements.grid.Col;
 import com.qxcmp.web.view.elements.grid.Row;
 import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
+import com.qxcmp.web.view.elements.label.AbstractLabel;
+import com.qxcmp.web.view.elements.label.Label;
 import com.qxcmp.web.view.elements.menu.Menu;
 import com.qxcmp.web.view.elements.menu.RightMenu;
 import com.qxcmp.web.view.elements.menu.VerticalMenu;
@@ -24,9 +27,11 @@ import com.qxcmp.web.view.elements.message.*;
 import com.qxcmp.web.view.modules.accordion.AccordionItem;
 import com.qxcmp.web.view.modules.sidebar.AbstractSidebar;
 import com.qxcmp.web.view.modules.sidebar.AccordionMenuSidebar;
+import com.qxcmp.web.view.support.Color;
 import com.qxcmp.web.view.support.Fixed;
 import com.qxcmp.web.view.support.Wide;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,6 +41,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_PROFILE;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_SIDEBAR;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
@@ -51,19 +58,23 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 public abstract class QxcmpAdminPage extends GenericQxcmpPage {
 
     protected UserService userService;
+    protected SystemConfigService systemConfigService;
+    protected UserConfigService userConfigService;
+    protected SystemDictionaryService systemDictionaryService;
     protected SiteService siteService;
-    protected InnerMessageService innerMessageService;
     protected NavigationService navigationService;
     protected PlatformConfig platformConfig;
-    protected SiteNotificationService siteNotificationService;
 
     private AbstractSidebar sidebar = new AccordionMenuSidebar().setAttachEventsSelector(".ui.bottom.fixed.menu .sidebar.item");
     private AbstractBreadcrumb breadcrumb;
     private VerticalMenu verticalMenu;
     private Col content = new Col(Wide.SIXTEEN);
 
+    private InnerMessageService innerMessageService;
+    private SiteNotificationService siteNotificationService;
+
     @Override
-    public QxcmpPage addComponent(Component component) {
+    public QxcmpAdminPage addComponent(Component component) {
 
         if (Objects.nonNull(component)) {
             content.addComponent(component);
@@ -73,13 +84,90 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
     }
 
     @Override
-    public QxcmpPage addComponent(Supplier<Component> supplier) {
+    public QxcmpAdminPage addComponent(Supplier<Component> supplier) {
         return addComponent(supplier.get());
     }
 
     @Override
-    public QxcmpPage addComponents(Collection<Component> components) {
+    public QxcmpAdminPage addComponents(Collection<Component> components) {
         content.addComponents(components);
+        return this;
+    }
+
+    public QxcmpAdminPage setBreadcrumb(String... breadcrumb) {
+        checkArgument(breadcrumb.length % 2 == 1);
+
+        Breadcrumb bc = new Breadcrumb();
+
+        for (int i = 0; i < breadcrumb.length; i += 2) {
+
+            String text = breadcrumb[i];
+
+            if (i + 1 == breadcrumb.length) {
+                bc.addItem(new BreadcrumbItem(text));
+            } else {
+                String url = breadcrumb[i + 1];
+                if (Objects.nonNull(url)) {
+                    bc.addItem(new BreadcrumbItem(text, QXCMP_BACKEND_URL + "/" + url));
+                } else {
+                    bc.addItem(new BreadcrumbItem(text));
+                }
+            }
+        }
+
+        this.breadcrumb = bc;
+        return this;
+    }
+
+    public QxcmpAdminPage setVerticalNavigation(String id, String activeId) {
+
+        VerticalMenu verticalMenu = new VerticalMenu().setFluid();
+        verticalMenu.setTabular();
+
+        navigationService.get(id).getItems().forEach(navigation -> {
+            if (navigation.isVisible(userService.currentUser())) {
+                if (navigation.getItems().isEmpty()) {
+                    TextItem textItem = new TextItem(navigation.getTitle(), navigation.getAnchor().getHref());
+
+                    if (StringUtils.equals(activeId, navigation.getId())) {
+                        textItem.setActive();
+                    }
+
+                    textItem.addContext("navigation-id", navigation.getId());
+
+                    verticalMenu.addItem(textItem);
+                }
+            }
+        });
+
+        if (!verticalMenu.getItems().isEmpty()) {
+            this.verticalMenu = verticalMenu;
+        }
+
+        return this;
+    }
+
+    public QxcmpAdminPage setVerticalNavigationBadge(String id, String text) {
+        return setVerticalNavigationBadge(id, text, Color.NONE);
+    }
+
+    public QxcmpAdminPage setVerticalNavigationBadge(String id, String text, Color color) {
+        return setVerticalNavigationBadge(id, new Label(text).setColor(color));
+    }
+
+    public QxcmpAdminPage setVerticalNavigationBadge(String id, AbstractLabel label) {
+
+        if (Objects.nonNull(verticalMenu)) {
+            verticalMenu.getItems().forEach(menuItem -> {
+                if (Objects.nonNull(menuItem.getContext("navigation-id")) && StringUtils.equals(menuItem.getContext("navigation-id").toString(), id)) {
+                    if (menuItem instanceof TextItem) {
+                        TextItem textItem = (TextItem) menuItem;
+                        textItem.setBadge(label);
+                    }
+                }
+            });
+        }
+
         return this;
     }
 
@@ -114,7 +202,7 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
         menu.setInverted().setFixed(Fixed.BOTTOM);
         menu.addItem(new SidebarIconItem());
         RightMenu rightMenu = new RightMenu();
-        rightMenu.addItem(new TextItem("关于", platformConfig.getAdminUrl()));
+        rightMenu.addItem(new TextItem("关于", platformConfig.getAdminUrl() + "/about"));
         menu.setRightMenu(rightMenu);
         sidebar.setBottomFixedMenu(menu);
     }
@@ -213,13 +301,23 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
     }
 
     @Autowired
-    public void setSiteService(SiteService siteService) {
-        this.siteService = siteService;
+    public void setSystemConfigService(SystemConfigService systemConfigService) {
+        this.systemConfigService = systemConfigService;
     }
 
     @Autowired
-    public void setInnerMessageService(InnerMessageService innerMessageService) {
-        this.innerMessageService = innerMessageService;
+    public void setUserConfigService(UserConfigService userConfigService) {
+        this.userConfigService = userConfigService;
+    }
+
+    @Autowired
+    public void setSystemDictionaryService(SystemDictionaryService systemDictionaryService) {
+        this.systemDictionaryService = systemDictionaryService;
+    }
+
+    @Autowired
+    public void setSiteService(SiteService siteService) {
+        this.siteService = siteService;
     }
 
     @Autowired
@@ -230,6 +328,11 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
     @Autowired
     public void setPlatformConfig(PlatformConfig platformConfig) {
         this.platformConfig = platformConfig;
+    }
+
+    @Autowired
+    public void setInnerMessageService(InnerMessageService innerMessageService) {
+        this.innerMessageService = innerMessageService;
     }
 
     @Autowired

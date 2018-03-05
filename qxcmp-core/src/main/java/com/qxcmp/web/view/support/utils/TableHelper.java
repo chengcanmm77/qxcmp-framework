@@ -2,6 +2,7 @@ package com.qxcmp.web.view.support.utils;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.qxcmp.web.view.annotation.table.RowActionCheck;
 import com.qxcmp.web.view.annotation.table.TableField;
 import com.qxcmp.web.view.annotation.table.TableFieldRender;
@@ -39,6 +40,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -60,7 +62,6 @@ public class TableHelper {
      * 字典表格视图包含两列，第一列为键，第二列为值
      *
      * @param dictionary 渲染的字典对象
-     *
      * @return 表格视图
      */
     public Table convert(Map<Object, Object> dictionary) {
@@ -92,6 +93,12 @@ public class TableHelper {
         }
 
         return table;
+    }
+
+    public Table convert(Consumer<Map<Object, Object>> consumer) {
+        Map<Object, Object> objectObjectMap = Maps.newLinkedHashMap();
+        consumer.accept(objectObjectMap);
+        return convert(objectObjectMap);
     }
 
     private void parseValueCell(TableRow tableRow, Object value) {
