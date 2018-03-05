@@ -1,13 +1,15 @@
-package com.qxcmp.news.web;
+package com.qxcmp.article.controller;
 
 import com.google.common.collect.ImmutableList;
+import com.qxcmp.article.Article;
+import com.qxcmp.article.ArticleService;
+import com.qxcmp.article.ArticleStatus;
+import com.qxcmp.article.event.AdminNewsArticleDisableEvent;
+import com.qxcmp.article.event.AdminNewsArticleEnableEvent;
+import com.qxcmp.article.event.AdminNewsArticlePublishEvent;
+import com.qxcmp.article.form.AdminNewsArticleAuditForm;
+import com.qxcmp.article.support.AdminNewsPageHelper;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.core.event.AdminNewsArticleDisableEvent;
-import com.qxcmp.core.event.AdminNewsArticleEnableEvent;
-import com.qxcmp.core.event.AdminNewsArticlePublishEvent;
-import com.qxcmp.news.Article;
-import com.qxcmp.news.ArticleService;
-import com.qxcmp.news.ArticleStatus;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;

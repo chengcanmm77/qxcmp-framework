@@ -1,8 +1,10 @@
-package com.qxcmp.news.web;
+package com.qxcmp.article.controller;
 
+import com.qxcmp.article.Channel;
+import com.qxcmp.article.ChannelService;
+import com.qxcmp.article.form.AdminNewsChannelEditForm;
+import com.qxcmp.article.form.AdminNewsChannelNewForm;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.news.Channel;
-import com.qxcmp.news.ChannelService;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;

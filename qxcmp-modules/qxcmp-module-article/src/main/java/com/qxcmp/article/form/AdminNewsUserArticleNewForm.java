@@ -1,6 +1,6 @@
-package com.qxcmp.news.web;
+package com.qxcmp.article.form;
 
-import com.qxcmp.news.Channel;
+import com.qxcmp.article.Channel;
 import com.qxcmp.web.view.annotation.form.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;

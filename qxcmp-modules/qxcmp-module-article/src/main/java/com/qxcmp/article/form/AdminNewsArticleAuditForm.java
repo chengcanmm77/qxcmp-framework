@@ -1,4 +1,4 @@
-package com.qxcmp.news.web;
+package com.qxcmp.article.form;
 
 import com.qxcmp.web.view.annotation.form.Form;
 import com.qxcmp.web.view.annotation.form.TextInputField;

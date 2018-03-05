@@ -1,4 +1,4 @@
-package com.qxcmp.news.web;
+package com.qxcmp.article.form;
 
 import com.google.common.collect.Sets;
 import com.qxcmp.user.User;

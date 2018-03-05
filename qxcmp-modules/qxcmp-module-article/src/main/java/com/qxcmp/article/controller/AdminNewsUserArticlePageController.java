@@ -1,9 +1,13 @@
-package com.qxcmp.news.web;
+package com.qxcmp.article.controller;
 
+import com.qxcmp.article.*;
+import com.qxcmp.article.event.AdminNewsArticleDisableEvent;
+import com.qxcmp.article.event.AdminNewsArticleEnableEvent;
+import com.qxcmp.article.form.AdminNewsUserArticleAuditForm;
+import com.qxcmp.article.form.AdminNewsUserArticleEditForm;
+import com.qxcmp.article.form.AdminNewsUserArticleNewForm;
+import com.qxcmp.article.support.AdminNewsPageHelper;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.core.event.AdminNewsArticleDisableEvent;
-import com.qxcmp.core.event.AdminNewsArticleEnableEvent;
-import com.qxcmp.news.*;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;
@@ -49,11 +53,8 @@ import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 public class AdminNewsUserArticlePageController extends QxcmpController {
 
     private final ArticleService articleService;
-
     private final ChannelService channelService;
-
     private final TableHelper tableHelper;
-
     private final AdminNewsPageHelper adminNewsPageHelper;
 
     @GetMapping("")

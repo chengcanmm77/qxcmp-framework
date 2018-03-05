@@ -1,7 +1,7 @@
-package com.qxcmp.news.web;
+package com.qxcmp.article.support;
 
 import com.google.common.collect.Maps;
-import com.qxcmp.news.Article;
+import com.qxcmp.article.Article;
 import com.qxcmp.user.UserService;
 import com.qxcmp.web.view.modules.table.dictionary.CollectionValueCell;
 import lombok.RequiredArgsConstructor;

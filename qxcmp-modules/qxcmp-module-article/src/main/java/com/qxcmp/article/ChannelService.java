@@ -1,4 +1,4 @@
-package com.qxcmp.news;
+package com.qxcmp.article;
 
 import com.google.common.collect.Lists;
 import com.qxcmp.core.entity.AbstractEntityService;

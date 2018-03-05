@@ -1,8 +1,11 @@
-package com.qxcmp.news.web;
+package com.qxcmp.article.controller;
 
 import com.google.common.collect.ImmutableSet;
+import com.qxcmp.article.*;
+import com.qxcmp.article.form.AdminNewsUserChannelAdminEditForm;
+import com.qxcmp.article.form.AdminNewsUserChannelOwnerEditForm;
+import com.qxcmp.article.support.AdminNewsPageHelper;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.news.*;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;

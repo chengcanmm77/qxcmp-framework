@@ -4,9 +4,6 @@ import com.google.gson.GsonBuilder;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.core.QxcmpSystemConfigConfiguration;
 import com.qxcmp.core.event.AdminWeixinSettingsEvent;
-import com.qxcmp.news.Article;
-import com.qxcmp.news.ArticleService;
-import com.qxcmp.news.ArticleStatus;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.form.AdminWeixinMenuForm;
 import com.qxcmp.web.form.AdminWeixinSettingsForm;
@@ -63,7 +60,6 @@ public class AdminWeixinPageController extends QxcmpController {
     private final WxMpConfigStorage wxMpConfigStorage;
     private final WeixinMpMaterialService weixinMpMaterialService;
     private final WeixinService weixinService;
-    private final ArticleService articleService;
 
     @GetMapping("")
     public ModelAndView weixinPage() {
@@ -116,33 +112,6 @@ public class AdminWeixinPageController extends QxcmpController {
                                 .addComponent(new Overview(weixinMpMaterial.getTitle(), weixinMpMaterial.getAuthor()).addComponent(new HtmlText(weixinMpMaterial.getContent()))))
                         .setBreadcrumb("控制台", "", "微信公众平台", "weixin", "素材管理", "weixin/material", "图文查看")
                         .setVerticalNavigation(NAVIGATION_ADMIN_WEIXIN, NAVIGATION_ADMIN_WEIXIN_MATERIAL))
-                .orElse(page(viewHelper.nextWarningOverview("素材不存在或者不为图文素材", "目前仅支持图文素材的查看"))).build();
-    }
-
-    @GetMapping("/material/{id}/convert")
-    public ModelAndView materialConvertPage(@PathVariable String id) {
-        return weixinMpMaterialService.findOne(id)
-                .filter(weixinMpMaterial -> weixinMpMaterial.getType().equals(WeixinMpMaterialType.NEWS))
-                .map(weixinMpMaterial -> {
-
-                    Article next = articleService.next();
-                    next.setUserId(currentUser().orElseThrow(RuntimeException::new).getId());
-                    next.setTitle(weixinMpMaterial.getTitle());
-                    next.setAuthor(weixinMpMaterial.getAuthor());
-                    next.setDigest(weixinMpMaterial.getDigest());
-                    next.setContent(weixinMpMaterial.getContent());
-                    next.setCover(weixinMpMaterial.getThumbUrl());
-                    next.setStatus(ArticleStatus.NEW);
-
-
-                    Article article1 = articleService.create(() -> next);
-
-                    return page(viewHelper.nextSuccessOverview("转换文章成功", "现在可以前往新闻中心发布该文章")
-                            .addLink("返回素材管理", QXCMP_BACKEND_URL + "/weixin/material")
-                            .addLink("我的文章", QXCMP_BACKEND_URL + "/news/user/article/draft")
-                            .addLink("申请发布该文章", QXCMP_BACKEND_URL + "/news/user/article/" + article1.getId() + "/audit")
-                    );
-                })
                 .orElse(page(viewHelper.nextWarningOverview("素材不存在或者不为图文素材", "目前仅支持图文素材的查看"))).build();
     }
 

@@ -1,11 +1,8 @@
-package com.qxcmp.core.listener;
+package com.qxcmp.article.event;
 
+import com.qxcmp.article.Article;
 import com.qxcmp.config.SiteService;
-import com.qxcmp.core.event.AdminNewsArticleDisableEvent;
-import com.qxcmp.core.event.AdminNewsArticleEnableEvent;
-import com.qxcmp.core.event.AdminNewsArticlePublishEvent;
 import com.qxcmp.message.MessageService;
-import com.qxcmp.news.Article;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;

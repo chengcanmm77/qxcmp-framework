@@ -1,4 +1,4 @@
-package com.qxcmp.news.web;
+package com.qxcmp.article.controller;
 
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.view.views.Overview;

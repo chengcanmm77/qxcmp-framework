@@ -1,4 +1,4 @@
-package com.qxcmp.news;
+package com.qxcmp.article;
 
 /**
  * 文章状态

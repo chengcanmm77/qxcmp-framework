@@ -1,4 +1,4 @@
-package com.qxcmp.news;
+package com.qxcmp.article;
 
 import com.qxcmp.user.User;
 import org.springframework.data.domain.Page;
