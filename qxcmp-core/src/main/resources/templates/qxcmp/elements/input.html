@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+<body>
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.input.Input"*/-->
+<th:block th:fragment="default(component)">
+    <div th:class="${component.getClassName()}">
+        <input type="text" th:name="${component.name}" th:placeholder="${component.placeholder}"
+               th:value="${component.value}"/>
+    </div>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.input.IconInput"*/-->
+<th:block th:fragment="icon(component)">
+    <div th:class="${component.getClassName()}">
+        <input type="text" th:name="${component.name}" th:placeholder="${component.placeholder}"
+               th:value="${component.value}"/>
+        <div th:replace="~{qxcmp/globals/components :: component(${component.icon})}"></div>
+    </div>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.input.LabeledInput"*/-->
+<th:block th:fragment="label(component)">
+    <div th:if="${component.rightLabel}" th:class="${component.getClassName()}">
+        <th:block th:if="${component.extraLabel ne null}">
+            <div th:replace="~{qxcmp/globals/components :: component(${component.extraLabel})}"></div>
+        </th:block>
+        <div th:replace="~{qxcmp/globals/components :: component(${component.input})}"></div>
+        <div th:replace="~{qxcmp/globals/components :: component(${component.label})}"></div>
+    </div>
+    <div th:unless="${component.rightLabel}" th:class="${component.getClassName()}">
+        <div th:replace="~{qxcmp/globals/components :: component(${component.label})}"></div>
+        <div th:replace="~{qxcmp/globals/components :: component(${component.input})}"></div>
+        <th:block th:if="${component.extraLabel ne null}">
+            <div th:replace="~{qxcmp/globals/components :: component(${component.extraLabel})}"></div>
+        </th:block>
+    </div>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.input.ActionInput"*/-->
+<th:block th:fragment="action(component)">
+    <div th:if="${component.leftAction}" th:class="${component.getClassName()}">
+        <th:block th:if="${component.button ne null}">
+            <div th:replace="~{qxcmp/globals/components :: component(${component.button})}"></div>
+        </th:block>
+        <th:block th:if="${component.dropdown ne null}">
+            <div th:replace="~{qxcmp/globals/components :: component(${component.dropdown})}"></div>
+        </th:block>
+        <div th:replace="~{qxcmp/globals/components :: component(${component.input})}"></div>
+    </div>
+    <div th:unless="${component.leftAction}" th:class="${component.getClassName()}">
+        <div th:replace="~{qxcmp/globals/components :: component(${component.input})}"></div>
+        <th:block th:if="${component.button ne null}">
+            <div th:replace="~{qxcmp/globals/components :: component(${component.button})}"></div>
+        </th:block>
+        <th:block th:if="${component.dropdown ne null}">
+            <div th:replace="~{qxcmp/globals/components :: component(${component.dropdown})}"></div>
+        </th:block>
+    </div>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.pagination.Pagination"*/-->
+<div th:id="${component.id}" th:fragment="default(component)"
+     th:if="${component.showSizeChanger or (component.getTotalPage() gt 1)}">
+    <small th:if="${component.showTotal}" style="margin-right: 1em" th:utext="${component.getTotalText()}"></small>
+    <div th:class="${component.getClassName()}">
+        <a class="icon item" th:href="@{${component.getItemUrl(component.current - 1)}}"><i
+                class="left chevron icon"></i></a>
+        <a th:each="item : ${component.getItemList()}" th:class="|${item.active ? 'active ' : ''}item|"
+           th:href="${item.url}" th:utext="${item.page}"></a>
+        <a class="icon item" th:href="@{${component.getItemUrl(component.current + 1)}}"><i
+                class="right chevron icon"></i></a>
+    </div>
+    <div th:if="${component.showSizeChanger}" class="ui floating dropdown basic button"
+         style="margin-left: 1em; vertical-align: middle">
+        <div class="text" th:utext="|${component.pageSize} 条/页|"></div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+            <a th:each="item : ${component.pageSizeOptions}" class="item"
+               th:utext="|${item} 条/页|"
+               th:href="${component.getChangeSizeUrl(item)}"></a>
+        </div>
+        <script th:inline="javascript">
+            $(document).ready(function () {
+                var dropdownId = /*[[|#${component.id} .ui.dropdown|]]*/ "";
+                $(dropdownId).dropdown();
+            });
+        </script>
+    </div>
+    <div th:if="${component.showQuickJumper}" style="display: inline-block;margin-left: 1em;vertical-align: middle">
+        <form class="jump">
+            <div class="ui small action input">
+                <input class="page" name="page" type="number" min="1" th:max="${component.getTotalPage()}">
+                <input name="size" type="hidden" th:value="${component.pageSize}">
+                <button class="ui basic button">跳转</button>
+            </div>
+        </form>
+        <script th:inline="javascript">
+            $(document).ready(function () {
+                var jumpForm = /*[[|#${component.id} form.jump|]]*/ "";
+                var jumpButton = /*[[|#${component.id} form.jump button|]]*/ "";
+                var targetPage = /*[[|#${component.id} form.jump input.page|]]*/ "";
+
+                $(jumpForm).submit(function () {
+                    $(jumpButton).addClass("loading");
+                    var page = $(targetPage);
+                    var pageNumber = Number.parseInt(page.val()) || -1;
+                    page.val(pageNumber < 0 ? 0 : page.val() - 1);
+                });
+            });
+        </script>
+    </div>
+</div>
+
+</body>
+</html>

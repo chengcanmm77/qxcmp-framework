@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.views.Overview"*/-->
+<div th:fragment="default(component)" th:class="${component.getClassName()}">
+    <div th:replace="~{qxcmp/globals/components :: component(${component.header})}"></div>
+    <th:block th:if="not ${#lists.isEmpty(component.components)}">
+        <div class="ui divider"></div>
+        <th:block th:each="com : ${component.components}">
+            <div th:replace="~{qxcmp/globals/components :: component(${com})}"></div>
+        </th:block>
+    </th:block>
+    <th:block th:if="not ${#lists.isEmpty(component.links)}">
+        <div class="ui divider"></div>
+        <th:block th:each="link : ${component.links}">
+            <div th:replace="~{qxcmp/globals/components :: component(${link})}"></div>
+        </th:block>
+    </th:block>
+</div>
+
+</body>
+</html>
