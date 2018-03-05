@@ -309,7 +309,7 @@ public class AdminMessageController extends QxcmpController {
 
         if (Objects.nonNull(removeTemplates)) {
             try {
-                smsTemplateService.remove(form.getTemplates().remove(removeTemplates.intValue()));
+                smsTemplateService.delete(form.getTemplates().remove(removeTemplates.intValue()));
             } catch (Exception ignored) {
 
             }
@@ -451,7 +451,7 @@ public class AdminMessageController extends QxcmpController {
                 .map(siteNotification -> {
                     RestfulResponse restfulResponse = audit("删除网站通知", context -> {
                         try {
-                            siteNotificationService.remove(siteNotification);
+                            siteNotificationService.delete(siteNotification);
                         } catch (Exception e) {
                             throw new ActionException(e.getMessage(), e);
                         }

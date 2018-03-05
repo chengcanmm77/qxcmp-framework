@@ -21,7 +21,8 @@ public interface ActionExecutor {
      * @param content 操作内容
      * @param user    执行操作的用户
      * @param action  要执行的操作
+     *
      * @return 如果审计日志保存失败，则返回 {@link Optional#empty()}
      */
-    Optional<AuditLog> execute(String title, String url, String content, User user, Action action);
+    AuditLog execute(String title, String url, String content, User user, Action action);
 }

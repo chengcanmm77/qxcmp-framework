@@ -13,20 +13,32 @@ server:
 # Spring Framework Settings
 spring:
   resources:
-    cache-period: 31536000
     chain:
       strategy:
         content:
           enabled: true
-  thymeleaf:
-    mode: HTML
   messages:
     basename: i18n/qxcmp, i18n/ValidationMessages
-  mobile:
-    devicedelegatingviewresolver:
-      enabled: true
   data:
     rest:
       max-page-size: 100
+  datasource:
+    url: jdbc:mysql://localhost:3306/${platform.database.name}?useSSL=false
+    username: ${platform.database.username}
+    password: ${platform.database.password}
+    driverClassName: com.mysql.jdbc.Driver
+    platform: mysql
+  jpa:
+    database: MYSQL
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      use-new-id-generator-mappings: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    open-in-view: true
 logging:
-  file: logs/${application.short-name}.log
+  file: logs/${platform.application.title}.log
+logging.level.us.codecraft.webmagic: ERROR
+logging.level.org.apache.http.client.protocol: ERROR

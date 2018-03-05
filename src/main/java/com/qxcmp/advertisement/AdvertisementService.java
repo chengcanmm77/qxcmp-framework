@@ -15,10 +15,6 @@ import java.util.Optional;
 @Service
 public class AdvertisementService extends AbstractEntityService<Advertisement, Long, AdvertisementRepository> {
 
-    public AdvertisementService(AdvertisementRepository repository) {
-        super(repository);
-    }
-
     public Optional<Advertisement> findOne(String id) {
         try {
             Long aId = Long.parseLong(id);
@@ -32,14 +28,4 @@ public class AdvertisementService extends AbstractEntityService<Advertisement, L
         return repository.findByTypeOrderByAdOrderDesc(type, pageable);
     }
 
-    /**
-     * 从实体对象获取实体主键的方式，子类唯一需要实现的接口 该方法不能返回{null}值
-     *
-     * @param entity 实体对象
-     * @return 实体对象的主键
-     */
-    @Override
-    protected <S extends Advertisement> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

@@ -22,12 +22,12 @@ public class TransferServiceImpl implements TransferService {
     private final WalletService walletService;
 
     @Override
-    public Optional<TransferRecord> transfer(String from, String to, int fee) throws FinanceException {
+    public TransferRecord transfer(String from, String to, int fee) throws FinanceException {
         return transfer(from, to, fee, "CNY");
     }
 
     @Override
-    public Optional<TransferRecord> transfer(String from, String to, int fee, String feeType) throws FinanceException {
+    public TransferRecord transfer(String from, String to, int fee, String feeType) throws FinanceException {
         checkArgument(StringUtils.equals(feeType, "CNY"), "Current only support CNY fee type");
         Optional<Wallet> sourceWallet = walletService.getByUserId(from);
         checkState(sourceWallet.isPresent(), "Source wallet not exist");

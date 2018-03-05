@@ -16,20 +16,16 @@ import java.util.function.Supplier;
 @Service
 public class AccountSecurityQuestionService extends AbstractEntityService<AccountSecurityQuestion, String, AccountSecurityQuestionRepository> {
 
-    public AccountSecurityQuestionService(AccountSecurityQuestionRepository repository) {
-        super(repository);
-    }
-
     public Optional<AccountSecurityQuestion> findByUserId(String userId) {
         return repository.findByUserId(userId);
     }
 
     @Override
-    public <S extends AccountSecurityQuestion> Optional<S> create(Supplier<S> supplier) {
-        S securityQuestion = supplier.get();
+    public AccountSecurityQuestion create(Supplier<AccountSecurityQuestion> supplier) {
+        AccountSecurityQuestion securityQuestion = supplier.get();
 
         if (StringUtils.isNotEmpty(securityQuestion.getId())) {
-            return Optional.empty();
+            return null;
         }
 
         securityQuestion.setId(IDGenerator.next());
@@ -37,8 +33,5 @@ public class AccountSecurityQuestionService extends AbstractEntityService<Accoun
         return super.create(() -> securityQuestion);
     }
 
-    @Override
-    protected <S extends AccountSecurityQuestion> String getEntityId(S entity) {
-        return entity.getId();
-    }
+
 }

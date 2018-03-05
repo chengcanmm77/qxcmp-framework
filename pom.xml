@@ -6,11 +6,11 @@
     <parent>
         <groupId>com.github.aaricchen</groupId>
         <artifactId>qxcmp-parent</artifactId>
-        <version>2.0.0.RELEASE</version>
+        <version>3.0.0.RELEASE</version>
     </parent>
 
     <artifactId>qxcmp-framework</artifactId>
-    <version>2.0.0.RELEASE-SNAPSHOT</version>
+    <version>3.0.0.RELEASE-SNAPSHOT</version>
 
     <name>QingXing Content Management Platform Framework</name>
     <description>QingXing Content Management Platform Framework</description>

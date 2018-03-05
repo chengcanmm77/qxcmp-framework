@@ -12,9 +12,6 @@ import java.util.List;
  */
 @Service
 public class TopicService extends AbstractEntityService<Topic, String, TopicRepository> {
-    public TopicService(TopicRepository repository) {
-        super(repository);
-    }
 
     /**
      * 为一个主题增加一个订阅者
@@ -72,14 +69,11 @@ public class TopicService extends AbstractEntityService<Topic, String, TopicRepo
      * 如果主题不存在返回空列表
      *
      * @param topicId 主题ID
+     *
      * @return 主题对应的订阅者列表
      */
     public List<String> getSubscribers(String topicId) {
         return findOne(topicId).map(Topic::getSubscriber).orElse(Collections.emptyList());
     }
 
-    @Override
-    protected <S extends Topic> String getEntityId(S entity) {
-        return entity.getId();
-    }
 }

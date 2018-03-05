@@ -75,18 +75,19 @@ public class AccountEmailController extends AccountPageController {
         }
 
         try {
-            userService.create(() -> {
-                User user = userService.next();
-                user.setUsername(form.getUsername());
-                user.setEmail(form.getEmail());
-                user.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
-                user.setAccountNonExpired(true);
-                user.setAccountNonLocked(true);
-                user.setCredentialsNonExpired(true);
-                user.setEnabled(false);
-                userService.setDefaultPortrait(user);
-                return user;
-            }).ifPresent(accountService::sendActivateEmail);
+            accountService.sendActivateEmail(
+                    userService.create(() -> {
+                        User user = userService.next();
+                        user.setUsername(form.getUsername());
+                        user.setEmail(form.getEmail());
+                        user.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
+                        user.setAccountNonExpired(true);
+                        user.setAccountNonLocked(true);
+                        user.setCredentialsNonExpired(true);
+                        user.setEnabled(false);
+                        userService.setDefaultPortrait(user);
+                        return user;
+                    }));
 
             return page(new Overview("注册成功", "激活邮件已经发送到您的邮件，请前往激活。如果您未收到激活邮件，请检查是否被黑名单过滤，或者再次重新发送激活邮件").addLink("立即登录", "/login")).build();
         } catch (Exception e) {

@@ -16,7 +16,6 @@ import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.label.BasicLabel;
 import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.modules.form.support.KeyValueEntity;
-import com.qxcmp.web.view.support.utils.TableHelper;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,14 +46,9 @@ public class AdminMallUserPageController extends QxcmpController {
      * 用户所选店铺偏好
      */
     private final String USER_CONFIG_STORE_SELECTION = "admin.mall.user.store.selection";
-
     private final StoreService storeService;
-
     private final CommodityService commodityService;
-
     private final CommodityVersionService commodityVersionService;
-
-    private final TableHelper tableHelper;
 
     /**
      * 用户先进行店铺选择，然后进行相关店铺的处理
@@ -226,39 +220,39 @@ public class AdminMallUserPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                commodityService.create(() -> {
-                    Commodity commodity = commodityService.next();
-                    commodity.setCover(form.getCover());
-                    commodity.setAlbums(form.getAlbums());
-                    commodity.setDetails(form.getDetails());
-                    commodity.setTitle(form.getTitle());
-                    commodity.setSubTitle(form.getSubTitle());
-                    commodity.setCatalogs(form.getCatalogs());
-                    commodity.setOriginPrice(form.getOriginPrice());
-                    commodity.setSellPrice(form.getSellPrice());
-                    commodity.setInventory(form.getInventory());
-                    commodity.setDisabled(form.isDisabled());
-                    commodity.setPointOnly(form.isPointOnly());
-                    commodity.setPoint(form.getPoint());
+                Commodity commodity = commodityService.create(() -> {
+                    Commodity next = commodityService.next();
+                    next.setCover(form.getCover());
+                    next.setAlbums(form.getAlbums());
+                    next.setDetails(form.getDetails());
+                    next.setTitle(form.getTitle());
+                    next.setSubTitle(form.getSubTitle());
+                    next.setCatalogs(form.getCatalogs());
+                    next.setOriginPrice(form.getOriginPrice());
+                    next.setSellPrice(form.getSellPrice());
+                    next.setInventory(form.getInventory());
+                    next.setDisabled(form.isDisabled());
+                    next.setPointOnly(form.isPointOnly());
+                    next.setPoint(form.getPoint());
 
-                    commodity.getCustomProperties().clear();
-                    form.getCustomProperties().forEach(keyValueEntity -> commodity.getCustomProperties().put(keyValueEntity.getKey(), keyValueEntity.getValue()));
+                    next.getCustomProperties().clear();
+                    form.getCustomProperties().forEach(keyValueEntity -> next.getCustomProperties().put(keyValueEntity.getKey(), keyValueEntity.getValue()));
 
-                    commodity.setStore(selectedStore);
-                    commodity.setUserModified(user);
-                    commodity.setDateCreated(new Date());
-                    commodity.setDateModified(new Date());
-                    return commodity;
-                }).ifPresent(commodity -> {
-                    form.getVersions().forEach(commodityVersion -> commodityVersionService.create(() -> {
-                        CommodityVersion next = commodityVersionService.next();
-                        next.setCommodity(commodity);
-                        next.setName(commodityVersion.getName());
-                        next.setValue(commodityVersion.getValue());
-                        return next;
-                    }));
-                    commodityService.update(commodity.getId(), c -> c.setParentId(commodity.getId()));
+                    next.setStore(selectedStore);
+                    next.setUserModified(user);
+                    next.setDateCreated(new Date());
+                    next.setDateModified(new Date());
+                    return next;
                 });
+
+                form.getVersions().forEach(commodityVersion -> commodityVersionService.create(() -> {
+                    CommodityVersion next = commodityVersionService.next();
+                    next.setCommodity(commodity);
+                    next.setName(commodityVersion.getName());
+                    next.setValue(commodityVersion.getValue());
+                    return next;
+                }));
+                commodityService.update(commodity.getId(), c -> c.setParentId(commodity.getId()));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -384,7 +378,7 @@ public class AdminMallUserPageController extends QxcmpController {
                             c.setUserModified(user);
                             c.setDateModified(new Date());
 
-                            c.getVersions().forEach(commodityVersionService::remove);
+                            c.getVersions().forEach(commodityVersionService::delete);
                             c.getVersions().clear();
                             form.getVersions().forEach(commodityVersion -> commodityVersionService.create(() -> {
                                 CommodityVersion next = commodityVersionService.next();
@@ -445,13 +439,15 @@ public class AdminMallUserPageController extends QxcmpController {
                             properties.putAll(commodity.getCustomProperties());
                             next.setCustomProperties(properties);
 
-                            commodityService.create(() -> next).ifPresent(c -> commodity.getVersions().forEach(commodityVersion -> {
+                            Commodity commodity1 = commodityService.create(() -> next);
+
+                            commodity1.getVersions().forEach(commodityVersion -> {
                                 CommodityVersion version = commodityVersionService.next();
-                                version.setCommodity(c);
+                                version.setCommodity(commodity1);
                                 version.setName(commodityVersion.getName());
                                 version.setValue(commodityVersion.getValue());
                                 commodityVersionService.create(() -> version);
-                            }));
+                            });
                         });
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);

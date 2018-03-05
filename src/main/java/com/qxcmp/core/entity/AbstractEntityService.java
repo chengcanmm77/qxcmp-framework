@@ -1,8 +1,8 @@
 package com.qxcmp.core.entity;
 
-import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -10,14 +10,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.persistence.criteria.Predicate;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -35,34 +37,9 @@ public abstract class AbstractEntityService<T, ID extends Serializable, R extend
     private TypeToken<T> typeToken = new TypeToken<T>(getClass()) {
     };
 
-    public AbstractEntityService(R repository) {
-        this.repository = repository;
-    }
-
     @Override
-    public Boolean exist(ID id) {
-        return repository.exists(id);
-    }
-
-    @Override
-    public Long count() {
-        return repository.count();
-    }
-
-    @Override
-    public Long count(Specification<T> specification) {
-        return repository.count(specification);
-    }
-
-    /**
-     * 获取实体对象所在类的信息
-     *
-     * @return 获取实体对象所在类的信息
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public Class<T> type() {
-        return (Class<T>) typeToken.getRawType();
+    public Class<? super T> type() {
+        return typeToken.getRawType();
     }
 
     @Override
@@ -70,70 +47,129 @@ public abstract class AbstractEntityService<T, ID extends Serializable, R extend
     public T next() {
         try {
             return (T) typeToken.getRawType().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (IllegalAccessException | InstantiationException e) {
             return null;
         }
     }
 
     @Override
-    public <S extends T> Optional<S> create(Supplier<S> supplier) {
-        S entity = supplier.get();
-        checkNotNull(entity, "Entity can't be null");
-
-        if (findOne(getEntityId(entity)).isPresent()) {
-            return Optional.empty();
-        } else {
-            return Optional.of(repository.save(entity));
+    @SuppressWarnings("unchecked")
+    public ID getEntityId(T entity) {
+        for (Field field : entity.getClass().getDeclaredFields()) {
+            if (Objects.nonNull(field.getAnnotation(Id.class))) {
+                field.setAccessible(true);
+                try {
+                    return (ID) field.get(entity);
+                } catch (IllegalAccessException ignored) {
+                }
+            }
         }
+        throw new IllegalStateException("No @Id definition in entity class");
     }
 
     @Override
-    public <S extends T> Optional<S> update(ID id, Consumer<S> present) {
-        checkNotNull(id, "Entity ID can't be null");
-
-        @SuppressWarnings("unchecked")
-        Optional<S> entity = (Optional<S>) findOne(id);
-
-        if (entity.isPresent()) {
-
-            present.accept(entity.get());
-
-            checkState(getEntityId(entity.get()).equals(id), "Can't change entity ID while update entity");
-
-            return entity.map(s -> repository.save(s));
-        } else {
-            return Optional.empty();
-        }
+    public long count() {
+        return repository.count();
     }
 
     @Override
-    public <S extends T> S save(S entity) {
+    public long count(Example<T> example) {
+        return repository.count(example);
+    }
+
+    @Override
+    public long count(Specification<T> specification) {
+        return repository.count(specification);
+    }
+
+    @Override
+    public boolean exist(ID id) {
+        return Objects.nonNull(id) && repository.existsById(id);
+    }
+
+    @Override
+    public boolean exist(Example<T> example) {
+        return repository.exists(example);
+    }
+
+    @Override
+    public T save(T entity) {
         return repository.save(entity);
     }
 
     @Override
-    public void remove(ID id) {
-        repository.delete(id);
+    public List<T> saveAll(Iterable<T> iterable) {
+        return repository.saveAll(iterable);
     }
 
     @Override
-    public void remove(T entity) {
-        repository.delete(entity);
+    public T create(T entity) {
+        checkNotNull(entity, "Entity is null");
+        checkState(!exist(getEntityId(entity)), "Entity already exist");
+        return repository.save(entity);
     }
 
     @Override
-    public void removeAll() {
-        repository.deleteAll();
+    public T create(Supplier<T> supplier) {
+        return create(supplier.get());
+    }
+
+    @Override
+    public List<T> createAll(Iterable<T> iterable) {
+        List<T> filtered = org.assertj.core.util.Lists.newArrayList();
+
+        iterable.forEach(t -> {
+            if (!exist(getEntityId(t))) {
+                filtered.add(t);
+            }
+        });
+
+        return saveAll(filtered);
+    }
+
+    @Override
+    public T update(ID id, Consumer<T> consumer) {
+        return findOne(id).map(t -> update(t, consumer)).orElseThrow(() -> new IllegalStateException("Entity not exist"));
+    }
+
+    @Override
+    public T update(Example<T> example, Consumer<T> consumer) {
+        return findOne(example).map(t -> update(t, consumer)).orElseThrow(() -> new IllegalStateException("Entity not exist"));
+    }
+
+    @Override
+    public T update(Specification<T> specification, Consumer<T> consumer) {
+        return findOne(specification).map(t -> update(t, consumer)).orElseThrow(() -> new IllegalStateException("Entity not exist"));
+    }
+
+    @Override
+    public List<T> updateAll(Iterable<ID> iterable, BiConsumer<ID, T> biConsumer) {
+        return findAll(iterable).stream().map(t -> update(t, biConsumer)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<T> updateAll(Example<T> example, BiConsumer<ID, T> biConsumer) {
+        return findAll(example).stream().map(t -> update(t, biConsumer)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<T> updateAll(Specification<T> specification, BiConsumer<ID, T> biConsumer) {
+        return findAll(specification).stream().map(t -> update(t, biConsumer)).collect(Collectors.toList());
     }
 
     @Override
     public Optional<T> findOne(ID id) {
-        return Objects.isNull(id) ? Optional.empty() : Optional.ofNullable(repository.findOne(id));
+        return repository.findById(id);
+    }
+
+    @Override
+    public Optional<T> findOne(Example<T> example) {
+        return repository.findOne(example);
     }
 
     @Override
     public Optional<T> findOne(Specification<T> specification) {
-        return Optional.ofNullable(repository.findOne(specification));
+        return repository.findOne(specification);
     }
 
     @Override
@@ -152,6 +188,26 @@ public abstract class AbstractEntityService<T, ID extends Serializable, R extend
     }
 
     @Override
+    public List<T> findAll(Iterable<ID> iterable) {
+        return repository.findAllById(iterable);
+    }
+
+    @Override
+    public List<T> findAll(Example<T> example) {
+        return repository.findAll(example);
+    }
+
+    @Override
+    public List<T> findAll(Example<T> example, Sort sort) {
+        return repository.findAll(example, sort);
+    }
+
+    @Override
+    public Page<T> findAll(Example<T> example, Pageable pageable) {
+        return repository.findAll(example, pageable);
+    }
+
+    @Override
     public List<T> findAll(Specification<T> specification) {
         return repository.findAll(specification);
     }
@@ -167,26 +223,51 @@ public abstract class AbstractEntityService<T, ID extends Serializable, R extend
     }
 
     @Override
-    public Page<T> search(String content, List<Field> fields, Pageable pageable) {
-        return StringUtils.isBlank(content) ? findAll(pageable) : findAll((root, criteriaQuery, criteriaBuilder) -> {
-            List<Predicate> restrictions = Lists.newArrayList();
-
-            fields.forEach(field -> {
-                if (field.getType().equals(String.class)) {
-                    restrictions.add(criteriaBuilder.like(root.get(field.getName()), String.format("%%%s%%", content.toLowerCase())));
-                }
-            });
-
-            return criteriaBuilder.or(restrictions.toArray(new Predicate[restrictions.size()]));
-        }, pageable);
+    public void delete(T entity) {
+        repository.delete(entity);
     }
 
-    /**
-     * 从实体对象获取实体主键的方式，子类唯一需要实现的接口 该方法不能返回{null}值
-     *
-     * @param entity 实体对象
-     * @param <S>    实体对象类型或者子类型
-     * @return 实体对象的主键
-     */
-    protected abstract <S extends T> ID getEntityId(S entity);
+    @Override
+    public void deleteAll() {
+        repository.deleteAll();
+    }
+
+    @Override
+    public void deleteAll(Iterable<T> iterable) {
+        repository.deleteAll(iterable);
+    }
+
+    @Override
+    public void deleteAllInBatch() {
+        repository.deleteAllInBatch();
+    }
+
+    @Override
+    public void deleteById(ID id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    public void deleteInBatch(Iterable<T> iterable) {
+        repository.deleteInBatch(iterable);
+    }
+
+    @Autowired
+    public void setRepository(R repository) {
+        this.repository = repository;
+    }
+
+    private T update(T entity, Consumer<T> consumer) {
+        ID originId = getEntityId(entity);
+        consumer.accept(entity);
+        checkState(Objects.equals(originId, getEntityId(entity)), "Entity id is changed when update");
+        return repository.save(entity);
+    }
+
+    private T update(T entity, BiConsumer<ID, T> biConsumer) {
+        ID originId = getEntityId(entity);
+        biConsumer.accept(originId, entity);
+        checkState(Objects.equals(originId, getEntityId(entity)), "Entity id is changed when update");
+        return repository.save(entity);
+    }
 }

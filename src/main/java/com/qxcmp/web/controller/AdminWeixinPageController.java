@@ -134,11 +134,14 @@ public class AdminWeixinPageController extends QxcmpController {
                     next.setCover(weixinMpMaterial.getThumbUrl());
                     next.setStatus(ArticleStatus.NEW);
 
-                    return articleService.create(() -> next).map(article -> page(viewHelper.nextSuccessOverview("转换文章成功", "现在可以前往新闻中心发布该文章")
+
+                    Article article1 = articleService.create(() -> next);
+
+                    return page(viewHelper.nextSuccessOverview("转换文章成功", "现在可以前往新闻中心发布该文章")
                             .addLink("返回素材管理", QXCMP_BACKEND_URL + "/weixin/material")
                             .addLink("我的文章", QXCMP_BACKEND_URL + "/news/user/article/draft")
-                            .addLink("申请发布该文章", QXCMP_BACKEND_URL + "/news/user/article/" + article.getId() + "/audit")
-                    )).orElse(page(viewHelper.nextWarningOverview("转换文章失败", "").addLink("返回", String.format(QXCMP_BACKEND_URL + "/weixin/material/%s/preview", id))));
+                            .addLink("申请发布该文章", QXCMP_BACKEND_URL + "/news/user/article/" + article1.getId() + "/audit")
+                    );
                 })
                 .orElse(page(viewHelper.nextWarningOverview("素材不存在或者不为图文素材", "目前仅支持图文素材的查看"))).build();
     }

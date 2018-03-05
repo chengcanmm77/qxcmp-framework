@@ -111,7 +111,7 @@ public class AdminProfilePageController extends QxcmpController {
                 .map(innerMessage -> {
                     RestfulResponse restfulResponse = audit("删除站内信", context -> {
                         try {
-                            innerMessageService.remove(innerMessage);
+                            innerMessageService.delete(innerMessage);
                         } catch (Exception e) {
                             throw new ActionException(e.getMessage(), e);
                         }
@@ -148,7 +148,8 @@ public class AdminProfilePageController extends QxcmpController {
                     u.setPortrait(form.getPortrait());
                     u.setNickname(form.getNickname());
                     u.setPersonalizedSignature(form.getPersonalizedSignature());
-                }).ifPresent(u -> refreshUser());
+                });
+                refreshUser();
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -238,10 +239,12 @@ public class AdminProfilePageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                userService.update(user.getId(), u -> {
-                    u.setPayPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
-                    u.getPasswordHistory().add(u.getPayPassword());
-                }).ifPresent(u -> SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(u, u.getPassword(), u.getAuthorities())));
+                User u = userService.update(user.getId(), user1 -> {
+                    user1.setPayPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
+                    user1.getPasswordHistory().add(user1.getPayPassword());
+                });
+
+                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(u, u.getPassword(), u.getAuthorities()));
 
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
@@ -282,10 +285,12 @@ public class AdminProfilePageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                userService.update(user.getId(), u -> {
-                    u.setPayPassword(new BCryptPasswordEncoder().encode(form.getNewPassword()));
-                    u.getPasswordHistory().add(u.getPayPassword());
-                }).ifPresent(u -> SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(u, u.getPassword(), u.getAuthorities())));
+                User u = userService.update(user.getId(), user1 -> {
+                    user1.setPayPassword(new BCryptPasswordEncoder().encode(form.getNewPassword()));
+                    user1.getPasswordHistory().add(user1.getPayPassword());
+                });
+
+                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(u, u.getPassword(), u.getAuthorities()));
 
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
@@ -317,7 +322,8 @@ public class AdminProfilePageController extends QxcmpController {
         return submitForm(form, context -> {
             try {
                 User user = currentUser().orElseThrow(RuntimeException::new);
-                userService.update(user.getId(), u -> u.setPhone(form.getPhone())).ifPresent(u -> refreshUser());
+                userService.update(user.getId(), u -> u.setPhone(form.getPhone()));
+                refreshUser();
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }

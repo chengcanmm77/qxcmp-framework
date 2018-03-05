@@ -160,7 +160,7 @@ public class AdminNewsChannelPageController extends QxcmpController {
     public ResponseEntity<RestfulResponse> newsChannelRemove(@PathVariable String id) {
         RestfulResponse restfulResponse = audit("删除栏目", context -> {
             try {
-                channelService.remove(Long.parseLong(id));
+                channelService.deleteById(Long.parseLong(id));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }

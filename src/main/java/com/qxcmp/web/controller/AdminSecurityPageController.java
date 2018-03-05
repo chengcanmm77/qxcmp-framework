@@ -89,13 +89,13 @@ public class AdminSecurityPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                roleService.create(() -> {
+                applicationContext.publishEvent(new AdminSecurityRoleNewEvent(currentUser().orElseThrow(RuntimeException::new), roleService.create(() -> {
                     Role role = roleService.next();
                     role.setName(form.getName());
                     role.setDescription(form.getDescription());
                     role.setPrivileges(form.getPrivileges());
                     return role;
-                }).ifPresent(role -> applicationContext.publishEvent(new AdminSecurityRoleNewEvent(currentUser().orElseThrow(RuntimeException::new), role)));
+                })));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -130,11 +130,11 @@ public class AdminSecurityPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                roleService.update(Long.parseLong(id), role -> {
+                applicationContext.publishEvent(new AdminSecurityRoleEditEvent(currentUser().orElseThrow(RuntimeException::new), roleService.update(Long.parseLong(id), role -> {
                     role.setName(form.getName());
                     role.setDescription(form.getDescription());
                     role.setPrivileges(form.getPrivileges());
-                }).ifPresent(role -> applicationContext.publishEvent(new AdminSecurityRoleEditEvent(currentUser().orElseThrow(RuntimeException::new), role)));
+                })));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -145,7 +145,7 @@ public class AdminSecurityPageController extends QxcmpController {
     public ResponseEntity<RestfulResponse> roleRemove(@PathVariable String id) {
         RestfulResponse restfulResponse = audit("删除角色", context -> {
             try {
-                roleService.remove(Long.parseLong(id));
+                roleService.deleteById(Long.parseLong(id));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -158,7 +158,7 @@ public class AdminSecurityPageController extends QxcmpController {
         RestfulResponse restfulResponse = audit("批量删除角色", context -> {
             try {
                 for (String key : keys) {
-                    roleService.remove(Long.parseLong(key));
+                    roleService.deleteById(Long.parseLong(key));
                 }
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
@@ -179,8 +179,7 @@ public class AdminSecurityPageController extends QxcmpController {
     public ResponseEntity<RestfulResponse> privilegeEnable(@PathVariable String id) {
         RestfulResponse restfulResponse = audit("启用权限", context -> {
             try {
-                privilegeService.update(Long.parseLong(id), privilege -> privilege.setDisabled(false))
-                        .ifPresent(privilege -> applicationContext.publishEvent(new AdminSecurityPrivilegeEnableEvent(currentUser().orElseThrow(RuntimeException::new), privilege)));
+                applicationContext.publishEvent(new AdminSecurityPrivilegeEnableEvent(currentUser().orElseThrow(RuntimeException::new), privilegeService.update(Long.parseLong(id), privilege -> privilege.setDisabled(false))));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -192,8 +191,8 @@ public class AdminSecurityPageController extends QxcmpController {
     public ResponseEntity<RestfulResponse> privilegeDisable(@PathVariable String id) {
         RestfulResponse restfulResponse = audit("禁用权限", context -> {
             try {
-                privilegeService.update(Long.parseLong(id), privilege -> privilege.setDisabled(true))
-                        .ifPresent(privilege -> applicationContext.publishEvent(new AdminSecurityPrivilegeDisableEvent(currentUser().orElseThrow(RuntimeException::new), privilege)));
+
+                applicationContext.publishEvent(new AdminSecurityPrivilegeDisableEvent(currentUser().orElseThrow(RuntimeException::new), privilegeService.update(Long.parseLong(id), privilege -> privilege.setDisabled(true))));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }

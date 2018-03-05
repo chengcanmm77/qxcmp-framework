@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -42,18 +41,9 @@ public class ImageService extends AbstractEntityService<Image, String, ImageRepo
         SUPPORT_TYPE.add("gif");
     }
 
-    public ImageService(ImageRepository repository) {
-        super(repository);
-    }
-
     @Override
-    protected <S extends Image> String getEntityId(S entity) {
-        return entity.getId();
-    }
-
-    @Override
-    public <S extends Image> Optional<S> create(Supplier<S> supplier) {
-        S entity = supplier.get();
+    public Image create(Supplier<Image> supplier) {
+        Image entity = supplier.get();
         checkNotNull(entity, "Image can't be null");
         entity.setId(IDGenerator.sha384());
         entity.setDateCreated(new Date());
@@ -70,7 +60,7 @@ public class ImageService extends AbstractEntityService<Image, String, ImageRepo
      *
      * @throws IOException 如果存储过程发生异常则抛出该异常
      */
-    public Optional<Image> store(InputStream inputStream, String type) throws IOException {
+    public Image store(InputStream inputStream, String type) throws IOException {
         return store(inputStream, type, 0, 0);
     }
 
@@ -86,7 +76,7 @@ public class ImageService extends AbstractEntityService<Image, String, ImageRepo
      *
      * @throws IOException 如果存储过程发生异常则抛出该异常
      */
-    public Optional<Image> store(InputStream inputStream, String type, int width, int height) throws IOException {
+    public Image store(InputStream inputStream, String type, int width, int height) throws IOException {
         ByteArrayOutputStream content = new ByteArrayOutputStream();
 
         String imageType = SUPPORT_TYPE.contains(type) ? type : "jpg";
@@ -109,11 +99,11 @@ public class ImageService extends AbstractEntityService<Image, String, ImageRepo
      *
      * @return 添加后的图片
      */
-    public Optional<Image> addWatermark(Image target, String watermark) {
+    public Image addWatermark(Image target, String watermark) {
         return addWatermark(target, watermark, Positions.BOTTOM_RIGHT, 18);
     }
 
-    public Optional<Image> addWatermark(Image target, String watermark, Position position, int fontSize) {
+    public Image addWatermark(Image target, String watermark, Position position, int fontSize) {
         return update(target.getId(), image -> {
             try {
                 BufferedImage originImage = ImageIO.read(new ByteArrayInputStream(image.getContent()));
@@ -151,7 +141,7 @@ public class ImageService extends AbstractEntityService<Image, String, ImageRepo
         });
     }
 
-    private Optional<Image> createImage(String type, byte[] content) {
+    private Image createImage(String type, byte[] content) {
         return create(() -> {
             Image image = next();
             image.setType(type);

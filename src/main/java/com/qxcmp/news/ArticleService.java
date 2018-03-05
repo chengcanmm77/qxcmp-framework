@@ -18,9 +18,6 @@ import java.util.function.Supplier;
  */
 @Service
 public class ArticleService extends AbstractEntityService<Article, Long, ArticleRepository> {
-    public ArticleService(ArticleRepository repository) {
-        super(repository);
-    }
 
     public Optional<Article> findOne(String id) {
         try {
@@ -60,22 +57,17 @@ public class ArticleService extends AbstractEntityService<Article, Long, Article
     }
 
     @Override
-    public <S extends Article> Optional<S> create(Supplier<S> supplier) {
+    public Article create(Supplier<Article> supplier) {
 
-        S entity = supplier.get();
+        Article entity = supplier.get();
 
         if (Objects.nonNull(entity.getId())) {
-            return Optional.empty();
+            return null;
         }
 
         entity.setDateCreated(new Date());
         entity.setDateModified(new Date());
 
         return super.create(() -> entity);
-    }
-
-    @Override
-    protected <S extends Article> Long getEntityId(S entity) {
-        return entity.getId();
     }
 }

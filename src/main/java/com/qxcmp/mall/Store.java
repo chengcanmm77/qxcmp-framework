@@ -1,6 +1,5 @@
 package com.qxcmp.mall;
 
-import com.google.common.collect.Sets;
 import com.qxcmp.user.User;
 import com.qxcmp.web.view.annotation.table.EntityTable;
 import com.qxcmp.web.view.annotation.table.RowAction;
@@ -11,7 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 
@@ -43,9 +41,6 @@ public class Store {
     @ManyToOne
     @TableField(value = "所有者", name = "store", fieldSuffix = ".username")
     private User owner;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<User> admins = Sets.newHashSet();
 
     @TableField("创建日期")
     @DateTimeFormat(pattern = "yyyy-MM-dd")

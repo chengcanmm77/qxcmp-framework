@@ -98,13 +98,13 @@ public class AdminRedeemPageController extends QxcmpController {
 
             try {
                 for (int i = 0; i < form.getQuantity(); i++) {
-                    redeemKeyService.create(() -> {
+                    redeemKeys.add(redeemKeyService.create(() -> {
                         RedeemKey redeemKey = redeemKeyService.next();
                         redeemKey.setType(form.getType());
                         redeemKey.setContent(form.getContent());
                         redeemKey.setDateExpired(form.getDateExpired());
                         return redeemKey;
-                    }).ifPresent(redeemKeys::add);
+                    }));
                 }
 
                 context.put("keys", redeemKeys);

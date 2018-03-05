@@ -46,7 +46,7 @@ public class FinancePageController extends QxcmpController {
 //        List<ListViewItem> items = depositOrders.getContent().stream().map(depositOrder -> ListViewItem.builder()
 //                .title(String.format("【%s】交易金额：%s", depositOrder.getStatus().getValue(), new DecimalFormat("￥0.00").format((double) depositOrder.getFee() / 100)))
 //                .description(String.format("交易时间：%s", new SimpleDateFormat("yyyy-MM-dd HH:MM:ss").format(depositOrder.getTimeStart())))
-//                .link("/finance/deposit/order/" + depositOrder.getId())
+//                .link("/finance/deposit/order/" + depositOrder.getEntityId())
 //                .build()).collect(Collectors.toList());
 //
 //        if (items.isEmpty()) {
@@ -73,7 +73,7 @@ public class FinancePageController extends QxcmpController {
 //    public ModelAndView depositDetails(@PathVariable String id) {
 //        Optional<DepositOrder> depositOrderOptional = depositOrderService.findOne(id);
 //
-//        if (!depositOrderOptional.isPresent() || !StringUtils.equals(depositOrderOptional.get().getUserId(), currentUser().getId())) {
+//        if (!depositOrderOptional.isPresent() || !StringUtils.equals(depositOrderOptional.get().getUserId(), currentUser().getEntityId())) {
 //            return error(HttpStatus.NOT_FOUND, "充值记录不存在").build();
 //        }
 //
@@ -88,7 +88,7 @@ public class FinancePageController extends QxcmpController {
 //
 //    private DictionaryView extractDepositOrderToDictionaryView(DepositOrder depositOrder) {
 //        return DictionaryView.builder()
-//                .dictionary("订单号", depositOrder.getId())
+//                .dictionary("订单号", depositOrder.getEntityId())
 //                .dictionary("充值金额", new DecimalFormat("￥0.00").format((double) depositOrder.getFee() / 100))
 //                .dictionary("充值时间", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(depositOrder.getTimeStart()))
 //                .dictionary("备注", depositOrder.getDescription())

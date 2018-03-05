@@ -179,7 +179,8 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                 article.setChannels(form.getChannels());
                 article.setContent(form.getContent());
                 article.setContentQuill(form.getContentQuill());
-                articleService.create(() -> article).ifPresent(a -> context.put("article", a));
+                Article article1 = articleService.create(() -> article);
+                context.put("article", article1);
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -301,7 +302,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                 .map(article -> {
                     RestfulResponse restfulResponse = audit("删除文章", context -> {
                         try {
-                            articleService.remove(article);
+                            articleService.delete(article);
                         } catch (Exception e) {
                             throw new ActionException(e.getMessage(), e);
                         }
@@ -440,7 +441,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                     articleService.findOne(key)
                             .filter(article -> StringUtils.equals(article.getUserId(), user.getId()))
                             .filter(article -> !article.getStatus().equals(ArticleStatus.PUBLISHED))
-                            .ifPresent(articleService::remove);
+                            .ifPresent(articleService::delete);
                 }
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);

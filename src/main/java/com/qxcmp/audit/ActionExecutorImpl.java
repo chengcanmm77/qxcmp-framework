@@ -34,10 +34,11 @@ public class ActionExecutorImpl implements ActionExecutor {
      * @param content 操作内容
      * @param user    执行操作的用户
      * @param action  要执行的操作
+     *
      * @return 如果审计日志保存失败，则返回 {@link Optional#empty()}
      */
     @Override
-    public Optional<AuditLog> execute(String title, String url, String content, User user, Action action) {
+    public AuditLog execute(String title, String url, String content, User user, Action action) {
         checkArgument(StringUtils.isNotBlank(title));
         checkArgument(StringUtils.isNotBlank(url));
         checkArgument(Objects.nonNull(action));

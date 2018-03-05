@@ -40,7 +40,6 @@ import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT
 public class WeixinPaymentAPI extends QxcmpController {
 
     private final WxPayService wxPayService;
-
     private final DepositOrderService depositOrderService;
 
 
@@ -155,7 +154,7 @@ public class WeixinPaymentAPI extends QxcmpController {
             order.setFee(fee);
             order.setFeeType(feeType);
             return order;
-        }).orElseThrow(() -> new OrderStatusException("创建充值订单失败"));
+        });
     }
 
     /**

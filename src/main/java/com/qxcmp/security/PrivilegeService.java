@@ -14,10 +14,6 @@ import java.util.Optional;
 @Service
 public class PrivilegeService extends AbstractEntityService<Privilege, Long, PrivilegeRepository> {
 
-    public PrivilegeService(PrivilegeRepository repository) {
-        super(repository);
-    }
-
     public Optional<Privilege> create(String name, String description) {
         if (repository.findByName(name).isPresent()) {
             return Optional.empty();
@@ -43,7 +39,7 @@ public class PrivilegeService extends AbstractEntityService<Privilege, Long, Pri
         try {
             Long pId = Long.parseLong(id);
 
-            Optional<Privilege> privilege = Optional.ofNullable(repository.findOne(pId));
+            Optional<Privilege> privilege = repository.findById(pId);
 
             if (privilege.isPresent()) {
                 if (privilege.get().isDisabled()) {
@@ -65,7 +61,7 @@ public class PrivilegeService extends AbstractEntityService<Privilege, Long, Pri
         try {
             Long pId = Long.parseLong(id);
 
-            Optional<Privilege> privilege = Optional.ofNullable(repository.findOne(pId));
+            Optional<Privilege> privilege = repository.findById(pId);
 
             if (privilege.isPresent()) {
                 if (!privilege.get().isDisabled()) {
@@ -83,8 +79,4 @@ public class PrivilegeService extends AbstractEntityService<Privilege, Long, Pri
         }
     }
 
-    @Override
-    protected <S extends Privilege> Long getEntityId(S entity) {
-        return Optional.ofNullable(entity.getId()).orElse(-1L);
-    }
 }

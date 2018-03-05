@@ -31,7 +31,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.data.domain.Page;
-import org.springframework.format.support.FormattingConversionService;
+import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +52,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @RequiredArgsConstructor
 public class TableHelper {
 
-    private final FormattingConversionService conversionService;
+    private final DefaultFormattingConversionService conversionService;
 
     /**
      * 生成一个字典表格视图

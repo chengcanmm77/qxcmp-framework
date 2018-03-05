@@ -2,6 +2,7 @@ package com.qxcmp.web.api;
 
 import com.qxcmp.core.QxcmpSystemConfigConfiguration;
 import com.qxcmp.core.validation.ImageValidator;
+import com.qxcmp.image.Image;
 import com.qxcmp.image.ImageService;
 import com.qxcmp.web.QxcmpController;
 import lombok.RequiredArgsConstructor;
@@ -64,15 +65,13 @@ public class ImageAPI extends QxcmpController {
             String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
 
             if (new ImageValidator().isValid(file, null)) {
-                return imageService.store(file.getInputStream(), fileExtension).map(image -> {
+                Image image = imageService.store(file.getInputStream(), fileExtension);
 
-                    if (systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_ENABLE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_ENABLE_DEFAULT_VALUE)) {
-                        imageService.addWatermark(image, siteService.getTitle(), Positions.values()[systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_POSITION).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_POSITION_DEFAULT_VALUE)], systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_FONT_SIZE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_FONT_SIZE_DEFAULT_VALUE));
-                    }
+                if (systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_ENABLE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_ENABLE_DEFAULT_VALUE)) {
+                    imageService.addWatermark(image, siteService.getTitle(), Positions.values()[systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_POSITION).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_POSITION_DEFAULT_VALUE)], systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_FONT_SIZE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_FONT_SIZE_DEFAULT_VALUE));
+                }
 
-                    return ResponseEntity.ok(String.format("/api/image/%s.%s", image.getId(), image.getType()));
-                })
-                        .orElse(ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("upload failed"));
+                return ResponseEntity.ok(String.format("/api/image/%s.%s", image.getId(), image.getType()));
             } else {
                 return ResponseEntity.badRequest().body("仅支持以下图片格式:jpg,gif,png");
             }

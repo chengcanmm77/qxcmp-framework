@@ -97,8 +97,7 @@ public class AdminLinkPageController extends QxcmpController {
                     link.setTarget(AnchorTarget.BLANK.toString());
                 }
 
-                linkService.create(() -> link)
-                        .ifPresent(link1 -> applicationContext.publishEvent(new AdminLinkNewEvent(currentUser().orElseThrow(RuntimeException::new), link1)));
+                applicationContext.publishEvent(new AdminLinkNewEvent(currentUser().orElseThrow(RuntimeException::new), linkService.create(() -> link)));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -145,7 +144,7 @@ public class AdminLinkPageController extends QxcmpController {
 
             return submitForm(form, context -> {
                 try {
-                    linkService.update(link.getId(), target -> {
+                    applicationContext.publishEvent(new AdminLinkEditEvent(currentUser().orElseThrow(RuntimeException::new), linkService.update(link.getId(), target -> {
                         target.setTitle(form.getTitle());
                         target.setDateModified(new Date());
                         target.setHref(form.getHref());
@@ -157,8 +156,7 @@ public class AdminLinkPageController extends QxcmpController {
                         } else {
                             target.setTarget(AnchorTarget.BLANK.toString());
                         }
-                    })
-                            .ifPresent(link1 -> applicationContext.publishEvent(new AdminLinkEditEvent(currentUser().orElseThrow(RuntimeException::new), link1)));
+                    })));
                 } catch (Exception e) {
                     throw new ActionException(e.getMessage(), e);
                 }
@@ -170,7 +168,7 @@ public class AdminLinkPageController extends QxcmpController {
     public ResponseEntity<RestfulResponse> linkRemove(@PathVariable String id) {
         RestfulResponse restfulResponse = audit("删除链接", context -> {
             try {
-                linkService.remove(Long.parseLong(id));
+                linkService.deleteById(Long.parseLong(id));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }

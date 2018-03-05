@@ -7,6 +7,7 @@ import com.qxcmp.exception.NoBalanceException;
 import com.qxcmp.exception.OrderStatusException;
 import com.qxcmp.finance.Wallet;
 import com.qxcmp.finance.WalletService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
@@ -26,26 +27,15 @@ import java.util.function.Supplier;
  * @author aaric
  */
 @Service
+@RequiredArgsConstructor
 public class CommodityOrderService extends AbstractEntityService<CommodityOrder, String, CommodityOrderRepository> {
 
     private final ApplicationContext applicationContext;
-
     private final WalletService walletService;
-
     private final ShoppingCartItemService shoppingCartItemService;
-
     private final CommodityOrderItemService commodityOrderItemService;
-
     private final ConsigneeService consigneeService;
 
-    public CommodityOrderService(CommodityOrderRepository repository, ApplicationContext applicationContext, WalletService walletService, ShoppingCartItemService shoppingCartItemService, CommodityOrderItemService commodityOrderItemService, ConsigneeService consigneeService) {
-        super(repository);
-        this.applicationContext = applicationContext;
-        this.walletService = walletService;
-        this.shoppingCartItemService = shoppingCartItemService;
-        this.commodityOrderItemService = commodityOrderItemService;
-        this.consigneeService = consigneeService;
-    }
 
     /**
      * 商品统一下单接口
@@ -62,7 +52,7 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
             return Optional.empty();
         }
 
-        Optional<CommodityOrder> order = create(() -> {
+        CommodityOrder order = create(() -> {
             CommodityOrder commodityOrder = next();
             commodityOrder.setUserId(userId);
             commodityOrder.setActualPayment(getTotalItemPrice(items));
@@ -76,18 +66,18 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
             return commodityOrder;
         });
 
-        order.ifPresent(commodityOrder -> items.forEach(shoppingCartItem -> commodityOrderItemService.create(() -> {
+        items.forEach(shoppingCartItem -> commodityOrderItemService.create(() -> {
             CommodityOrderItem commodityOrderItem = commodityOrderItemService.next();
             commodityOrderItem.setQuantity(shoppingCartItem.getQuantity());
             commodityOrderItem.setCommodity(shoppingCartItem.getCommodity());
             commodityOrderItem.setActualPrice(shoppingCartItem.getCommodity().getSellPrice());
-            commodityOrderItem.setCommodityOrder(commodityOrder);
+            commodityOrderItem.setCommodityOrder(order);
             return commodityOrderItem;
-        })));
+        }));
 
-        items.forEach(shoppingCartItem -> shoppingCartItemService.remove(shoppingCartItem.getId()));
+        items.forEach(shoppingCartItem -> shoppingCartItemService.deleteById(shoppingCartItem.getId()));
 
-        return order;
+        return Optional.ofNullable(order);
     }
 
     /**
@@ -140,7 +130,7 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
             w.setPoints(w.getPoints() - orderPoint);
         });
 
-        Optional<CommodityOrder> updatedCommodity = update(commodityOrder.getId(), order -> {
+        CommodityOrder updatedCommodity = update(commodityOrder.getId(), order -> {
             order.setStatus(OrderStatusEnum.PAYED);
             order.setActualPayment(orderPrice);
             order.setActualPoint(orderPoint);
@@ -150,9 +140,9 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
         /*
          * 发送商品销售事件
          * */
-        updatedCommodity.ifPresent(order -> order.getItems().forEach(commodityOrderItem -> applicationContext.publishEvent(new CommoditySellEvent(commodityOrder.getUserId(), commodityOrderItem.getCommodity(), (long) commodityOrderItem.getQuantity()))));
+        updatedCommodity.getItems().forEach(commodityOrderItem -> applicationContext.publishEvent(new CommoditySellEvent(commodityOrder.getUserId(), commodityOrderItem.getCommodity(), (long) commodityOrderItem.getQuantity())));
 
-        return updatedCommodity;
+        return Optional.of(updatedCommodity);
     }
 
     /**
@@ -182,11 +172,11 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
     }
 
     @Override
-    public <S extends CommodityOrder> Optional<S> create(Supplier<S> supplier) {
-        S entity = supplier.get();
+    public CommodityOrder create(Supplier<CommodityOrder> supplier) {
+        CommodityOrder entity = supplier.get();
 
         if (StringUtils.isNotEmpty(entity.getId())) {
-            return Optional.empty();
+            return null;
         }
 
         entity.setId(IDGenerator.order());
@@ -194,11 +184,6 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
         entity.setStatus(OrderStatusEnum.PAYING);
 
         return super.create(() -> entity);
-    }
-
-    @Override
-    protected <S extends CommodityOrder> String getEntityId(S entity) {
-        return entity.getId();
     }
 
     private int getTotalItemPrice(List<ShoppingCartItem> items) {

@@ -11,14 +11,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FeedService extends AbstractEntityService<Feed, Long, FeedRepository> {
-    public FeedService(FeedRepository repository) {
-        super(repository);
-    }
 
     /**
      * 查询用户的Feed流
      *
      * @param userId 用户ID
+     *
      * @return 用户Feed流列表
      */
     public Page<Feed> findByOwner(String userId, Pageable pageable) {
@@ -29,8 +27,4 @@ public class FeedService extends AbstractEntityService<Feed, Long, FeedRepositor
         return repository.findByTypeOrderByDateCreatedDesc(type, pageable);
     }
 
-    @Override
-    protected <S extends Feed> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

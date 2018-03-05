@@ -14,10 +14,6 @@ import java.util.function.Consumer;
 @Service
 public class RoleService extends AbstractEntityService<Role, Long, RoleRepository> {
 
-    public RoleService(RoleRepository repository) {
-        super(repository);
-    }
-
     public Optional<Role> findOne(String id) {
         try {
             return findOne(Long.parseLong(id));
@@ -30,12 +26,8 @@ public class RoleService extends AbstractEntityService<Role, Long, RoleRepositor
         return repository.findByName(name);
     }
 
-    public Optional<Role> update(String name, Consumer<Role> consumer) {
-        return findByName(name).flatMap(role -> update(role.getId(), consumer));
+    public Role update(String name, Consumer<Role> consumer) {
+        return update(findByName(name).map(Role::getId).orElse(-1L), consumer);
     }
 
-    @Override
-    protected <S extends Role> Long getEntityId(S entity) {
-        return Optional.ofNullable(entity.getId()).orElse(-1L);
-    }
 }

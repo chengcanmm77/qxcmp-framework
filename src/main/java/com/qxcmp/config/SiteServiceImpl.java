@@ -19,7 +19,7 @@ public class SiteServiceImpl implements SiteService {
      * <p>
      * 配置在 Spring Boot application.yml 文件里面
      */
-    @Value("${application.name}")
+    @Value("${platform.application.title}")
     private String applicationName;
 
     @Override

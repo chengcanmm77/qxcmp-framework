@@ -81,7 +81,7 @@ public class AdminUserPageController extends QxcmpController {
                     Date dateTarget = DateTime.now().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate();
 
                     return new Statistics().setCount(ItemCount.THREE)
-                            .addStatistic(new Statistic("用户总数", userService.count().toString()))
+                            .addStatistic(new Statistic("用户总数", String.valueOf(userService.count())))
                             .addStatistic(new Statistic("今日新增", Long.toString(userService.findByDateCreate(dateTarget).size())))
                             .addStatistic(new Statistic("今日登陆", Long.toString(userService.findByDateLogin(dateTarget).size())));
                 })
@@ -220,8 +220,7 @@ public class AdminUserPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                userService.update(id, user -> user.setRoles(form.getRoles()))
-                        .ifPresent(user -> applicationContext.publishEvent(new AdminUserRoleEditEvent(currentUser().orElseThrow(RuntimeException::new), user)));
+                applicationContext.publishEvent(new AdminUserRoleEditEvent(currentUser().orElseThrow(RuntimeException::new), userService.update(id, user -> user.setRoles(form.getRoles()))));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -257,13 +256,12 @@ public class AdminUserPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                userService.update(id, user -> {
+                applicationContext.publishEvent(new AdminUserStatusEditEvent(currentUser().orElseThrow(RuntimeException::new), userService.update(id, user -> {
                     user.setEnabled(!form.isDisabled());
                     user.setAccountNonLocked(!form.isLocked());
                     user.setAccountNonExpired(!form.isExpired());
                     user.setCredentialsNonExpired(!form.isCredentialExpired());
-                })
-                        .ifPresent(user -> applicationContext.publishEvent(new AdminUserStatusEditEvent(currentUser().orElseThrow(RuntimeException::new), user)));
+                })));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }

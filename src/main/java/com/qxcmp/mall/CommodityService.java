@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * 商品实体服务
@@ -17,9 +16,6 @@ import java.util.function.Supplier;
  */
 @Service
 public class CommodityService extends AbstractEntityService<Commodity, Long, CommodityRepository> {
-    public CommodityService(CommodityRepository repository) {
-        super(repository);
-    }
 
     public Optional<Commodity> findOne(String id) {
         try {
@@ -44,17 +40,5 @@ public class CommodityService extends AbstractEntityService<Commodity, Long, Com
 
     public List<Commodity> findByParentId(Long parentId) {
         return repository.findByParentId(parentId);
-    }
-
-    @Override
-    public <S extends Commodity> Optional<S> create(Supplier<S> supplier) {
-        S entity = supplier.get();
-
-        return super.create(() -> entity);
-    }
-
-    @Override
-    protected <S extends Commodity> Long getEntityId(S entity) {
-        return entity.getId();
     }
 }

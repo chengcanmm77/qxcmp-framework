@@ -5,9 +5,11 @@ import com.google.common.hash.Hashing;
 import com.qxcmp.core.entity.AbstractEntityService;
 import com.qxcmp.core.support.IDGenerator;
 import com.qxcmp.core.support.ImageGenerator;
+import com.qxcmp.image.Image;
 import com.qxcmp.image.ImageService;
 import com.qxcmp.security.Role;
 import com.qxcmp.web.auth.UserAuthenticationToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,7 @@ import java.util.function.Supplier;
  * @author aaric
  */
 @Service
+@RequiredArgsConstructor
 public class UserService extends AbstractEntityService<User, String, UserRepository> {
 
     private final ImageService imageService;
@@ -43,11 +46,6 @@ public class UserService extends AbstractEntityService<User, String, UserReposit
      */
     private Map<String, UserAuthenticationToken> loginTokens = Maps.newConcurrentMap();
 
-    public UserService(UserRepository repository, ImageService imageService, ImageGenerator imageGenerator) {
-        super(repository);
-        this.imageService = imageService;
-        this.imageGenerator = imageGenerator;
-    }
 
     /**
      * 获取当前认证的用户
@@ -179,7 +177,8 @@ public class UserService extends AbstractEntityService<User, String, UserReposit
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(imageGenerator.nextPortrait(name, 96), "jpg", byteArrayOutputStream);
-            imageService.store(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()), "jpg", 96, 96).ifPresent(image -> user.setPortrait(String.format("/api/image/%s.%s", image.getId(), image.getType())));
+            Image image = imageService.store(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()), "jpg", 96, 96);
+            user.setPortrait(String.format("/api/image/%s.%s", image.getId(), image.getType()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -256,21 +255,15 @@ public class UserService extends AbstractEntityService<User, String, UserReposit
     }
 
     @Override
-    public <S extends User> Optional<S> create(Supplier<S> supplier) {
-        S user = supplier.get();
+    public User create(Supplier<User> supplier) {
+        User user = supplier.get();
 
         if (StringUtils.isNotEmpty(user.getId())) {
-            return Optional.empty();
+            return null;
         }
 
         user.setId(IDGenerator.next());
 
         return super.create(() -> user);
     }
-
-    @Override
-    protected <S extends User> String getEntityId(S entity) {
-        return entity.getId();
-    }
-
 }

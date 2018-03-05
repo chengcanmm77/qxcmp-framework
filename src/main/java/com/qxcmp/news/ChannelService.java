@@ -18,15 +18,13 @@ import java.util.Set;
  */
 @Service
 public class ChannelService extends AbstractEntityService<Channel, Long, ChannelRepository> {
-    public ChannelService(ChannelRepository repository) {
-        super(repository);
-    }
 
     /**
      * 获取用户拥有的所有栏目
      *
      * @param user     用户
      * @param pageable 分页查询
+     *
      * @return 用户拥有的所有栏目
      */
     public Page<Channel> findByUser(User user, Pageable pageable) {
@@ -51,6 +49,7 @@ public class ChannelService extends AbstractEntityService<Channel, Long, Channel
      * 当用户为栏目所有者或者管理员的时候将会返回该栏目
      *
      * @param user 用户ID
+     *
      * @return 用户栏目列表
      */
     public List<Channel> findByUserId(User user) {
@@ -80,8 +79,4 @@ public class ChannelService extends AbstractEntityService<Channel, Long, Channel
         return repository.findByName(name);
     }
 
-    @Override
-    protected <S extends Channel> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

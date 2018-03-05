@@ -10,11 +10,6 @@ import java.util.Optional;
 @Service
 public class InnerMessageService extends AbstractEntityService<InnerMessage, Long, InnerMessageRepository> {
 
-
-    public InnerMessageService(InnerMessageRepository repository) {
-        super(repository);
-    }
-
     public Optional<InnerMessage> findOne(String id) {
         try {
             Long aId = Long.parseLong(id);
@@ -40,8 +35,4 @@ public class InnerMessageService extends AbstractEntityService<InnerMessage, Lon
         return repository.countByUserIdAndUnread(userId, true);
     }
 
-    @Override
-    protected <S extends InnerMessage> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

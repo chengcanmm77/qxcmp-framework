@@ -68,16 +68,16 @@ public class AdminAdvertisementPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                advertisementService.create(() -> {
-                    Advertisement advertisement = advertisementService.next();
-                    advertisement.setImage(form.getImage());
-                    advertisement.setType(form.getType());
-                    advertisement.setTitle(form.getTitle());
-                    advertisement.setLink(form.getLink());
-                    advertisement.setAdOrder(form.getAdOrder());
-                    advertisement.setBlank(form.isBlack());
-                    return advertisement;
-                }).ifPresent(advertisement -> applicationContext.publishEvent(new AdminAdvertisementNewEvent(user, advertisement)));
+                applicationContext.publishEvent(new AdminAdvertisementNewEvent(user, advertisementService.create(() -> {
+                    Advertisement next = advertisementService.next();
+                    next.setImage(form.getImage());
+                    next.setType(form.getType());
+                    next.setTitle(form.getTitle());
+                    next.setLink(form.getLink());
+                    next.setAdOrder(form.getAdOrder());
+                    next.setBlank(form.isBlack());
+                    return next;
+                })));
 
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
@@ -115,14 +115,14 @@ public class AdminAdvertisementPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                advertisementService.update(Long.parseLong(id), advertisement -> {
+                applicationContext.publishEvent(new AdminAdvertisementEditEvent(user, advertisementService.update(Long.parseLong(id), advertisement -> {
                     advertisement.setImage(form.getImage());
                     advertisement.setType(form.getType());
                     advertisement.setTitle(form.getTitle());
                     advertisement.setLink(form.getLink());
                     advertisement.setAdOrder(form.getAdOrder());
                     advertisement.setBlank(form.isBlack());
-                }).ifPresent(advertisement -> applicationContext.publishEvent(new AdminAdvertisementEditEvent(user, advertisement)));
+                })));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -133,7 +133,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
     public ResponseEntity<RestfulResponse> advertisementRemove(@PathVariable String id) {
         RestfulResponse restfulResponse = audit("删除广告", context -> {
             try {
-                advertisementService.remove(Long.parseLong(id));
+                advertisementService.deleteById(Long.parseLong(id));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }

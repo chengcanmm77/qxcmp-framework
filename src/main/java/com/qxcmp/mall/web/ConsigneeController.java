@@ -91,25 +91,22 @@ public class ConsigneeController extends QxcmpController {
                     .build();
         }
 
-        consigneeService.create(() -> {
-            final Consignee consignee = consigneeService.next();
-            consignee.setUserId(user.getId());
-            consignee.setName(form.getLabels().isEmpty() ? form.getConsigneeName() : form.getLabels().stream().findFirst().orElse(""));
-            consignee.setConsigneeName(form.getConsigneeName());
-            consignee.setAddress(form.getAddress());
-            consignee.setTelephone(form.getTelephone());
-            consignee.setEmail(form.getEmail());
-            consignee.setDateCreated(new Date());
-            consignee.setDateModified(new Date());
-            consignee.setLabels(Sets.newLinkedHashSet(form.getLabels()));
-            return consignee;
-        }).ifPresent(consignee -> {
-            try {
-                shoppingCartService.update(shoppingCartService.findByUserId(user.getId()).getId(), shoppingCart -> shoppingCart.setConsigneeId(consignee.getId()));
-            } catch (ShoppingCartServiceException e) {
-                e.printStackTrace();
-            }
+        Consignee consignee = consigneeService.create(() -> {
+            final Consignee next = consigneeService.next();
+            next.setUserId(user.getId());
+            next.setName(form.getLabels().isEmpty() ? form.getConsigneeName() : form.getLabels().stream().findFirst().orElse(""));
+            next.setConsigneeName(form.getConsigneeName());
+            next.setAddress(form.getAddress());
+            next.setTelephone(form.getTelephone());
+            next.setEmail(form.getEmail());
+            next.setDateCreated(new Date());
+            next.setDateModified(new Date());
+            next.setLabels(Sets.newLinkedHashSet(form.getLabels()));
+            return next;
         });
+
+        shoppingCartService.update(shoppingCartService.findByUserId(user.getId()).getId(), shoppingCart -> shoppingCart.setConsigneeId(consignee.getId()));
+
 
         return redirect("/mall/cart/order");
     }

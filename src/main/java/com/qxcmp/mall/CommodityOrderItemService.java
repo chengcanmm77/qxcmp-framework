@@ -11,12 +11,4 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommodityOrderItemService extends AbstractEntityService<CommodityOrderItem, Long, CommodityOrderItemRepository> {
 
-    public CommodityOrderItemService(CommodityOrderItemRepository repository) {
-        super(repository);
-    }
-
-    @Override
-    protected <S extends CommodityOrderItem> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

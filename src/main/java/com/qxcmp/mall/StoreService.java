@@ -9,15 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 @Service
 public class StoreService extends AbstractEntityService<Store, String, StoreRepository> {
 
-    public StoreService(StoreRepository repository) {
-        super(repository);
-    }
 
     public Page<Store> findByUser(User user, Pageable pageable) {
         return repository.findByUser(user, pageable);
@@ -27,22 +23,17 @@ public class StoreService extends AbstractEntityService<Store, String, StoreRepo
         return repository.findByUser(user);
     }
 
+
     @Override
-    public <S extends Store> Optional<S> create(Supplier<S> supplier) {
-        S store = supplier.get();
+    public Store create(Supplier<Store> supplier) {
+        Store store = supplier.get();
 
         if (StringUtils.isNotEmpty(store.getId())) {
-            return Optional.empty();
+            return null;
         }
 
         store.setId(IDGenerator.next());
 
         return super.create(() -> store);
-
-    }
-
-    @Override
-    protected <S extends Store> String getEntityId(S entity) {
-        return entity.getId();
     }
 }

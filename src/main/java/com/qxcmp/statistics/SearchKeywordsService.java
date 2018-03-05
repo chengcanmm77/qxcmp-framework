@@ -13,10 +13,6 @@ import java.util.Date;
 @Service
 public class SearchKeywordsService extends AbstractEntityService<SearchKeywords, Long, SearchKeywordsRepository> {
 
-    public SearchKeywordsService(SearchKeywordsRepository repository) {
-        super(repository);
-    }
-
     /**
      * 增加一个搜索关键词记录
      *
@@ -38,6 +34,7 @@ public class SearchKeywordsService extends AbstractEntityService<SearchKeywords,
      *
      * @param date     日期
      * @param pageable 分页信息
+     *
      * @return 排名结果
      */
     public Page<SearchKeywordsPageResult> findByDateCreatedAfter(Date date, Pageable pageable) {
@@ -48,8 +45,4 @@ public class SearchKeywordsService extends AbstractEntityService<SearchKeywords,
         return repository.findAllResult(pageable);
     }
 
-    @Override
-    protected <S extends SearchKeywords> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

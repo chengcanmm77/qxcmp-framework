@@ -50,7 +50,6 @@ import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 public class AdminNewsArticlePageController extends QxcmpController {
 
     private final ArticleService articleService;
-
     private final AdminNewsPageHelper adminNewsPageHelper;
 
     @GetMapping("")
@@ -143,12 +142,12 @@ public class AdminNewsArticlePageController extends QxcmpController {
                 .map(article -> submitForm("审核文章", form, context -> {
                     try {
                         if (StringUtils.equals("通过文章", form.getOperation())) {
-                            articleService.update(article.getId(), a -> {
+                            applicationContext.publishEvent(new AdminNewsArticlePublishEvent(user, articleService.update(article.getId(), a -> {
                                 a.setAuditor(user.getId());
                                 a.setAuditResponse(form.getResponse());
                                 a.setDatePublished(new Date());
                                 a.setStatus(ArticleStatus.PUBLISHED);
-                            }).ifPresent(article1 -> applicationContext.publishEvent(new AdminNewsArticlePublishEvent(user, article1)));
+                            })));
                         } else {
                             articleService.update(article.getId(), a -> {
                                 a.setAuditor(user.getId());
@@ -172,7 +171,7 @@ public class AdminNewsArticlePageController extends QxcmpController {
                 .map(article -> {
                     RestfulResponse restfulResponse = audit("删除文章", context -> {
                         try {
-                            articleService.remove(article);
+                            articleService.delete(article);
                         } catch (Exception e) {
                             throw new ActionException(e.getMessage(), e);
                         }
@@ -191,11 +190,11 @@ public class AdminNewsArticlePageController extends QxcmpController {
                 .map(article -> {
                     RestfulResponse restfulResponse = audit("禁用文章", context -> {
                         try {
-                            articleService.update(article.getId(), a -> {
+                            applicationContext.publishEvent(new AdminNewsArticleDisableEvent(user, articleService.update(article.getId(), a -> {
                                 a.setDatePublished(new Date());
                                 a.setStatus(ArticleStatus.DISABLED);
                                 a.setDisableUser(user.getId());
-                            }).ifPresent(article1 -> applicationContext.publishEvent(new AdminNewsArticleDisableEvent(user, article1)));
+                            })));
                         } catch (Exception e) {
                             throw new ActionException(e.getMessage(), e);
                         }
@@ -212,10 +211,10 @@ public class AdminNewsArticlePageController extends QxcmpController {
                 .map(article -> {
                     RestfulResponse restfulResponse = audit("启用文章", context -> {
                         try {
-                            articleService.update(article.getId(), a -> {
+                            applicationContext.publishEvent(new AdminNewsArticleEnableEvent(currentUser().orElseThrow(RuntimeException::new), articleService.update(article.getId(), a -> {
                                 a.setDatePublished(new Date());
                                 a.setStatus(ArticleStatus.PUBLISHED);
-                            }).ifPresent(article1 -> applicationContext.publishEvent(new AdminNewsArticleEnableEvent(currentUser().orElseThrow(RuntimeException::new), article1)));
+                            })));
                         } catch (Exception e) {
                             throw new ActionException(e.getMessage(), e);
                         }
@@ -285,7 +284,7 @@ public class AdminNewsArticlePageController extends QxcmpController {
                 for (String key : keys) {
                     articleService.findOne(key)
                             .filter(article -> !article.getStatus().equals(ArticleStatus.PUBLISHED))
-                            .ifPresent(articleService::remove);
+                            .ifPresent(articleService::delete);
                 }
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);

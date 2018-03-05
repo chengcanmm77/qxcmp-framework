@@ -52,7 +52,6 @@ import static com.qxcmp.web.auth.AuthenticationFailureHandler.AUTHENTICATION_ERR
 public class AccountPageController extends QxcmpController {
 
     protected final AccountService accountService;
-
     protected final AccountCodeService codeService;
 
     @GetMapping("/login")
@@ -150,7 +149,7 @@ public class AccountPageController extends QxcmpController {
 
         userService.update(code.getUserId(), user -> {
             user.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
-            codeService.remove(code);
+            codeService.delete(code);
         });
 
         return page(new Overview("密码重置成功", "请使用新的密码登录").addLink("现在去登录", "/login")).build();
@@ -216,7 +215,7 @@ public class AccountPageController extends QxcmpController {
 
             userService.update(code.getUserId(), user -> {
                 user.setEnabled(true);
-                codeService.remove(code);
+                codeService.delete(code);
             });
 
             return page(new Overview("账户激活成功", "现在可以登录您的账户了").addLink("现在去登录", "/login")).build();

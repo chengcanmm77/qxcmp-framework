@@ -7,12 +7,12 @@ import com.qxcmp.web.view.elements.html.P;
 import com.qxcmp.web.view.support.Alignment;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ErrorAttributes;
-import org.springframework.boot.autoconfigure.web.ErrorController;
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ public class QxcmpErrorController extends QxcmpController implements ErrorContro
 
     @RequestMapping("")
     public ModelAndView handleError(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> errors = errorAttributes.getErrorAttributes(new ServletRequestAttributes(request), true);
+        Map<String, Object> errors = errorAttributes.getErrorAttributes(new ServletWebRequest(request), true);
 
         HttpStatus status = HttpStatus.valueOf(Integer.parseInt(errors.get("status").toString()));
         String path = errors.get("path").toString();

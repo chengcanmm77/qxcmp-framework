@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.qxcmp.core.entity.AbstractEntityService;
 import com.qxcmp.core.support.IDGenerator;
 import com.qxcmp.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
@@ -28,17 +29,11 @@ import static com.google.common.base.Preconditions.checkState;
  * @author aaric
  */
 @Service
+@RequiredArgsConstructor
 public class OfferService extends AbstractEntityService<Offer, String, OfferRepository> {
 
     private final UserService userService;
-
     private final ApplicationContext applicationContext;
-
-    public OfferService(OfferRepository repository, UserService userService, ApplicationContext applicationContext) {
-        super(repository);
-        this.userService = userService;
-        this.applicationContext = applicationContext;
-    }
 
     public Page<Offer> findByUserId(String userId, Pageable pageable) {
         return repository.findByUserIdOrderByDateReceivedDesc(userId, pageable);
@@ -51,6 +46,7 @@ public class OfferService extends AbstractEntityService<Offer, String, OfferRepo
      *
      * @param prototype 券原型
      * @param quantity  要发布的券的数量
+     *
      * @return 发布券以后的ID
      */
     public Set<String> publish(Consumer<Offer> prototype, int quantity) {
@@ -67,10 +63,11 @@ public class OfferService extends AbstractEntityService<Offer, String, OfferRepo
         Set<String> offerIds = Sets.newHashSet();
 
         for (int i = 0; i < quantity; i++) {
-            create(() -> {
+            Offer o = create(() -> {
                 offer.setId(null);
                 return offer;
-            }).ifPresent(o -> offerIds.add(o.getId()));
+            });
+            offerIds.add(o.getId());
         }
 
         return offerIds;
@@ -83,6 +80,7 @@ public class OfferService extends AbstractEntityService<Offer, String, OfferRepo
      *
      * @param userId  用户ID
      * @param offerId 券ID
+     *
      * @return 领取后的券，如果领取失败返回空
      */
     public Optional<Offer> pick(String userId, String offerId) {
@@ -100,7 +98,7 @@ public class OfferService extends AbstractEntityService<Offer, String, OfferRepo
                 offer.setDateReceived(new Date());
             });
 
-        }).orElse(Optional.empty());
+        });
     }
 
     /**
@@ -110,6 +108,7 @@ public class OfferService extends AbstractEntityService<Offer, String, OfferRepo
      *
      * @param userId  使用券的用户ID
      * @param offerId 使用的券ID
+     *
      * @return 券是否使用成功
      */
     public void comsume(String userId, String offerId) throws Exception {
@@ -135,20 +134,18 @@ public class OfferService extends AbstractEntityService<Offer, String, OfferRepo
             throw new Exception("券已过期");
         }
 
-        update(offer.getId(), o -> {
+        applicationContext.publishEvent(new OfferEvent(update(offer.getId(), o -> {
             o.setDateUsed(new Date());
             o.setStatus(OfferStatus.USED);
-        }).ifPresent(o -> {
-            applicationContext.publishEvent(new OfferEvent(o));
-        });
+        })));
     }
 
     @Override
-    public <S extends Offer> Optional<S> create(Supplier<S> supplier) {
-        S entity = supplier.get();
+    public Offer create(Supplier<Offer> supplier) {
+        Offer entity = supplier.get();
 
         if (StringUtils.isNotEmpty(entity.getId())) {
-            return Optional.empty();
+            return null;
         }
 
         entity.setId(IDGenerator.next());
@@ -156,10 +153,5 @@ public class OfferService extends AbstractEntityService<Offer, String, OfferRepo
         entity.setStatus(OfferStatus.NEW);
 
         return super.create(() -> entity);
-    }
-
-    @Override
-    protected <S extends Offer> String getEntityId(S entity) {
-        return entity.getId();
     }
 }

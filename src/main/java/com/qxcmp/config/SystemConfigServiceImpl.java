@@ -24,13 +24,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 
     @Override
     public Optional<String> getString(String name) {
-        SystemConfig systemConfig = systemConfigRepository.findOne(name);
-
-        if (systemConfig == null || StringUtils.isEmpty(systemConfig.getValue())) {
-            return Optional.empty();
-        }
-
-        return Optional.of(systemConfig.getValue());
+        return systemConfigRepository.findById(name).map(SystemConfig::getValue);
     }
 
     @Override
@@ -70,7 +64,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 
     @Override
     public Optional<SystemConfig> create(String name, String value) {
-        if (!Optional.ofNullable(systemConfigRepository.findOne(name)).isPresent()) {
+        if (!systemConfigRepository.findById(name).isPresent()) {
             SystemConfig systemConfig = new SystemConfig();
             systemConfig.setName(name);
             systemConfig.setDescription(name + ".description");
@@ -85,7 +79,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
     public Optional<SystemConfig> update(String name, String value) {
         checkNotNull(value, "SystemConfig value can not be null");
 
-        return Optional.ofNullable(systemConfigRepository.findOne(name)).flatMap(systemConfig -> {
+        return systemConfigRepository.findById(name).flatMap(systemConfig -> {
             systemConfig.setDateModified(new Date());
             systemConfig.setUserModified(userService.currentUser());
             systemConfig.setValue(value);

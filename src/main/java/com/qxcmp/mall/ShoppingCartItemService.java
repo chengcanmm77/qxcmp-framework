@@ -2,6 +2,7 @@ package com.qxcmp.mall;
 
 import com.qxcmp.core.entity.AbstractEntityService;
 import com.qxcmp.exception.ShoppingCartServiceException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,14 +16,11 @@ import java.util.stream.Collectors;
  * @author aaric
  */
 @Service
+@RequiredArgsConstructor
 public class ShoppingCartItemService extends AbstractEntityService<ShoppingCartItem, Long, ShoppingCartItemRepository> {
 
     private final CommodityService commodityService;
 
-    public ShoppingCartItemService(ShoppingCartItemRepository repository, CommodityService commodityService) {
-        super(repository);
-        this.commodityService = commodityService;
-    }
 
     /**
      * 获取用户的购物车项目
@@ -97,8 +95,4 @@ public class ShoppingCartItemService extends AbstractEntityService<ShoppingCartI
         update(id, shoppingCartItem -> shoppingCartItem.setQuantity(amount));
     }
 
-    @Override
-    protected <S extends ShoppingCartItem> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

@@ -16,10 +16,6 @@ import java.util.Optional;
 @Service
 public class AuditLogService extends AbstractEntityService<AuditLog, Long, AuditLogRepository> {
 
-    public AuditLogService(AuditLogRepository repository) {
-        super(repository);
-    }
-
     public Optional<AuditLog> findOne(String id) {
         try {
             return findOne(Long.parseLong(id));
@@ -33,14 +29,4 @@ public class AuditLogService extends AbstractEntityService<AuditLog, Long, Audit
         return repository.findAllByOrderByDateCreatedDesc(pageable);
     }
 
-    /**
-     * 从实体对象获取实体主键的方式，子类唯一需要实现的接口 该方法不能返回{null}值
-     *
-     * @param entity 实体对象
-     * @return 实体对象的主键
-     */
-    @Override
-    protected <S extends AuditLog> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

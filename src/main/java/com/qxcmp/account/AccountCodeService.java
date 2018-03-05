@@ -19,16 +19,13 @@ public class AccountCodeService extends AbstractEntityService<AccountCode, Strin
      */
     private static final long CODE_EXPIRE_DURATION = 1000 * 60 * 60 * 24;
 
-    public AccountCodeService(AccountCodeRepository repository) {
-        super(repository);
-    }
-
     /**
      * 检查平台码是否可用
      * <p>
      * 如果该平台码存在并且没有过期则返回{@code true}
      *
      * @param id 平台码ID
+     *
      * @return 该平台码是否过期
      */
     public boolean isInvalidCode(String id) {
@@ -39,25 +36,22 @@ public class AccountCodeService extends AbstractEntityService<AccountCode, Strin
      * 生成一个账户激活码，并保存
      *
      * @param userId 要激活的用户主键
+     *
      * @return 保存以后的激活码
      */
     public AccountCode nextActivateCode(String userId) {
-        return create(() -> next(AccountCode.Type.ACTIVATE, userId)).orElse(null);
+        return create(() -> next(AccountCode.Type.ACTIVATE, userId));
     }
 
     /**
      * 生成一个账户重置码，并保存
      *
      * @param userId 要重置的用户主键
+     *
      * @return 保存以后的重置码
      */
     public AccountCode nextPasswordCode(String userId) {
-        return create(() -> next(AccountCode.Type.PASSWORD, userId)).orElse(null);
-    }
-
-    @Override
-    protected <S extends AccountCode> String getEntityId(S entity) {
-        return entity.getId();
+        return create(() -> next(AccountCode.Type.PASSWORD, userId));
     }
 
     /**
@@ -65,6 +59,7 @@ public class AccountCodeService extends AbstractEntityService<AccountCode, Strin
      *
      * @param type   平台码类型
      * @param userId 平台码关联的用户主键
+     *
      * @return 平台码实体
      */
     private AccountCode next(AccountCode.Type type, String userId) {

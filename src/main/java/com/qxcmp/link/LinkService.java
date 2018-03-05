@@ -8,9 +8,6 @@ import java.util.Optional;
 
 @Service
 public class LinkService extends AbstractEntityService<Link, Long, LinkRepository> {
-    public LinkService(LinkRepository repository) {
-        super(repository);
-    }
 
     public Optional<Link> findOne(String id) {
         try {
@@ -24,8 +21,4 @@ public class LinkService extends AbstractEntityService<Link, Long, LinkRepositor
         return repository.findByTypeOrderBySort(type);
     }
 
-    @Override
-    protected <S extends Link> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

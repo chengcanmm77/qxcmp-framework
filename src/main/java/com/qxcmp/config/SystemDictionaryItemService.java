@@ -10,12 +10,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SystemDictionaryItemService extends AbstractEntityService<SystemDictionaryItem, Long, SystemDictionaryItemRepository> {
-    public SystemDictionaryItemService(SystemDictionaryItemRepository repository) {
-        super(repository);
-    }
-
-    @Override
-    protected <S extends SystemDictionaryItem> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

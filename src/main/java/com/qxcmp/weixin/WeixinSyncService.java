@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.qxcmp.config.SiteService;
 import com.qxcmp.core.event.AdminWeixinMaterialSyncFinishEvent;
 import com.qxcmp.core.event.AdminWeixinMaterialSyncStartEvent;
+import com.qxcmp.image.Image;
 import com.qxcmp.image.ImageService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
@@ -182,7 +183,8 @@ public class WeixinSyncService {
 
                         try {
                             InputStream inputStream = wxMpService.getMaterialService().materialImageOrVoiceDownload(article.getThumbMediaId());
-                            imageService.store(inputStream, "jpg").ifPresent(image -> next.setThumbUrl(String.format("/api/image/%s.jpg", image.getId())));
+                            Image image = imageService.store(inputStream, "jpg");
+                            next.setThumbUrl(String.format("/api/image/%s.jpg", image.getId()));
                         } catch (Exception e) {
                             next.setThumbUrl(siteService.getLogo());
                         }
@@ -299,7 +301,8 @@ public class WeixinSyncService {
                 try {
                     HttpResponse response = new HttpRequest().method("GET").set(weixinImageSrc).send();
                     String imageType = StringUtils.substringAfter(weixinImageSrc, "wx_fmt=");
-                    imageService.store(new ByteArrayInputStream(response.bodyBytes()), StringUtils.isNotBlank(imageType) ? imageType : "jpg").ifPresent(image -> element.attr("src", String.format("/api/image/%s.%s", image.getId(), image.getType())));
+                    Image image = imageService.store(new ByteArrayInputStream(response.bodyBytes()), StringUtils.isNotBlank(imageType) ? imageType : "jpg");
+                    element.attr("src", String.format("/api/image/%s.%s", image.getId(), image.getType()));
                 } catch (Exception e) {
                     log.error("Can't convert article image: {}", e.getMessage());
                 }

@@ -51,11 +51,8 @@ public class AdminSettingsPageController extends QxcmpController {
     private static final List<String> WATERMARK_POSITIONS = ImmutableList.of("左上", "中上", "右上", "左中", "居中", "右中", "左下", "中下", "右下");
 
     private final AccountService accountService;
-
     private final SystemDictionaryService systemDictionaryService;
-
     private final SystemDictionaryItemService systemDictionaryItemService;
-
     private final RegionService regionService;
 
     @GetMapping("")
@@ -183,7 +180,7 @@ public class AdminSettingsPageController extends QxcmpController {
 
         return systemDictionaryService.findOne(form.getName()).map(systemDictionary -> submitForm(form, context -> {
             try {
-                systemDictionary.getItems().forEach(systemDictionaryItemService::remove);
+                systemDictionary.getItems().forEach(systemDictionaryItemService::delete);
                 form.getItems().forEach(systemDictionaryItem -> {
                     systemDictionaryItem.setId(null);
                     systemDictionaryItem.setParent(systemDictionary);
@@ -278,8 +275,8 @@ public class AdminSettingsPageController extends QxcmpController {
                             r.setParent(id);
                             r.setLevel(RegionLevel.COUNTY);
 
-                            regionService.create(() -> r)
-                                    .ifPresent(region1 -> applicationContext.publishEvent(new AdminSettingsRegionEvent(currentUser().orElseThrow(RuntimeException::new), region1, "new")));
+                            applicationContext.publishEvent(new AdminSettingsRegionEvent(currentUser().orElseThrow(RuntimeException::new), regionService.create(() -> r), "new"));
+
 
                         } catch (Exception e) {
                             throw new ActionException(e.getMessage(), e);
@@ -306,8 +303,8 @@ public class AdminSettingsPageController extends QxcmpController {
                         regionService.findInferiors(region).forEach(inferior -> regionService.update(inferior.getCode(), r -> r.setDisable(true)));
                     }
 
-                    regionService.update(region.getCode(), r -> r.setDisable(true))
-                            .ifPresent(region1 -> applicationContext.publishEvent(new AdminSettingsRegionEvent(currentUser().orElseThrow(RuntimeException::new), region1, "disable")));
+
+                    applicationContext.publishEvent(new AdminSettingsRegionEvent(currentUser().orElseThrow(RuntimeException::new), regionService.update(region.getCode(), r -> r.setDisable(true)), "disable"));
                 } catch (Exception e) {
                     throw new ActionException(e.getMessage(), e);
                 }
@@ -333,8 +330,8 @@ public class AdminSettingsPageController extends QxcmpController {
                         regionService.findAllInferiors(region).forEach(inferior -> regionService.update(inferior.getCode(), r -> r.setDisable(false)));
                     }
 
-                    regionService.update(region.getCode(), r -> r.setDisable(false))
-                            .ifPresent(region1 -> applicationContext.publishEvent(new AdminSettingsRegionEvent(currentUser().orElseThrow(RuntimeException::new), region1, "enable")));
+
+                    applicationContext.publishEvent(new AdminSettingsRegionEvent(currentUser().orElseThrow(RuntimeException::new), regionService.update(region.getCode(), r -> r.setDisable(false)), "enable"));
                 } catch (Exception e) {
                     throw new ActionException(e.getMessage(), e);
                 }

@@ -4,6 +4,7 @@ import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpConfigurator;
 import com.qxcmp.core.QxcmpSystemConfigConfiguration;
 import com.qxcmp.core.entity.AbstractEntityService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
@@ -14,14 +15,10 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RegionService extends AbstractEntityService<Region, String, RegionRepository> implements QxcmpConfigurator {
 
     private final SystemConfigService systemConfigService;
-
-    public RegionService(RegionRepository repository, SystemConfigService systemConfigService) {
-        super(repository);
-        this.systemConfigService = systemConfigService;
-    }
 
     public List<Region> findByLevel(RegionLevel level) {
         return repository.findByLevel(level);
@@ -41,11 +38,6 @@ public class RegionService extends AbstractEntityService<Region, String, RegionR
 
     public List<Region> findAllInferiors(String parent) {
         return repository.findAllInferiors(parent);
-    }
-
-    @Override
-    protected <S extends Region> String getEntityId(S entity) {
-        return entity.getCode();
     }
 
     @Override

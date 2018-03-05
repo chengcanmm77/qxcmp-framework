@@ -6,13 +6,13 @@ import com.qxcmp.exception.FinanceException;
 import com.qxcmp.exception.OrderExpiredException;
 import com.qxcmp.exception.OrderStatusException;
 import com.qxcmp.mall.OrderStatusEnum;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 
@@ -28,17 +28,13 @@ import java.util.function.Supplier;
  * @see DepositOrder
  */
 @Service
+@RequiredArgsConstructor
 public class DepositOrderService extends AbstractEntityService<DepositOrder, String, DepositOrderRepository> {
 
     private final ApplicationContext applicationContext;
 
     private final WalletService walletService;
 
-    public DepositOrderService(DepositOrderRepository repository, ApplicationContext applicationContext, WalletService walletService) {
-        super(repository);
-        this.applicationContext = applicationContext;
-        this.walletService = walletService;
-    }
 
     /**
      * 查询已完成的订单
@@ -63,22 +59,9 @@ public class DepositOrderService extends AbstractEntityService<DepositOrder, Str
         return repository.findByUserIdAndStatusOrderByDateFinishedDesc(userId, OrderStatusEnum.FINISHED, pageable);
     }
 
-    /**
-     * 创建一个充值订单
-     * <p>
-     * 需要设置订单的金额，货币类型可选
-     * <p>
-     * 目前重置订单有效期为五分钟
-     *
-     * @param supplier 提单提供者
-     * @param <S>      订单类型
-     *
-     * @return 保存后的充值订单
-     */
     @Override
-
-    public <S extends DepositOrder> Optional<S> create(Supplier<S> supplier) {
-        S order = supplier.get();
+    public DepositOrder create(Supplier<DepositOrder> supplier) {
+        DepositOrder order = supplier.get();
         order.setId(IDGenerator.order());
         order.setTimeStart(new Date());
         order.setTimeEnd(new Date(System.currentTimeMillis() + 1000 * 60 * 5));
@@ -111,17 +94,13 @@ public class DepositOrderService extends AbstractEntityService<DepositOrder, Str
 
         try {
             walletService.changeBalance(depositOrder.getUserId(), depositOrder.getFee(), "钱包充值", "");
-            update(depositOrder.getId(), order -> {
+            applicationContext.publishEvent(new DepositEvent(update(depositOrder.getId(), order -> {
                 order.setDateFinished(new Date());
                 order.setStatus(OrderStatusEnum.FINISHED);
-            }).ifPresent(order -> applicationContext.publishEvent(new DepositEvent(order)));
+            })));
         } catch (Exception e) {
             update(depositOrder.getId(), order -> order.setStatus(OrderStatusEnum.EXCEPTION));
         }
     }
 
-    @Override
-    protected <S extends DepositOrder> String getEntityId(S entity) {
-        return entity.getId();
-    }
 }

@@ -7,7 +7,7 @@
 
 ============================================
 Spring Boot Version:        ${spring-boot.version}
-Application Name:           ${application.name}
-Application Short Name:     ${application.short-name}
+Application Name:           ${application.title}
+Application Version:        ${application.version}
 Database Platform:          ${spring.datasource.platform}
 ============================================

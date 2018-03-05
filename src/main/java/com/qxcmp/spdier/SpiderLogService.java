@@ -2,6 +2,7 @@ package com.qxcmp.spdier;
 
 import com.qxcmp.core.entity.AbstractEntityService;
 import com.qxcmp.core.support.TimeDurationHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,11 @@ import java.util.Date;
  * @author aaric
  */
 @Service
+@RequiredArgsConstructor
 public class SpiderLogService extends AbstractEntityService<SpiderLog, Long, SpiderLogRepository> {
 
-    private TimeDurationHelper timeDurationHelper;
+    private final TimeDurationHelper timeDurationHelper;
 
-    public SpiderLogService(SpiderLogRepository repository, TimeDurationHelper timeDurationHelper) {
-        super(repository);
-        this.timeDurationHelper = timeDurationHelper;
-    }
 
     public void save(SpiderPageProcessor spiderPageProcessor) {
         create(() -> {
@@ -47,8 +45,4 @@ public class SpiderLogService extends AbstractEntityService<SpiderLog, Long, Spi
         return repository.findAllByOrderByDateFinishDesc(pageable);
     }
 
-    @Override
-    protected <S extends SpiderLog> Long getEntityId(S entity) {
-        return entity.getId();
-    }
 }

@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.qxcmp.audit.Action;
 import com.qxcmp.audit.ActionExecutor;
+import com.qxcmp.audit.AuditLog;
 import com.qxcmp.config.SiteService;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.config.UserConfigService;
@@ -170,7 +171,7 @@ public abstract class QxcmpController {
                 }
             }
 
-            page = entityService.search(searchContent, fields, pageable);
+            page = entityService.findAll(pageable);
         } else {
             page = entityService.findAll(pageable);
         }
@@ -283,27 +284,25 @@ public abstract class QxcmpController {
             title = request.getRequestURL().toString();
         }
 
-        return actionExecutor.execute(title, request.getRequestURL().toString(), getRequestContent(request), currentUser().orElse(null), action)
-                .map(auditLog -> {
-                    Overview overview = null;
-                    switch (auditLog.getStatus()) {
-                        case SUCCESS:
-                            overview = new Overview(new IconHeader(auditLog.getTitle(), new Icon("info circle")).setSubTitle("操作成功"));
-                            break;
-                        case FAILURE:
-                            overview = new Overview(new IconHeader(auditLog.getTitle(), new Icon("warning circle").setColor(Color.RED)).setSubTitle("操作失败")).addComponent(new P(auditLog.getComments()));
-                            break;
-                    }
+        AuditLog auditLog = actionExecutor.execute(title, request.getRequestURL().toString(), getRequestContent(request), currentUser().orElse(null), action);
+        Overview overview = null;
+        switch (auditLog.getStatus()) {
+            case SUCCESS:
+                overview = new Overview(new IconHeader(auditLog.getTitle(), new Icon("info circle")).setSubTitle("操作成功"));
+                break;
+            case FAILURE:
+                overview = new Overview(new IconHeader(auditLog.getTitle(), new Icon("warning circle").setColor(Color.RED)).setSubTitle("操作失败")).addComponent(new P(auditLog.getComments()));
+                break;
+        }
 
 
-                    biConsumer.accept(auditLog.getActionContext(), overview);
+        biConsumer.accept(auditLog.getActionContext(), overview);
 
-                    if (overview.getLinks().isEmpty()) {
-                        overview.addLink("返回", request.getRequestURL().toString());
-                    }
+        if (overview.getLinks().isEmpty()) {
+            overview.addLink("返回", request.getRequestURL().toString());
+        }
 
-                    return page(overview).build();
-                }).orElse(page(new Overview(new IconHeader("保存操作结果失败", new Icon("warning circle"))).addLink("返回", request.getRequestURL().toString())).build());
+        return page(overview).build();
     }
 
     /**
@@ -315,18 +314,16 @@ public abstract class QxcmpController {
      * @return 操作结果实体
      */
     protected RestfulResponse audit(String title, Action action) {
-        return actionExecutor.execute(title, request.getRequestURL().toString(), getRequestContent(request), currentUser().orElse(null), action).map(auditLog -> {
+        AuditLog auditLog = actionExecutor.execute(title, request.getRequestURL().toString(), getRequestContent(request), currentUser().orElse(null), action);
 
-            switch (auditLog.getStatus()) {
-                case SUCCESS:
-                    return new RestfulResponse(HttpStatus.OK.value(), "", auditLog.getTitle(), auditLog.getComments());
-                case FAILURE:
-                    return new RestfulResponse(HttpStatus.BAD_GATEWAY.value(), "", auditLog.getTitle(), auditLog.getComments());
-            }
+        switch (auditLog.getStatus()) {
+            case SUCCESS:
+                return new RestfulResponse(HttpStatus.OK.value(), "", auditLog.getTitle(), auditLog.getComments());
+            case FAILURE:
+                return new RestfulResponse(HttpStatus.BAD_GATEWAY.value(), "", auditLog.getTitle(), auditLog.getComments());
+        }
 
-            return new RestfulResponse(HttpStatus.NOT_ACCEPTABLE.value(), "", auditLog.getTitle(), auditLog.getComments());
-
-        }).orElse(new RestfulResponse(HttpStatus.BAD_GATEWAY.value(), "", "Can't save audit log"));
+        return new RestfulResponse(HttpStatus.NOT_ACCEPTABLE.value(), "", auditLog.getTitle(), auditLog.getComments());
     }
 
     /**
