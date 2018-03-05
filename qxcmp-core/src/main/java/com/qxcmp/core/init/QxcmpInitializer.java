@@ -7,14 +7,14 @@ package com.qxcmp.core.init;
  *
  * @author aaric
  */
-public interface QxcmpInitailizer {
+public interface QxcmpInitializer {
 
     /**
      * 执行相应配置
      *
      * @throws Exception 抛出任何异常会中断当前配置，继续跳到下一个配置
      */
-    void config() throws Exception;
+    void init() throws Exception;
 
     /**
      * 配置名称

@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
  * <p>
  * 在平台启动的最后进行平台初始化操作
  * <p>
- * 加载所有实现了{@link QxcmpInitailizer} 接口的Spring Bean，排序以后分别执行初始化操作
+ * 加载所有实现了{@link QxcmpInitializer} 接口的Spring Bean，排序以后分别执行初始化操作
  * <p>
  * 可使用 {@link org.springframework.core.annotation.Order} 标注加载顺序
  *
  * @author aaric
- * @see QxcmpInitailizer
+ * @see QxcmpInitializer
  */
 @Slf4j
 @Component
@@ -36,12 +36,12 @@ public class QxcmpRunner implements ApplicationRunner {
         log.info("Start Initializing");
         log.info(SEPARATOR);
 
-        applicationContext.getBeansOfType(QxcmpInitailizer.class).values().stream().sorted(new AnnotationAwareOrderComparator()).forEach(qxcmpConfigurator -> {
+        applicationContext.getBeansOfType(QxcmpInitializer.class).values().stream().sorted(new AnnotationAwareOrderComparator()).forEach(qxcmpConfigurator -> {
             try {
                 log.info(SEPARATOR);
-                log.info("Initializing {}", qxcmpConfigurator.name());
+                log.info("--- initializing {}", qxcmpConfigurator.name());
                 log.info(SEPARATOR);
-                qxcmpConfigurator.config();
+                qxcmpConfigurator.init();
             } catch (Exception e) {
                 log.error("Can't initialize {}, cause: {}", qxcmpConfigurator.name(), e.getMessage());
                 e.printStackTrace();

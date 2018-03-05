@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.qxcmp.config.SiteService;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpSystemConfigConfiguration;
-import com.qxcmp.core.init.QxcmpInitailizer;
+import com.qxcmp.core.init.QxcmpInitializer;
 import com.qxcmp.message.EmailService;
 import com.qxcmp.user.User;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class AccountService implements QxcmpInitailizer {
+public class AccountService implements QxcmpInitializer {
 
     public static final String ACCOUNT_PAGE = "qxcmp-account";
 
@@ -138,7 +138,7 @@ public class AccountService implements QxcmpInitailizer {
     }
 
     @Override
-    public void config() {
+    public void init() {
         loadConfig();
     }
 }

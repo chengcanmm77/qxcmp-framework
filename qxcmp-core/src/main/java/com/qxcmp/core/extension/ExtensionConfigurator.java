@@ -1,6 +1,6 @@
 package com.qxcmp.core.extension;
 
-import com.qxcmp.core.init.QxcmpInitailizer;
+import com.qxcmp.core.init.QxcmpInitializer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ExtensionConfigurator implements QxcmpInitailizer {
+public class ExtensionConfigurator implements QxcmpInitializer {
 
     private final ApplicationContext applicationContext;
 
     @SuppressWarnings("unchecked")
     @Override
-    public void config() {
+    public void init() {
         log.info("Start load extension points...");
 
         applicationContext.getBeansOfType(ExtensionPoint.class).forEach((s, extensionPoint) -> {

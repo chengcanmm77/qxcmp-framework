@@ -1,8 +1,8 @@
 package com.qxcmp.web.page;
 
+import com.qxcmp.core.navigation.NavigationService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
-import com.qxcmp.web.model.navigation.NavigationService;
 import com.qxcmp.web.view.Component;
 import com.qxcmp.web.view.elements.icon.CircularIcon;
 import com.qxcmp.web.view.elements.menu.AbstractMenu;

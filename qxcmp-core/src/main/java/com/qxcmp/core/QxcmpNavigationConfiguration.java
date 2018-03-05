@@ -1,11 +1,13 @@
 package com.qxcmp.core;
 
 import com.google.common.collect.ImmutableSet;
-import com.qxcmp.web.model.navigation.Navigation;
-import com.qxcmp.web.model.navigation.NavigationConfigurator;
-import com.qxcmp.web.model.navigation.NavigationService;
+import com.qxcmp.core.navigation.Navigation;
+import com.qxcmp.core.navigation.NavigationConfigurator;
+import com.qxcmp.core.navigation.NavigationService;
 import com.qxcmp.web.view.elements.icon.Icon;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpSecurityConfiguration.*;
@@ -15,6 +17,7 @@ import static com.qxcmp.core.QxcmpSecurityConfiguration.*;
  *
  * @author Aaric
  */
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Configuration
 public class QxcmpNavigationConfiguration implements NavigationConfigurator {
 
@@ -309,10 +312,4 @@ public class QxcmpNavigationConfiguration implements NavigationConfigurator {
                 .addItem(new Navigation(NAVIGATION_ADMIN_STATISTIC_SETTINGS, "网站统计设置", QXCMP_BACKEND_URL + "/statistic/settings").setOrder(60).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_STATISTIC_SETTINGS)))
         );
     }
-
-    @Override
-    public int order() {
-        return Integer.MIN_VALUE;
-    }
-
 }

@@ -21,6 +21,6 @@ public class WeixinMpConfigScript extends AbstractComponent {
 
     @Override
     public String getFragmentName() {
-        return "config";
+        return "init";
     }
 }

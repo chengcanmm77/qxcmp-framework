@@ -2,7 +2,7 @@ package com.qxcmp.security;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.qxcmp.core.init.QxcmpInitailizer;
+import com.qxcmp.core.init.QxcmpInitializer;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ import static com.qxcmp.core.QxcmpSecurityConfiguration.*;
 @Order(Ordered.LOWEST_PRECEDENCE - 1)
 @Component
 @AllArgsConstructor
-public class SecurityConfigurator implements QxcmpInitailizer {
+public class SecurityConfigurator implements QxcmpInitializer {
 
     private UserService userService;
 
@@ -32,7 +32,7 @@ public class SecurityConfigurator implements QxcmpInitailizer {
     private PrivilegeService privilegeService;
 
     @Override
-    public void config() {
+    public void init() {
 
         /*
          * 创建超级角色

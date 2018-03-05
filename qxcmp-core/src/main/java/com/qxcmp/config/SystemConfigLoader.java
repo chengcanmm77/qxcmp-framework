@@ -1,6 +1,6 @@
 package com.qxcmp.config;
 
-import com.qxcmp.core.init.QxcmpInitailizer;
+import com.qxcmp.core.init.QxcmpInitializer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -31,14 +31,14 @@ import java.util.Objects;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SystemConfigLoader implements QxcmpInitailizer {
+public class SystemConfigLoader implements QxcmpInitializer {
 
     private final ApplicationContext applicationContext;
 
     private final SystemConfigService systemConfigService;
 
     @Override
-    public void config() {
+    public void init() {
         applicationContext.getBeansWithAnnotation(SystemConfigAutowired.class).forEach((s, o) -> loadFromClass(o));
     }
 
@@ -66,7 +66,7 @@ public class SystemConfigLoader implements QxcmpInitailizer {
                     systemConfigService.create(systemConfigName, "");
                 }
             } catch (IllegalAccessException e) {
-                log.error("Can't get system config information {}:{}", bean.getClass().getSimpleName(), field.getName());
+                log.error("Can't get system init information {}:{}", bean.getClass().getSimpleName(), field.getName());
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.qxcmp.web.model.navigation;
+package com.qxcmp.core.navigation;
 
 public interface NavigationService {
 

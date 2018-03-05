@@ -1,12 +1,12 @@
 package com.qxcmp.web.page;
 
 import com.qxcmp.config.SiteService;
+import com.qxcmp.core.navigation.NavigationService;
 import com.qxcmp.message.InnerMessageService;
 import com.qxcmp.message.SiteNotification;
 import com.qxcmp.message.SiteNotificationService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
-import com.qxcmp.web.model.navigation.NavigationService;
 import com.qxcmp.web.view.Component;
 import com.qxcmp.web.view.elements.breadcrumb.AbstractBreadcrumb;
 import com.qxcmp.web.view.elements.breadcrumb.Breadcrumb;

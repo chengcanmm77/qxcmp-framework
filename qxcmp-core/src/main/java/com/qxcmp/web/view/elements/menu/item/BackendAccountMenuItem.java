@@ -1,7 +1,7 @@
 package com.qxcmp.web.view.elements.menu.item;
 
+import com.qxcmp.core.navigation.AbstractNavigation;
 import com.qxcmp.user.User;
-import com.qxcmp.web.model.navigation.AbstractNavigation;
 import lombok.Getter;
 import lombok.Setter;
 

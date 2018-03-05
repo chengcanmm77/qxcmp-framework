@@ -1,6 +1,6 @@
 package com.qxcmp.security;
 
-import com.qxcmp.core.init.QxcmpInitailizer;
+import com.qxcmp.core.init.QxcmpInitializer;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -31,14 +31,14 @@ import static com.google.common.base.Preconditions.checkState;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class PrivilegeLoader implements QxcmpInitailizer {
+public class PrivilegeLoader implements QxcmpInitializer {
 
     private ApplicationContext applicationContext;
 
     private PrivilegeService privilegeService;
 
     @Override
-    public void config() {
+    public void init() {
         applicationContext.getBeansWithAnnotation(PrivilegeAutowired.class).forEach((s, o) -> loadFromClass(o));
     }
 

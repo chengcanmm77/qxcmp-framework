@@ -1,7 +1,7 @@
 package com.qxcmp.calendar;
 
 import com.google.common.collect.Maps;
-import com.qxcmp.core.init.QxcmpInitailizer;
+import com.qxcmp.core.init.QxcmpInitializer;
 import org.apache.commons.csv.CSVFormat;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
-public class CalendarServiceImpl implements CalendarService, QxcmpInitailizer {
+public class CalendarServiceImpl implements CalendarService, QxcmpInitializer {
 
     private Map<String, CalendarDate> calendarDateMap = Maps.newConcurrentMap();
 
@@ -42,7 +42,7 @@ public class CalendarServiceImpl implements CalendarService, QxcmpInitailizer {
     }
 
     @Override
-    public void config() {
+    public void init() {
         try {
             Resource calendarCSVFile = new ClassPathResource("/calendar/Calendar.csv");
             CSVFormat.EXCEL.parse(new InputStreamReader(calendarCSVFile.getInputStream())).forEach(record -> {

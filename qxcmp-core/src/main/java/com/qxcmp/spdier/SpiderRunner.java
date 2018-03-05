@@ -1,7 +1,7 @@
 package com.qxcmp.spdier;
 
 import com.qxcmp.core.event.AdminSpiderFinishEvent;
-import com.qxcmp.core.init.QxcmpInitailizer;
+import com.qxcmp.core.init.QxcmpInitializer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SpiderRunner implements QxcmpInitailizer {
+public class SpiderRunner implements QxcmpInitializer {
 
     private final ApplicationContext applicationContext;
     private final TaskExecutor taskExecutor;
@@ -139,7 +139,7 @@ public class SpiderRunner implements QxcmpInitailizer {
     }
 
     @Override
-    public void config() {
+    public void init() {
         loadSpiderDefinition();
         start();
     }
