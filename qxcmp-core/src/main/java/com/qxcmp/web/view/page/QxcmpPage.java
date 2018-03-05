@@ -83,32 +83,32 @@ public interface QxcmpPage {
     QxcmpPage addJavascriptToBody(String javascript);
 
     /**
-     * 渲染页面
+     * 默认渲染页面
      * <p>
      * 负责把数据组装为视图
      */
     void render();
 
     /**
-     * 渲染PC端视图，默认调用 {@link #render()}
+     * 渲染为PC端视图，默认调用 {@link #render()}
      * <p>
      * 若子类覆盖该方式可实现不同的PC端视图
      */
-    void renderNormal();
+    void renderToNormal();
 
     /**
-     * 渲染平板端视图，默认调用 {@link #render()}
+     * 渲染为平板端视图，默认调用 {@link #render()}
      * <p>
      * 若子类覆盖该方式可实现不同的平板端视图
      */
-    void renderTablet();
+    void renderToTablet();
 
     /**
-     * 渲染移动端视图，默认调用 {@link #render()}
+     * 渲染为移动端视图，默认调用 {@link #render()}
      * <p>
      * 若子类覆盖该方式可实现不同的移动端视图
      */
-    void renderMobile();
+    void renderToMobile();
 
     /**
      * 把渲染完的页面构建为 {@link ModelAndView}

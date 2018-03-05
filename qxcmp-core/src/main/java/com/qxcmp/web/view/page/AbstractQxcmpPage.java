@@ -41,17 +41,15 @@ public abstract class AbstractQxcmpPage implements QxcmpPage {
 
     @Override
     public QxcmpPage addComponent(Component component) {
-        components.add(component);
+        if (Objects.nonNull(component)) {
+            components.add(component);
+        }
         return this;
     }
 
     @Override
     public QxcmpPage addComponent(Supplier<Component> supplier) {
-        Component component = supplier.get();
-        if (Objects.nonNull(component)) {
-            components.add(component);
-        }
-        return this;
+        return addComponent(supplier.get());
     }
 
     @Override
@@ -85,17 +83,17 @@ public abstract class AbstractQxcmpPage implements QxcmpPage {
     }
 
     @Override
-    public void renderNormal() {
+    public void renderToNormal() {
         render();
     }
 
     @Override
-    public void renderTablet() {
+    public void renderToTablet() {
         render();
     }
 
     @Override
-    public void renderMobile() {
+    public void renderToMobile() {
         render();
     }
 }

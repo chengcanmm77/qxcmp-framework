@@ -33,19 +33,6 @@ public class ImageAPI extends QxcmpController {
 
     private final ImageService imageService;
 
-    @GetMapping("{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String id) {
-        try {
-            return imageService.findOne(id).map(image ->
-                    ResponseEntity.status(HttpStatus.OK)
-                            .contentType(MediaType.parseMediaType(String.format("image/%s", image.getType())))
-                            .body(image.getContent()))
-                    .orElse(ResponseEntity.notFound().build());
-        } catch (NumberFormatException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @GetMapping("{id}.{type}")
     public ResponseEntity<byte[]> getImage(@PathVariable String id, @PathVariable String type) {
         try {

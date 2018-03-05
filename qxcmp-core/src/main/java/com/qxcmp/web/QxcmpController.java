@@ -95,20 +95,23 @@ public abstract class QxcmpController {
     /**
      * 获取一个页面
      *
-     * @param t   页面类型
-     * @param <T> 页面类型
-     *
+     * @param tClass 页面类型
+     * @param models 页面数据
+     * @param <T>    页面类型
      * @return 渲染后的页面
      */
-    protected <T extends QxcmpPage> ModelAndView qxcmpPage(T t) {
+    protected <T extends QxcmpPage> ModelAndView qxcmpPage(Class<T> tClass, Object... models) {
+
+        T t = applicationContext.getBean(tClass, models);
+
         Device device = deviceResolver.resolveDevice(request);
 
         if (device.isMobile()) {
-            t.renderMobile();
+            t.renderToMobile();
         } else if (device.isTablet()) {
-            t.renderTablet();
+            t.renderToTablet();
         } else if (device.isNormal()) {
-            t.renderNormal();
+            t.renderToNormal();
         } else {
             t.render();
         }
@@ -120,7 +123,6 @@ public abstract class QxcmpController {
      * 根据请求获取一个页面
      *
      * @return 由页面解析器解析出来的页面
-     *
      * @see QxcmpPageResolver
      */
     protected AbstractPage page() {
@@ -131,9 +133,7 @@ public abstract class QxcmpController {
      * 根据请求获取一个页面并设置概览视图
      *
      * @param overview 概览组件
-     *
      * @return 概览视图页面
-     *
      * @see Overview
      */
     protected AbstractPage page(Overview overview) {
@@ -144,7 +144,6 @@ public abstract class QxcmpController {
      * 获取一个重定向页面
      *
      * @param url 重定向链接
-     *
      * @return 重定向页面
      */
     protected ModelAndView redirect(String url) {
@@ -284,7 +283,6 @@ public abstract class QxcmpController {
      * @param form       要提交的表单
      * @param action     要执行的操作
      * @param biConsumer 返回的结果页面
-     *
      * @return 提交后的页面
      */
     protected ModelAndView submitForm(String title, Object form, Action action, BiConsumer<Map<String, Object>, Overview> biConsumer) {
@@ -324,7 +322,6 @@ public abstract class QxcmpController {
      *
      * @param title  操作名称
      * @param action 要执行的操作
-     *
      * @return 操作结果实体
      */
     protected RestfulResponse audit(String title, Action action) {
@@ -344,7 +341,6 @@ public abstract class QxcmpController {
      * 获取上传后的文件
      *
      * @param keys 临时文件标识
-     *
      * @return 文件列表
      */
     protected List<File> getUploadFiles(List<String> keys) {
@@ -359,7 +355,6 @@ public abstract class QxcmpController {
      * 获取单个上传后的文件
      *
      * @param key 临时文件标识
-     *
      * @return 单个文件
      */
     protected File getUploadFile(String key) {

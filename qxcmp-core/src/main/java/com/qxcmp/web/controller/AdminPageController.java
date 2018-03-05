@@ -6,21 +6,14 @@ import com.qxcmp.core.extension.AdminToolPageExtensionPoint;
 import com.qxcmp.message.FeedService;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
+import com.qxcmp.web.page.AdminHomePage;
 import com.qxcmp.web.view.elements.container.TextContainer;
-import com.qxcmp.web.view.elements.grid.Col;
-import com.qxcmp.web.view.elements.grid.Row;
-import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
-import com.qxcmp.web.view.elements.header.ContentHeader;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.PageHeader;
 import com.qxcmp.web.view.elements.list.List;
 import com.qxcmp.web.view.elements.list.item.TextItem;
 import com.qxcmp.web.view.elements.segment.Segment;
-import com.qxcmp.web.view.modules.pagination.Pagination;
 import com.qxcmp.web.view.support.Alignment;
-import com.qxcmp.web.view.support.Size;
-import com.qxcmp.web.view.support.Wide;
-import com.qxcmp.web.view.views.Feed;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -54,15 +47,17 @@ public class AdminPageController extends QxcmpController {
         User user = currentUser().orElseThrow(RuntimeException::new);
         Page<com.qxcmp.message.Feed> feeds = feedService.findByOwner(user.getId(), pageable);
 
-        return page().addComponent(new VerticallyDividedGrid().setContainer().setCentered()
-                .addItem(new Row()
-                        .addCol(new Col().setMobileWide(Wide.SIXTEEN).setTabletWide(Wide.EIGHT).setComputerWide(Wide.EIGHT).addComponent(new Segment()
-                                .addComponent(new ContentHeader("我的动态", Size.NONE).setDividing())
-                                .addComponent(new Feed(feeds.getContent()))
-                                .addComponent(new Pagination("", feeds.getNumber() + 1, (int) feeds.getTotalElements(), feeds.getSize()))
-                        ))
-                )
-        ).build();
+//        return page().addComponent(new VerticallyDividedGrid().setContainer().setCentered()
+//                .addItem(new Row()
+//                        .addCol(new Col().setMobileWide(Wide.SIXTEEN).setTabletWide(Wide.EIGHT).setComputerWide(Wide.EIGHT).addComponent(new Segment()
+//                                .addComponent(new ContentHeader("我的动态", Size.NONE).setDividing())
+//                                .addComponent(new Feed(feeds.getContent()))
+//                                .addComponent(new Pagination("", feeds.getNumber() + 1, (int) feeds.getTotalElements(), feeds.getSize()))
+//                        ))
+//                )
+//        ).build();
+
+        return qxcmpPage(AdminHomePage.class, feeds);
     }
 
     @GetMapping("/about")
