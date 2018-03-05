@@ -21,13 +21,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import static com.qxcmp.config.PlatformConfig.ADMIN_URL;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL)
+@RequestMapping(ADMIN_URL)
 @RequiredArgsConstructor
 public class AdminPageController extends QxcmpController {
 

@@ -17,10 +17,6 @@
 
     <link rel="icon" type="image/png" sizes="32x32" th:href="@{${@siteServiceImpl.getFavicon()}}"/>
 
-    <link rel="stylesheet" th:href="@{/assets/scripts/qxcmp.css}"/>
-
-    <script th:src="@{/assets/scripts/qxcmp.js}"></script>
-
     <th:block th:each="style : ${page.stylesheets}">
         <link rel="stylesheet" th:href="@{${style}}"/>
     </th:block>

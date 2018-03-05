@@ -202,7 +202,7 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
         menu.setInverted().setFixed(Fixed.BOTTOM);
         menu.addItem(new SidebarIconItem());
         RightMenu rightMenu = new RightMenu();
-        rightMenu.addItem(new TextItem("关于", platformConfig.getAdminUrl() + "/about"));
+        rightMenu.addItem(new TextItem("关于", "about"));
         menu.setRightMenu(rightMenu);
         sidebar.setBottomFixedMenu(menu);
     }

@@ -1,11 +1,8 @@
 package com.qxcmp.config;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * 平台配置
@@ -13,11 +10,11 @@ import javax.validation.constraints.NotNull;
  * @author Aaric
  */
 @Data
-@Validated
 @Component
-@ConfigurationProperties("platform")
 public class PlatformConfig {
 
-    @NotNull
+    public static final String ADMIN_URL = "${platform.admin-url}";
+
+    @Value(ADMIN_URL)
     private String adminUrl;
 }

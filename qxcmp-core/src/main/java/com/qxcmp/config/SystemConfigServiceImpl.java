@@ -24,7 +24,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 
     @Override
     public Optional<String> getString(String name) {
-        return systemConfigRepository.findById(name).map(SystemConfig::getValue);
+        return systemConfigRepository.findById(name).filter(systemConfig -> StringUtils.isNotBlank(systemConfig.getValue())).map(SystemConfig::getValue);
     }
 
     @Override
