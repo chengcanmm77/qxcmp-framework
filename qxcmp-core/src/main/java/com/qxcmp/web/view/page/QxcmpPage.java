@@ -14,8 +14,6 @@ import java.util.function.Supplier;
  * Controller负责组装页面的Model
  * <p>
  * 所有的子类必须为Spring Bean且Scope为PROTOTYPE
- * <p>
- * 使用 {@link QxcmpPageFactory#next(Class, Object...)} 来生成一个页面
  *
  * @author Aaric
  */
@@ -90,6 +88,27 @@ public interface QxcmpPage {
      * 负责把数据组装为视图
      */
     void render();
+
+    /**
+     * 渲染PC端视图，默认调用 {@link #render()}
+     * <p>
+     * 若子类覆盖该方式可实现不同的PC端视图
+     */
+    void renderNormal();
+
+    /**
+     * 渲染平板端视图，默认调用 {@link #render()}
+     * <p>
+     * 若子类覆盖该方式可实现不同的平板端视图
+     */
+    void renderTablet();
+
+    /**
+     * 渲染移动端视图，默认调用 {@link #render()}
+     * <p>
+     * 若子类覆盖该方式可实现不同的移动端视图
+     */
+    void renderMobile();
 
     /**
      * 把渲染完的页面构建为 {@link ModelAndView}

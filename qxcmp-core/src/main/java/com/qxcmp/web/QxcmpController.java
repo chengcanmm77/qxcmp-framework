@@ -45,6 +45,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DeviceResolver;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -88,6 +90,7 @@ public abstract class QxcmpController {
     private CaptchaService captchaService;
     private ActionExecutor actionExecutor;
     private IpAddressResolver ipAddressResolver;
+    private DeviceResolver deviceResolver;
 
     /**
      * 获取一个页面
@@ -98,7 +101,18 @@ public abstract class QxcmpController {
      * @return 渲染后的页面
      */
     protected <T extends QxcmpPage> ModelAndView qxcmpPage(T t) {
-        t.render();
+        Device device = deviceResolver.resolveDevice(request);
+
+        if (device.isMobile()) {
+            t.renderMobile();
+        } else if (device.isTablet()) {
+            t.renderTablet();
+        } else if (device.isNormal()) {
+            t.renderNormal();
+        } else {
+            t.render();
+        }
+
         return t.build();
     }
 
@@ -432,4 +446,8 @@ public abstract class QxcmpController {
         this.ipAddressResolver = ipAddressResolver;
     }
 
+    @Autowired
+    public void setDeviceResolver(DeviceResolver deviceResolver) {
+        this.deviceResolver = deviceResolver;
+    }
 }

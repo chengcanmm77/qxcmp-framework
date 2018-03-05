@@ -83,4 +83,19 @@ public abstract class AbstractQxcmpPage implements QxcmpPage {
         modelAndView.addObject(BASE_MODEL_OBJECT, this);
         return modelAndView;
     }
+
+    @Override
+    public void renderNormal() {
+        render();
+    }
+
+    @Override
+    public void renderTablet() {
+        render();
+    }
+
+    @Override
+    public void renderMobile() {
+        render();
+    }
 }
