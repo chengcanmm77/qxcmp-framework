@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<body>
+<!--/*
+    图片
+*/-->
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.image.Image"*/-->
+<th:block th:fragment="default(component)">
+    <img th:if="${#strings.isEmpty(component.url)}"
+         th:class="${component.getClassName()}" th:src="@{${component.source}}"/>
+    <a th:unless="${#strings.isEmpty(component.url)}" th:href="@{${component.url}}"
+       th:target="${component.urlTarget}" th:class="${component.getClassName()}">
+        <img th:src="@{${component.source}}"/>
+    </a>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.image.LazyImage"*/-->
+<th:block th:fragment="lazy-image(component)">
+    <img th:if="${#strings.isEmpty(component.url)}"
+         th:id="${component.id}"
+         th:class="${component.getClassName()}"
+         th:attr="data-src=@{${component.source}}"
+         th:src="@{/assets/images/placeholder.png}"/>
+    <a th:unless="${#strings.isEmpty(component.url)}"
+       th:href="@{${component.url}}"
+       th:target="${component.urlTarget}"
+       th:class="${component.getClassName()}">
+        <img th:id="${component.id}"
+             th:attr="data-src=@{${component.source}}"
+             th:src="@{/assets/images/placeholder.png}"/>
+    </a>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var imageId = /*[[|#${component.id}|]]*/ "";
+            $(imageId).visibility({
+                type: 'image',
+                transition: /*[[${component.transition.toString()}]]*/ 'fade in',
+                duration: /*[[${component.duration}]]*/ 1000
+            });
+        });
+    </script>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.image.Images"*/-->
+<div th:fragment="images(component)" th:class="${component.getClassName()}">
+    <th:block th:each="image : ${component.images}">
+        <div th:replace="~{qxcmp/globals/components :: component(${image})}"></div>
+    </th:block>
+</div>
+</body>
+</html>

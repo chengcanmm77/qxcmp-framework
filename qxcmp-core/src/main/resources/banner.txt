@@ -1,0 +1,14 @@
+============================================
+   ___  __  ______ __  __ ____
+  / _ \ \ \/ / ___|  \/  |  _ \
+ | | | | \  / |   | |\/| | |_) |
+ | |_| | /  \ |___| |  | |  __/
+  \__\_\/_/\_\____|_|  |_|_|
+
+============================================
+Spring Boot Version:        ${spring-boot.version}
+Application Title:          ${platform.application.title}
+Application Name:           ${application.title}
+Application Version:        ${application.version}
+Database Platform:          ${spring.datasource.platform}
+============================================

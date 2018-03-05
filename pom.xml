@@ -2,18 +2,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>qxcmp-parent</module>
+        <module>qxcmp-core</module>
+    </modules>
 
     <parent>
         <groupId>com.github.aaricchen</groupId>
         <artifactId>qxcmp-parent</artifactId>
-        <version>3.0.0.RELEASE</version>
+        <version>1.0.0.RELEASE</version>
+        <relativePath>./qxcmp-parent</relativePath>
     </parent>
 
     <artifactId>qxcmp-framework</artifactId>
-    <version>3.0.0.RELEASE-SNAPSHOT</version>
+    <version>1.0.0.RELEASE</version>
 
     <name>QingXing Content Management Platform Framework</name>
-    <description>QingXing Content Management Platform Framework</description>
     <url>https://github.com/AaricChen/qxcmp-framework</url>
 
     <scm>
@@ -22,21 +28,17 @@
         <url>git@github.com:AaricChen/qxcmp-framework.git</url>
     </scm>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://mit-license.org/</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Aaric</name>
+            <url>aaricchen@foxmail.com</url>
+        </developer>
+    </developers>
 </project>

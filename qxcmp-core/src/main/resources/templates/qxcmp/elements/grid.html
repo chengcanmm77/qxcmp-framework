@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<body>
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.grid.Grid"*/-->
+<div th:fragment="grid(component)" th:class="${component.getClassName()}">
+    <th:block th:each="component : ${component.items}">
+        <div th:replace="~{qxcmp/globals/components :: component(${component})}"></div>
+    </th:block>
+</div>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.grid.Row"*/-->
+<div th:fragment="row(component)" th:class="${component.getClassName()}">
+    <th:block th:each="component : ${component.columns}">
+        <div th:replace="~{qxcmp/globals/components :: component(${component})}"></div>
+    </th:block>
+</div>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.grid.Col"*/-->
+<div th:fragment="col(component)" th:class="${component.getClassName()}">
+    <th:block th:each="component : ${component.components}">
+        <div th:replace="~{qxcmp/globals/components :: component(${component})}"></div>
+    </th:block>
+</div>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<body>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.AbstractTable"*/-->
+<table th:fragment="table(component)" th:class="${component.getClassName()}">
+    <th:block th:if="${component.header ne null}">
+        <div th:replace="~{qxcmp/globals/components :: component(${component.header})}"></div>
+    </th:block>
+    <th:block th:if="${component.body ne null}">
+        <div th:replace="~{qxcmp/globals/components :: component(${component.body})}"></div>
+    </th:block>
+    <th:block th:if="${component.footer ne null}">
+        <div th:replace="~{qxcmp/globals/components :: component(${component.footer})}"></div>
+    </th:block>
+</table>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.EntityTableFilter"*/-->
+<form th:fragment="table-filter(component)">
+    <b>过滤： </b>
+    <div th:replace="~{qxcmp/globals/components :: component(${component.selection})}"></div>
+    <div th:replace="~{qxcmp/globals/components :: component(${component.input})}"></div>
+    <div th:replace="~{qxcmp/globals/components :: component(${component.button})}"></div>
+</form>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.AbstractTableHeader"*/-->
+<th:block th:fragment="table-header(component)">
+    <thead th:class="${component.getClassName()}">
+    <th:block th:each="row : ${component.rows}">
+        <div th:replace="~{qxcmp/globals/components :: component(${row})}"></div>
+    </th:block>
+    </thead>
+</th:block>
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.AbstractTableBody"*/-->
+<th:block th:fragment="table-body(component)">
+    <tbody th:class="${component.getClassName()}">
+    <th:block th:each="row : ${component.rows}">
+        <div th:replace="~{qxcmp/globals/components :: component(${row})}"></div>
+    </th:block>
+    </tbody>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.AbstractTableFooter"*/-->
+<th:block th:fragment="table-footer(component)">
+    <tfoot th:class="${component.getClassName()}">
+    <th:block th:each="row : ${component.rows}">
+        <div th:replace="~{qxcmp/globals/components :: component(${row})}"></div>
+    </th:block>
+    </tfoot>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.AbstractTableRow"*/-->
+<th:block th:fragment="table-row(component)">
+    <tr th:class="${component.getClassName()}">
+        <th:block th:each="cell : ${component.cells}">
+            <div th:replace="~{qxcmp/globals/components :: component(${cell})}"></div>
+        </th:block>
+    </tr>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.AbstractTableCell"*/-->
+<th:block th:fragment="table-head(component)">
+    <th th:class="${component.getClassName()}" th:title="${component.content}"
+        th:rowspan="${component.rowSpan gt 1 ? component.rowSpan : _}"
+        th:colspan="${component.colSpan gt 1 ? component.colSpan : _}">
+        <th:block th:if="${not #lists.isEmpty(component.components)}">
+            <th:block th:each="component : ${component.components}">
+                <div th:replace="~{qxcmp/globals/components :: component(${component})}"></div>
+            </th:block>
+        </th:block>
+        <th:block th:if="${#lists.isEmpty(component.components)}" th:utext="${component.content}"/>
+    </th>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.AbstractTableCell"*/-->
+<th:block th:fragment="table-data(component)">
+    <td th:class="${component.getClassName()}" th:title="${component.content}"
+        th:rowspan="${component.rowSpan gt 1 ? component.rowSpan : _}"
+        th:colspan="${component.colSpan gt 1 ? component.colSpan : _}">
+        <th:block th:if="${not #lists.isEmpty(component.components)}">
+            <th:block th:each="component : ${component.components}">
+                <div th:replace="~{qxcmp/globals/components :: component(${component})}"></div>
+            </th:block>
+        </th:block>
+        <th:block th:if="${#lists.isEmpty(component.components)}" th:utext="${component.content}"/>
+    </td>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.TableHeadCheckbox"*/-->
+<th:block th:fragment="table-head-checkbox(component)">
+    <th th:class="${component.getClassName()}">
+        <div class="ui head fitted checkbox" th:attr="data-key=${component.key}">
+            <input type="checkbox"/>
+            <label></label>
+        </div>
+    </th>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.TableHeadCheckbox"*/-->
+<th:block th:fragment="table-data-checkbox(component)">
+    <td th:class="${component.getClassName()}">
+        <div class="ui data fitted checkbox" th:attr="data-key=${component.key}">
+            <input type="checkbox"/>
+            <label></label>
+        </div>
+    </td>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.EntityTable"*/-->
+<th:block th:fragment="entity-table(component)">
+    <th:block th:if="${component.tableHeader ne null}">
+        <div th:replace="~{qxcmp/globals/components :: component(${component.tableHeader})}"></div>
+    </th:block>
+    <div th:id="${component.id}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div class="ui inverted blurring load dimmer">
+            <div class="ui text loader"></div>
+        </div>
+        <div th:replace="~{:: table(${component})}"></div>
+    </div>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var id = /*[[|#${component.id}|]]*/ "";
+            var csrf = $(id).find("input[name='_csrf']").val();
+            var loadDimmer = $(id).find(".ui.load.dimmer");
+            var table = $(id).find("table");
+            var headCheckbox = $(table).find("thead .ui.head.checkbox");
+            var dataCheckbox = $(table).find("tbody .ui.data.checkbox");
+            var tableActionButton = $(table).find("thead tr .table-action.action.button");
+            var batchActionButton = $(table).find("thead tr .batch.action.button");
+            var rowActionButton = $(table).find("tbody tr td .table-row.action.button");
+
+            function performRowAction(button, action) {
+                button.addClass("loading");
+
+                $.ajax(action, {
+                    type: "POST",
+                    data: {
+                        "_csrf": csrf
+                    },
+                    success: function () {
+                        button.removeClass("loading");
+                        $(loadDimmer).dimmer("show");
+                        window.location.reload();
+                    },
+                    error: function () {
+                        button.removeClass("loading");
+                        button.addClass("error");
+                    }
+                });
+            }
+
+            function performTableAction(button, action) {
+                button.addClass("loading");
+
+                $.ajax(action, {
+                    type: "POST",
+                    data: {
+                        "_csrf": csrf
+                    },
+                    success: function () {
+                        button.removeClass("loading");
+                        $(loadDimmer).dimmer("show");
+                        window.location.reload();
+                    },
+                    error: function () {
+                        button.removeClass("loading");
+                        button.addClass("error");
+                    }
+                });
+            }
+
+            function performBatchAction(button, action, keys) {
+                button.addClass("loading");
+
+                $.ajax(action, {
+                    type: "POST",
+                    data: {
+                        "_csrf": csrf,
+                        "keys": keys
+                    },
+                    success: function () {
+                        button.removeClass("loading");
+                        $(loadDimmer).dimmer("show");
+                        window.location.reload();
+                    },
+                    error: function () {
+                        button.removeClass("loading");
+                        button.addClass("error");
+                    }
+                });
+            }
+
+            $(loadDimmer).dimmer({
+                closeable: false
+            });
+
+            $(rowActionButton).click(function () {
+                var button = $(this);
+                var action = $(button).attr("data-action");
+                var showConfirm = eval($(button).attr("data-show-confirm"));
+
+                if (action) {
+                    if (showConfirm) {
+                        var title = $(button).attr("data-confirm-title");
+                        var description = $(button).attr("data-confirm-description");
+
+                        $.dialog({
+                            title: title,
+                            description: description,
+                            onAccept: function () {
+                                performRowAction(button, action);
+                                return true;
+                            }
+                        })
+                    } else {
+                        performRowAction(button, action);
+                    }
+                }
+            });
+
+            $(tableActionButton).click(function () {
+                var button = $(this);
+                var action = $(button).attr("data-action");
+                var showConfirm = eval($(button).attr("data-show-confirm"));
+
+                if (action) {
+                    if (showConfirm) {
+                        var title = $(button).attr("data-confirm-title");
+                        var description = $(button).attr("data-confirm-description");
+
+                        $.dialog({
+                            title: title,
+                            description: description,
+                            onAccept: function () {
+                                performTableAction(button, action);
+                                return true;
+                            }
+                        })
+                    } else {
+                        performTableAction(button, action);
+                    }
+                }
+            });
+
+            $(batchActionButton).click(function () {
+                var button = $(this);
+                var action = $(button).attr("data-action");
+                var keys = [];
+                var showConfirm = eval($(button).attr("data-show-confirm"));
+
+                $.each(dataCheckbox, function () {
+                    if ($(this).checkbox("is checked")) {
+                        keys.push($(this).attr("data-key"))
+                    }
+                });
+
+                if (action && keys.length > 0) {
+                    if (showConfirm) {
+                        var title = $(button).attr("data-confirm-title");
+                        var description = $(button).attr("data-confirm-description");
+
+                        $.dialog({
+                            title: title,
+                            description: description,
+                            onAccept: function () {
+                                performBatchAction(button, action, keys);
+                                return true;
+                            }
+                        })
+                    } else {
+                        performBatchAction(button, action, keys);
+                    }
+                }
+            });
+
+            $(headCheckbox).checkbox({
+                onChecked: function () {
+                    $(dataCheckbox).checkbox("set checked");
+                },
+                onUnchecked: function () {
+                    $(dataCheckbox).checkbox("set unchecked");
+                }
+            });
+
+            $(dataCheckbox).checkbox({
+                onChange: function () {
+                    $(headCheckbox).checkbox(getHeadCheckboxState());
+                }
+            });
+
+            function getHeadCheckboxState() {
+                var allCheck = true;
+                var allUncheck = true;
+                $.each(dataCheckbox, function () {
+                    if ($(this).checkbox("is checked")) {
+                        allUncheck = false;
+                    } else {
+                        allCheck = false;
+                    }
+                });
+
+                if (allCheck) {
+                    return "set checked";
+                }
+
+                if (allUncheck) {
+                    return "set unchecked";
+                }
+
+                return "set indeterminate";
+            }
+        });
+    </script>
+</th:block>
+
+<!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.EntityTableActionButton"*/-->
+<th:block th:fragment="action-button(component)">
+    <button th:if="${component.method.name() eq 'POST'}" th:class="${component.getClassName()}"
+            th:attr="data-action=@{${component.anchor.href}},data-show-confirm=${component.showConfirm},data-confirm-title=${component.confirmDialogTitle},data-confirm-description=${component.confirmDialogDescription}"
+            th:utext="${component.text}"></button>
+    <a th:if="${component.method.name() ne 'POST'}" th:class="${component.getClassName()}"
+       th:utext="${component.text}" th:href="@{${component.anchor.href}}"
+       th:target="${component.anchor.target}"></a>
+</th:block>
+</body>
+</html>

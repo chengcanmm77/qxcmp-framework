@@ -1,0 +1,32 @@
+<!--/*
+    头部组件
+*/-->
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="page" type="com.qxcmp.web.page.AbstractPage"*/-->
+<head>
+    <!--/* 元数据 */-->
+    <meta charset=" UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="keywords" th:content="${@siteServiceImpl.getKeywords()} ?: _"/>
+    <meta name="description" th:content="${@siteServiceImpl.getDescription()} ?: _"/>
+
+    <title th:text="${page.title} ?: ${@siteServiceImpl.getTitle()}"></title>
+
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{${@siteServiceImpl.getFavicon()}}"/>
+
+    <link rel="stylesheet" th:href="@{/assets/scripts/qxcmp.css}"/>
+
+    <script th:src="@{/assets/scripts/qxcmp.js}"></script>
+
+    <th:block th:each="style : ${page.stylesheets}">
+        <link rel="stylesheet" th:href="@{${style}}"/>
+    </th:block>
+
+    <th:block th:each="script : ${page.javaScripts}">
+        <script th:src="@{${script}}"></script>
+    </th:block>
+</head>
+</html>
