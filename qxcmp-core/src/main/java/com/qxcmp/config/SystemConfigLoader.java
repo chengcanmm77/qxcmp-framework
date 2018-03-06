@@ -17,15 +17,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 系统配置加载器
  * <p>
- * 负责加载所有使用{@link SystemConfigAutowired}注解的Spring Bean，并加载相应的系统配置
+ * 负责加载所有实现{@link QxcmpSystemConfig}接口的Spring Bean，并加载相应的系统配置
  * <p>
- * 具体加载方式如下： <ol> <li>如果字段以{@link SystemConfigAutowired#prefix()}开头，则加载该字段</li> <li>如果字段值不为空，则系统配置的名称为该字段值</li>
- * <li>如果字段值为空，则根据字段名称转换系统配置名称并设置该字段值为转换后的值</li> <li>去掉{@link SystemConfigAutowired#prefix()}以后，用{@code .} 代替{@code
- * _}并把所有字母转换为小写</li> <li>寻找与字段名称相同并且以{@link SystemConfigAutowired#suffix()}结尾的字段</li> <li>如果找到，则设置系统配置的值为该字段的值</li>
+ * 具体加载方式如下：
+ * <ol>
+ * <li>如果字段以{@link #DEFAULT_CONFIG_PREFIX}开头，则加载该字段</li>
+ * <li>如果字段值不为空，则系统配置的名称为该字段值</li>
+ * <li>如果字段值为空，则根据字段名称转换系统配置名称并设置该字段值为转换后的值</li>
+ * <li>去掉{@link #DEFAULT_VALUE_SUFFIX}以后，用{@code .} 代替{@code _}并把所有字母转换为小写</li>
+ * <li>寻找与字段名称相同并且以{@link #DEFAULT_VALUE_SUFFIX}结尾的字段</li>
+ * <li>如果找到，则设置系统配置的值为该字段的值</li>
  * </ol>
  *
  * @author aaric
- * @see SystemConfigAutowired
+ * @see QxcmpSystemConfig
  * @see SystemConfig
  */
 @Order(Ordered.HIGHEST_PRECEDENCE + 1)
