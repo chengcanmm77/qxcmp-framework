@@ -5,7 +5,7 @@ import com.qxcmp.core.QxcmpConfiguration;
 import com.qxcmp.web.view.elements.container.TextContainer;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.PageHeader;
-import com.qxcmp.web.view.modules.table.Table;
+import com.qxcmp.web.view.modules.table.AbstractTable;
 import com.qxcmp.web.view.page.QxcmpAdminPage;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +33,11 @@ public class AdminAboutPage extends QxcmpAdminPage {
     @Override
     public void render() {
         setBreadcrumb("控制台", "", "关于");
-
         addComponent(new TextContainer().addComponent(new Overview(new PageHeader(HeaderType.H1, QXCMP)).addComponent(getTableView()).addLink("返回", QXCMP_BACKEND_URL)));
     }
 
-    private Table getTableView() {
-        return tableHelper.convert(stringObjectMap -> {
+    private AbstractTable getTableView() {
+        return viewHelper.nextTable(stringObjectMap -> {
             String appVersion = QxcmpConfiguration.class.getPackage().getImplementationVersion();
             String appBuildDate = "development";
             String appStartUpDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(applicationContext.getStartupDate()));

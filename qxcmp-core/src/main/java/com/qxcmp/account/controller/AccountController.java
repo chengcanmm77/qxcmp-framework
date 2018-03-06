@@ -4,10 +4,9 @@ import com.qxcmp.account.AccountCode;
 import com.qxcmp.account.AccountCodeService;
 import com.qxcmp.account.AccountService;
 import com.qxcmp.account.form.AccountActivateForm;
+import com.qxcmp.account.form.AccountLogonUsernameForm;
 import com.qxcmp.account.form.AccountResetForm;
-import com.qxcmp.account.page.AccountSelectPage;
-import com.qxcmp.account.page.LogonClosePage;
-import com.qxcmp.account.page.ResetClosePage;
+import com.qxcmp.account.page.*;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.page.AbstractPage;
@@ -41,6 +40,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static com.qxcmp.core.QxcmpSystemConfig.ACCOUNT_ENABLE_USERNAME;
+
 /**
  * 账户登录、注册、重置页面路由
  *
@@ -63,6 +64,24 @@ public class AccountController extends QxcmpController {
         } else {
             return qxcmpPage(AccountSelectPage.class, "请选择注册方式", accountService.getRegisterItems());
         }
+    }
+
+    @GetMapping("/logon/username")
+    public ModelAndView logonUsername(final AccountLogonUsernameForm form) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).filter(aBoolean -> aBoolean).map(aBoolean -> qxcmpPage(LogonPage.class, form, null)).orElse(qxcmpPage(LogonClosePage.class));
+    }
+
+    @PostMapping("/logon/username")
+    public ModelAndView logonUsername(@Valid final AccountLogonUsernameForm form, BindingResult bindingResult) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).filter(aBoolean -> aBoolean).map(aBoolean -> {
+            verifyCaptcha(form.getCaptcha(), bindingResult);
+            accountService.logon(form, bindingResult);
+            if (bindingResult.hasErrors()) {
+                return qxcmpPage(LogonPage.class, form, bindingResult);
+            }
+            return qxcmpPage(LogonSuccessPage.class);
+        }).orElse(qxcmpPage(LogonClosePage.class));
+
     }
 
     @GetMapping("/reset")

@@ -9,8 +9,6 @@ import com.qxcmp.core.Platform;
 import com.qxcmp.core.navigation.NavigationService;
 import com.qxcmp.user.UserService;
 import com.qxcmp.web.view.Component;
-import com.qxcmp.web.view.support.utils.FormHelper;
-import com.qxcmp.web.view.support.utils.TableHelper;
 import com.qxcmp.web.view.support.utils.ViewHelper;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +36,6 @@ public abstract class AbstractQxcmpPage implements QxcmpPage {
     protected NavigationService navigationService;
     protected Platform platformConfig;
     protected ViewHelper viewHelper;
-    protected TableHelper tableHelper;
-    protected FormHelper formHelper;
 
     private static final String PAGE = "qxcmp";
     private static final String BASE_MODEL_OBJECT = "page";
@@ -164,15 +160,5 @@ public abstract class AbstractQxcmpPage implements QxcmpPage {
     @Autowired
     public void setViewHelper(ViewHelper viewHelper) {
         this.viewHelper = viewHelper;
-    }
-
-    @Autowired
-    public void setTableHelper(TableHelper tableHelper) {
-        this.tableHelper = tableHelper;
-    }
-
-    @Autowired
-    public void setFormHelper(FormHelper formHelper) {
-        this.formHelper = formHelper;
     }
 }

@@ -41,7 +41,7 @@ public class LoginPage extends BaseAccountPage {
     public void renderContent(Col col) {
         col.addComponent(new Segment()
                 .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setDividing())
-                .addComponent(formHelper.convert(showCaptcha ? loginFormWithCaptcha : loginForm).setErrorMessage(getLoginErrorMessage()))
+                .addComponent(viewHelper.nextForm(showCaptcha ? loginFormWithCaptcha : loginForm).setErrorMessage(getLoginErrorMessage()))
                 .addComponent(new HorizontalDivider("或"))
                 .addComponent(new Container().setAlignment(Alignment.CENTER)
                         .addComponent(new Anchor("注册新用户", "/account/logon"))

@@ -1,7 +1,7 @@
 package com.qxcmp.account.controller;
 
 import com.qxcmp.account.*;
-import com.qxcmp.account.form.AccountUsernameLogonForm;
+import com.qxcmp.account.form.AccountLogonUsernameForm;
 import com.qxcmp.account.form.AccountUsernameResetForm;
 import com.qxcmp.account.form.AccountUsernameResetQuestionForm;
 import com.qxcmp.user.User;
@@ -36,21 +36,8 @@ public class AccountUsernameController extends AccountController {
         this.securityQuestionService = securityQuestionService;
     }
 
-    @GetMapping("logon")
-    public ModelAndView logon(final AccountUsernameLogonForm form) {
-
-        if (!systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false)) {
-            return logonClosedPage().build();
-        }
-
-        return buildPage(segment -> segment
-                .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("用户名注册").setDividing().setAlignment(Alignment.LEFT))
-                .addComponent(convertToForm(form))
-        ).build();
-    }
-
     @PostMapping("logon")
-    public ModelAndView logonEmailPost(@Valid AccountUsernameLogonForm form, BindingResult bindingResult) {
+    public ModelAndView logonEmailPost(@Valid AccountLogonUsernameForm form, BindingResult bindingResult) {
 
         if (!systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false)) {
             return logonClosedPage().build();

@@ -6,16 +6,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 用户登录事件
+ * 用户注册账户事件
  *
  * @author Aaric
  */
 @Getter
 @RequiredArgsConstructor
-public class UserLoginEvent implements QxcmpEvent {
+public class UserLogonEvent implements QxcmpEvent {
 
     /**
-     * 登录成功的用户
+     * 注册的用户
      */
     private final User user;
 }

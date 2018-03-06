@@ -4,12 +4,17 @@ import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.message.ErrorMessage;
 import com.qxcmp.web.view.modules.form.AbstractForm;
 import com.qxcmp.web.view.modules.pagination.Pagination;
+import com.qxcmp.web.view.modules.table.AbstractTable;
 import com.qxcmp.web.view.support.Color;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * 视图生成工具
@@ -21,16 +26,41 @@ import org.springframework.validation.BindingResult;
 public class ViewHelper {
 
     private final FormHelper formHelper;
-
     private final TableHelper tableHelper;
-
     private final OverviewHelper overviewHelper;
+
+    /**
+     * 创建一个表单组件
+     *
+     * @param form          表单对象
+     * @param bindingResult 错误信息
+     *
+     * @return 表单组件
+     */
+    public AbstractForm nextForm(Object form, BindingResult bindingResult) {
+        AbstractForm abstractForm = formHelper.convert(form);
+
+        if (Objects.nonNull(bindingResult)) {
+            abstractForm.setErrorMessage(formHelper.convertToErrorMessage(bindingResult, form));
+        }
+
+        return abstractForm;
+    }
 
     public AbstractForm nextForm(Object form) {
         return formHelper.convert(form);
     }
 
+    public AbstractTable nextTable(Consumer<Map<Object, Object>> consumer) {
+        return tableHelper.convert(consumer);
+    }
+
     public ErrorMessage nextFormErrorMessage(BindingResult bindingResult, Object form) {
+
+        if (Objects.isNull(bindingResult)) {
+            return null;
+        }
+
         return formHelper.convertToErrorMessage(bindingResult, form);
     }
 

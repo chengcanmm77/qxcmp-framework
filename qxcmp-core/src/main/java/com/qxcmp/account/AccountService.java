@@ -1,16 +1,23 @@
 package com.qxcmp.account;
 
 import com.google.common.collect.Lists;
+import com.qxcmp.account.event.UserLogonEvent;
+import com.qxcmp.account.form.AccountLogonUsernameForm;
 import com.qxcmp.config.SiteService;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.core.init.QxcmpInitializer;
 import com.qxcmp.message.EmailService;
 import com.qxcmp.user.User;
+import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.qxcmp.core.QxcmpSystemConfig.*;
@@ -24,6 +31,8 @@ import static com.qxcmp.core.QxcmpSystemConfig.*;
 @RequiredArgsConstructor
 public class AccountService implements QxcmpInitializer {
 
+    private final ApplicationContext applicationContext;
+    private final UserService userService;
     private final EmailService emailService;
     private final AccountCodeService codeService;
     private final SystemConfigService systemConfigService;
@@ -122,5 +131,38 @@ public class AccountService implements QxcmpInitializer {
     @Override
     public void init() {
         loadConfig();
+    }
+
+    /**
+     * 进行用户名注册
+     *
+     * @param form          注册表单
+     * @param bindingResult 错误对象
+     */
+    public void logon(AccountLogonUsernameForm form, BindingResult bindingResult) {
+
+        if (userService.findById(form.getUsername()).isPresent()) {
+            bindingResult.rejectValue("username", "Username.exist");
+        }
+
+        if (!Objects.equals(form.getPassword(), form.getPasswordConfirm())) {
+            bindingResult.rejectValue("passwordConfirm", "PasswordConfirm");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return;
+        }
+
+        applicationContext.publishEvent(new UserLogonEvent(userService.create(() -> {
+            User user = userService.next();
+            user.setUsername(form.getUsername());
+            user.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
+            user.setAccountNonExpired(true);
+            user.setAccountNonLocked(true);
+            user.setCredentialsNonExpired(true);
+            user.setEnabled(true);
+            userService.setDefaultPortrait(user);
+            return user;
+        })));
     }
 }
