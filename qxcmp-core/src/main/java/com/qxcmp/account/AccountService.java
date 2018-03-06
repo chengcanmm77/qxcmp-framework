@@ -3,6 +3,8 @@ package com.qxcmp.account;
 import com.google.common.collect.Lists;
 import com.qxcmp.account.event.UserLogonEvent;
 import com.qxcmp.account.form.AccountLogonUsernameForm;
+import com.qxcmp.account.form.AccountResetUsernameForm;
+import com.qxcmp.account.form.AccountResetUsernameQuestionForm;
 import com.qxcmp.config.SiteService;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpSystemConfig;
@@ -18,6 +20,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.qxcmp.core.QxcmpSystemConfig.*;
@@ -37,6 +40,7 @@ public class AccountService implements QxcmpInitializer {
     private final AccountCodeService codeService;
     private final SystemConfigService systemConfigService;
     private final SiteService siteService;
+    private final AccountSecurityQuestionService securityQuestionService;
 
     /**
      * 平台当前激活的模块
@@ -164,5 +168,59 @@ public class AccountService implements QxcmpInitializer {
             userService.setDefaultPortrait(user);
             return user;
         })));
+    }
+
+    /**
+     * 获取用户密保问题并对表单进行效验
+     *
+     * @param form          表单
+     * @param bindingResult 错误对象
+     *
+     * @return 用户密保问题
+     */
+    public AccountSecurityQuestion getUserSecurityQuestion(AccountResetUsernameForm form, BindingResult bindingResult) {
+        Optional<User> user = userService.findById(form.getUsername());
+
+        if (!user.isPresent()) {
+            bindingResult.rejectValue("username", "Account.reset.noUsername");
+        } else {
+            return securityQuestionService.findByUserId(user.get().getId()).orElseGet(() -> {
+                bindingResult.rejectValue("username", "Account.reset.noQuestion");
+                return null;
+            });
+        }
+
+        return null;
+    }
+
+    /**
+     * 验证用户密保问题，如果验证成功，返回重置码
+     *
+     * @param form 表单
+     *
+     * @return 账户重置码
+     */
+    public AccountCode validateSecurityQuestion(AccountResetUsernameQuestionForm form) {
+        AccountSecurityQuestion securityQuestion = securityQuestionService.findByUserId(form.getUserId()).orElseThrow(RuntimeException::new);
+
+        int count = 0;
+
+        if (form.getAnswer1().equals(securityQuestion.getAnswer1())) {
+            count++;
+        }
+
+        if (form.getAnswer2().equals(securityQuestion.getAnswer2())) {
+            count++;
+        }
+
+        if (form.getAnswer3().equals(securityQuestion.getAnswer3())) {
+            count++;
+        }
+
+        if (count >= 2) {
+            return codeService.nextPasswordCode(securityQuestion.getUserId());
+        }
+
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package com.qxcmp.account.controller;
 
 import com.qxcmp.account.AccountCodeService;
+import com.qxcmp.account.AccountSecurityQuestionService;
 import com.qxcmp.account.AccountService;
 import com.qxcmp.account.form.AccountEmailLogonForm;
 import com.qxcmp.account.form.AccountEmailResetForm;
@@ -28,8 +29,9 @@ import java.util.Optional;
 @RequestMapping("/account/email/")
 public class AccountEmailController extends AccountController {
 
-    public AccountEmailController(AccountService accountService, AccountCodeService codeService) {
-        super(accountService, codeService);
+
+    public AccountEmailController(AccountService accountService, AccountCodeService codeService, AccountSecurityQuestionService securityQuestionService) {
+        super(accountService, codeService, securityQuestionService);
     }
 
     @GetMapping("logon")

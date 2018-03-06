@@ -11,11 +11,11 @@ import lombok.Data;
  * 用户使用密码找回密码的时候需要填写的信息
  *
  * @author aaric
- * @see AccountUsernameResetForm
+ * @see AccountResetUsernameForm
  */
 @Form(submitText = "立即重置")
 @Data
-public class AccountUsernameResetQuestionForm {
+public class AccountResetUsernameQuestionForm {
 
     @HiddenField
     private String userId;

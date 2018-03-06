@@ -17,11 +17,11 @@ import javax.validation.constraints.Size;
  * <li>如果用户回答对两个以上的问题则生成密码重置链接并跳转到账户重置表单</li> </ol>
  *
  * @author aaric
- * @see AccountUsernameResetQuestionForm
+ * @see AccountResetUsernameQuestionForm
  */
 @Form(submitText = "回答密保问题")
 @Data
-public class AccountUsernameResetForm {
+public class AccountResetUsernameForm {
 
     /**
      * 用户名

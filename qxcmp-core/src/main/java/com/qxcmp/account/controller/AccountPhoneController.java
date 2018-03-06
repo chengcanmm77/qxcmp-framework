@@ -2,6 +2,7 @@ package com.qxcmp.account.controller;
 
 import com.qxcmp.account.AccountCode;
 import com.qxcmp.account.AccountCodeService;
+import com.qxcmp.account.AccountSecurityQuestionService;
 import com.qxcmp.account.AccountService;
 import com.qxcmp.account.form.AccountPhoneLogonForm;
 import com.qxcmp.account.form.AccountPhoneResetForm;
@@ -29,8 +30,9 @@ import java.util.Optional;
 @RequestMapping("/account/phone/")
 public class AccountPhoneController extends AccountController {
 
-    public AccountPhoneController(AccountService accountService, AccountCodeService codeService) {
-        super(accountService, codeService);
+
+    public AccountPhoneController(AccountService accountService, AccountCodeService codeService, AccountSecurityQuestionService securityQuestionService) {
+        super(accountService, codeService, securityQuestionService);
     }
 
     /**

@@ -1,11 +1,7 @@
 package com.qxcmp.account.controller;
 
-import com.qxcmp.account.AccountCode;
-import com.qxcmp.account.AccountCodeService;
-import com.qxcmp.account.AccountService;
-import com.qxcmp.account.form.AccountActivateForm;
-import com.qxcmp.account.form.AccountLogonUsernameForm;
-import com.qxcmp.account.form.AccountResetForm;
+import com.qxcmp.account.*;
+import com.qxcmp.account.form.*;
 import com.qxcmp.account.page.*;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
@@ -37,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -55,6 +52,7 @@ public class AccountController extends QxcmpController {
 
     protected final AccountService accountService;
     protected final AccountCodeService codeService;
+    private final AccountSecurityQuestionService securityQuestionService;
 
     @GetMapping("/logon")
     public ModelAndView logon() {
@@ -63,7 +61,7 @@ public class AccountController extends QxcmpController {
         } else if (accountService.getRegisterItems().size() == 1) {
             return redirect(accountService.getRegisterItems().get(0).getRegisterUrl());
         } else {
-            return qxcmpPage(AccountSelectPage.class, "请选择注册方式", accountService.getRegisterItems());
+            return qxcmpPage(LogonSelectPage.class, accountService.getRegisterItems());
         }
     }
 
@@ -91,7 +89,7 @@ public class AccountController extends QxcmpController {
         } else if (accountService.getResetItems().size() == 1) {
             return redirect(accountService.getResetItems().get(0).getResetUrl());
         } else {
-            return qxcmpPage(AccountSelectPage.class, "请选择密码找回方式", accountService.getRegisterItems().stream().filter(accountComponent -> !accountComponent.isDisableReset()).collect(Collectors.toList()));
+            return qxcmpPage(ResetSelectPage.class, accountService.getRegisterItems().stream().filter(accountComponent -> !accountComponent.isDisableReset()).collect(Collectors.toList()));
         }
     }
 
@@ -110,7 +108,7 @@ public class AccountController extends QxcmpController {
     }
 
     @PostMapping("/reset/{id}")
-    public ModelAndView reset(@PathVariable String id, @Valid final AccountResetForm form, BindingResult bindingResult) throws Exception {
+    public ModelAndView reset(@PathVariable String id, @Valid final AccountResetForm form, BindingResult bindingResult) {
 
         AccountCode code = codeService.findOne(id).orElse(null);
 
@@ -136,6 +134,39 @@ public class AccountController extends QxcmpController {
         });
 
         return page(new Overview("密码重置成功", "请使用新的密码登录").addLink("现在去登录", "/login")).build();
+    }
+
+    @GetMapping("/reset/username")
+    public ModelAndView resetUsername(final AccountResetUsernameForm form) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).filter(aBoolean -> aBoolean).map(aBoolean -> qxcmpPage(ResetPage.class, form, null)).orElse(qxcmpPage(ResetClosePage.class));
+    }
+
+    @PostMapping("/reset/username")
+    public ModelAndView resetUsername(@Valid final AccountResetUsernameForm form, BindingResult bindingResult) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).filter(aBoolean -> aBoolean).map(aBoolean -> {
+            AccountSecurityQuestion securityQuestion = accountService.getUserSecurityQuestion(form, bindingResult);
+            verifyCaptcha(form.getCaptcha(), bindingResult);
+            if (bindingResult.hasErrors()) {
+                return qxcmpPage(ResetPage.class, form, bindingResult);
+            }
+            final AccountResetUsernameQuestionForm questionForm = new AccountResetUsernameQuestionForm();
+            questionForm.setQuestion1(securityQuestion.getQuestion1());
+            questionForm.setQuestion2(securityQuestion.getQuestion2());
+            questionForm.setQuestion3(securityQuestion.getQuestion3());
+            questionForm.setUserId(securityQuestion.getUserId());
+            return qxcmpPage(ResetPage.class, questionForm, null).addObject(questionForm);
+        }).orElse(qxcmpPage(LogonClosePage.class));
+    }
+
+    @PostMapping("/reset/username/question")
+    public ModelAndView resetUsernameQuestion(@Valid final AccountResetUsernameQuestionForm form) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).filter(aBoolean -> aBoolean).map(aBoolean -> {
+            AccountCode accountCode = accountService.validateSecurityQuestion(form);
+            if (Objects.isNull(accountCode)) {
+                return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("密保问题回答不正确").addLink("返回", "/account/reset"));
+            }
+            return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("密保问题验证成功").addLink("重置密码", "/account/reset/" + accountCode.getId()));
+        }).orElse(qxcmpPage(LogonClosePage.class));
     }
 
     @GetMapping("/activate")

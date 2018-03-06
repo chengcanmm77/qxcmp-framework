@@ -29,19 +29,18 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @Scope(SCOPE_PROTOTYPE)
 @Component
 @RequiredArgsConstructor
-public class AccountSelectPage extends BaseAccountPage {
+public class ResetSelectPage extends BaseAccountPage {
 
-    private final String title;
     private final Collection<AccountComponent> accountComponents;
 
     @Override
     public void renderContent(Col col) {
 
-        List list = new com.qxcmp.web.view.elements.list.List().setSelection();
-        accountComponents.forEach(accountComponent -> list.addItem(new TextItem(accountComponent.getRegisterName()).setUrl(accountComponent.getRegisterUrl())));
+        List list = new List().setSelection();
+        accountComponents.forEach(accountComponent -> list.addItem(new TextItem(accountComponent.getResetName()).setUrl(accountComponent.getResetUrl())));
 
         col.addComponent(new Segment().setAlignment(Alignment.CENTER)
-                .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle(title).setDividing().setAlignment(Alignment.LEFT))
+                .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("请选择密码找回方式").setDividing().setAlignment(Alignment.LEFT))
                 .addComponent(list)
                 .addComponent(new Divider())
                 .addComponent(new Button("返回登录", "/login").setBasic()));
