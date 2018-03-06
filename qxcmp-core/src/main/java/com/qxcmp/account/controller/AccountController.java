@@ -3,26 +3,9 @@ package com.qxcmp.account.controller;
 import com.qxcmp.account.*;
 import com.qxcmp.account.form.*;
 import com.qxcmp.account.page.*;
-import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
-import com.qxcmp.web.page.AbstractPage;
-import com.qxcmp.web.view.elements.button.Button;
-import com.qxcmp.web.view.elements.divider.Divider;
-import com.qxcmp.web.view.elements.grid.Col;
-import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
-import com.qxcmp.web.view.elements.header.HeaderType;
-import com.qxcmp.web.view.elements.header.IconHeader;
-import com.qxcmp.web.view.elements.header.PageHeader;
-import com.qxcmp.web.view.elements.html.P;
-import com.qxcmp.web.view.elements.icon.Icon;
-import com.qxcmp.web.view.elements.image.Image;
-import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.page.QxcmpOverviewPage;
-import com.qxcmp.web.view.support.Alignment;
-import com.qxcmp.web.view.support.ColumnCount;
-import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 import static com.qxcmp.core.QxcmpSystemConfig.*;
 
@@ -216,77 +197,26 @@ public class AccountController extends QxcmpController {
 
     @GetMapping("/activate")
     public ModelAndView activate(final AccountActivateForm form) {
-        return buildPage(segment -> segment
-                .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("激活账户").setDividing().setAlignment(Alignment.LEFT))
-                .addComponent(convertToForm(form))
-        ).addObject(form)
-                .build();
+        return qxcmpPage(ActivatePage.class, form, null);
     }
 
     @PostMapping("/activate")
     public ModelAndView activate(@Valid final AccountActivateForm form, BindingResult bindingResult) {
-
-        Optional<User> userOptional = userService.findByUsername(form.getUsername());
-
-        if (!userOptional.isPresent()) {
-            bindingResult.rejectValue("username", "Account.activate.notExist");
-        } else {
-            if (StringUtils.isBlank(userOptional.get().getEmail())) {
-                bindingResult.rejectValue("username", "Account.activate.noEmail");
-            }
-
-            if (userOptional.get().isEnabled()) {
-                bindingResult.rejectValue("username", "Account.activate.activated");
-            }
-        }
-
+        accountService.activate(form, bindingResult);
         verifyCaptcha(form.getCaptcha(), bindingResult);
-
         if (bindingResult.hasErrors()) {
-            return buildPage(segment -> segment
-                    .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("激活账户").setDividing().setAlignment(Alignment.LEFT))
-                    .addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form)))
-            ).addObject(form)
-                    .build();
+            return qxcmpPage(ActivatePage.class, form, bindingResult);
         }
-
-        try {
-            accountService.sendActivateEmail(userOptional.get());
-
-            return buildPage(segment -> segment.setAlignment(Alignment.CENTER)
-                    .addComponent(new PageHeader(HeaderType.H2, "发送激活邮件成功").setSubTitle("激活邮件已经发送到您的邮件，请前往激活。如果您未收到激活邮件，请检查是否被黑名单过滤，或者再次重新发送激活邮件"))
-                    .addComponent(new Divider())
-                    .addComponent(new Button("立即登录", "/login").setBasic())
-            ).build();
-        } catch (Exception e) {
-            return page(new Overview("发送激活邮件失败").addComponent(new P(e.getMessage())).addLink("重新发送", "/account/activate").addLink("返回登录", "/login")).build();
-        }
+        return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("激活邮件发送成功", "请前往您的邮箱点击激活链接以激活您的账户").addLink("返回登录", "/login"));
     }
 
     @GetMapping("/activate/{id}")
     public ModelAndView activate(@PathVariable String id) {
         try {
-            AccountCode code = codeService.findOne(id).orElseThrow(Exception::new);
-
-            if (codeService.isInvalidCode(id) || !code.getType().equals(AccountCode.Type.ACTIVATE)) {
-                return page(new Overview(new IconHeader("账户激活失败", new Icon("warning circle")).setSubTitle("无效的激活码")).addLink("重新激活账户", "/account/activate").addLink("返回登录", "/login")).build();
-            }
-
-            userService.update(code.getUserId(), user -> {
-                user.setEnabled(true);
-                codeService.delete(code);
-            });
-
-            return page(new Overview("账户激活成功", "现在可以登录您的账户了").addLink("现在去登录", "/login")).build();
+            accountService.activate(id);
+            return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("账户激活成功", "现在可以登录您的账户了").addLink("立即登录", "/login"));
         } catch (Exception e) {
-            return page(new Overview(new IconHeader("账户激活失败", new Icon("warning circle")).setSubTitle("无效的激活码")).addLink("重新激活账户", "/account/activate").addLink("返回登录", "/login")).build();
+            return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("无效的激活链接", "请确认激活链接是否正确").addLink("重新激活账户", "/account/activate").addLink("返回登录", "/login"));
         }
     }
-
-    protected AbstractPage buildPage(Consumer<Segment> consumer) {
-        Segment segment = new Segment();
-        consumer.accept(segment);
-        return page().addComponent(new VerticallyDividedGrid().setVerticallyPadded().setTextContainer().setColumnCount(ColumnCount.ONE).addItem(new Col().addComponent(segment)));
-    }
-
 }
