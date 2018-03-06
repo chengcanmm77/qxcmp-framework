@@ -1,19 +1,16 @@
 package com.qxcmp.account.controller;
 
 import com.qxcmp.account.*;
-import com.qxcmp.account.form.AccountLogonUsernameForm;
 import com.qxcmp.account.form.AccountUsernameResetForm;
 import com.qxcmp.account.form.AccountUsernameResetQuestionForm;
 import com.qxcmp.user.User;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.IconHeader;
 import com.qxcmp.web.view.elements.header.PageHeader;
-import com.qxcmp.web.view.elements.html.P;
 import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.image.Image;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.views.Overview;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.qxcmp.core.QxcmpSystemConfig.ACCOUNT_ENABLE_USERNAME;
@@ -34,50 +30,6 @@ public class AccountUsernameController extends AccountController {
     public AccountUsernameController(AccountService accountService, AccountCodeService codeService, AccountSecurityQuestionService securityQuestionService) {
         super(accountService, codeService);
         this.securityQuestionService = securityQuestionService;
-    }
-
-    @PostMapping("logon")
-    public ModelAndView logonEmailPost(@Valid AccountLogonUsernameForm form, BindingResult bindingResult) {
-
-        if (!systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false)) {
-            return logonClosedPage().build();
-        }
-
-        if (userService.findById(form.getUsername()).isPresent()) {
-            bindingResult.rejectValue("username", "Username.exist");
-        }
-
-        if (!Objects.equals(form.getPassword(), form.getPasswordConfirm())) {
-            bindingResult.rejectValue("passwordConfirm", "PasswordConfirm");
-        }
-
-        verifyCaptcha(form.getCaptcha(), bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            return buildPage(segment -> segment
-                    .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("用户名注册").setDividing().setAlignment(Alignment.LEFT))
-                    .addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form)))
-            ).addObject(form)
-                    .build();
-        }
-
-        try {
-            userService.create(() -> {
-                User user = userService.next();
-                user.setUsername(form.getUsername());
-                user.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
-                user.setAccountNonExpired(true);
-                user.setAccountNonLocked(true);
-                user.setCredentialsNonExpired(true);
-                user.setEnabled(true);
-                userService.setDefaultPortrait(user);
-                return user;
-            });
-
-            return page(new Overview("注册成功", "你已经成功注册账号，现在可以登录了").addLink("立即登录", "/login")).build();
-        } catch (Exception e) {
-            return page(new Overview(new IconHeader("注册失败", new Icon("warning circle"))).addComponent(new P(e.getMessage())).addLink("返回登录", "/login")).build();
-        }
     }
 
     @GetMapping("reset")

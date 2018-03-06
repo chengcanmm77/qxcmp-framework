@@ -21,6 +21,7 @@ import com.qxcmp.web.view.elements.html.P;
 import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.image.Image;
 import com.qxcmp.web.view.elements.segment.Segment;
+import com.qxcmp.web.view.page.QxcmpOverviewPage;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.support.ColumnCount;
 import com.qxcmp.web.view.views.Overview;
@@ -81,7 +82,6 @@ public class AccountController extends QxcmpController {
             }
             return qxcmpPage(LogonSuccessPage.class);
         }).orElse(qxcmpPage(LogonClosePage.class));
-
     }
 
     @GetMapping("/reset")
@@ -99,7 +99,7 @@ public class AccountController extends QxcmpController {
     public ModelAndView reset(@PathVariable String id, final AccountResetForm form) {
 
         if (codeService.isInvalidCode(id)) {
-            return page(new Overview(new IconHeader("无效的重置链接", new Icon("warning circle")).setSubTitle("请确认重置链接是否正确，或者重新找回密码")).addLink("重新找回密码", "/account/reset").addLink("返回登录", "/login")).build();
+            return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("无效的重置链接", "请确认重置链接是否正确").addLink("重新找回密码", "/account/reset").addLink("返回登录", "/login"));
         }
 
         return buildPage(segment -> segment

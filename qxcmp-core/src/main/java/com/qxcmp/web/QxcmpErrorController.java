@@ -1,6 +1,6 @@
 package com.qxcmp.web;
 
-import com.qxcmp.web.page.DefaultErrorPage;
+import com.qxcmp.web.view.page.QxcmpErrorPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -29,7 +29,7 @@ public class QxcmpErrorController extends QxcmpController implements ErrorContro
     @RequestMapping("")
     public ModelAndView handleError(HttpServletRequest request) {
         Map<String, Object> errors = errorAttributes.getErrorAttributes(new ServletWebRequest(request), true);
-        return qxcmpPage(DefaultErrorPage.class, errors);
+        return qxcmpPage(QxcmpErrorPage.class, errors);
     }
 
     @Override

@@ -1,11 +1,10 @@
-package com.qxcmp.web.page;
+package com.qxcmp.web.view.page;
 
 import com.qxcmp.exception.BlackListException;
 import com.qxcmp.web.view.elements.grid.Col;
 import com.qxcmp.web.view.elements.grid.Row;
 import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
 import com.qxcmp.web.view.elements.html.P;
-import com.qxcmp.web.view.page.GenericQxcmpPage;
 import com.qxcmp.web.view.support.Wide;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -18,14 +17,14 @@ import java.util.Map;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
- * 默认错误页面
+ * 平台错误页面
  *
  * @author Aaric
  */
 @Scope(SCOPE_PROTOTYPE)
 @Component
 @RequiredArgsConstructor
-public class DefaultErrorPage extends GenericQxcmpPage {
+public class QxcmpErrorPage extends GenericQxcmpPage {
 
     private final Map<String, Object> errors;
 
