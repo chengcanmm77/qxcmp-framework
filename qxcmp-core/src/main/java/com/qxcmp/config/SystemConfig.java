@@ -14,13 +14,13 @@ import java.util.Date;
  * <p>
  * 保存了平台需要的配置信息
  * <p>
- * 可以使用{@link QxcmpSystemConfig}标注的Spring Bean进行自动创建
+ * 可以使用{@link SystemConfigLoader}标注的Spring Bean进行自动创建
  * <p>
  * 可以使用{@link SystemConfigService}对系统配置进行读取和修改
  *
  * @author aaric
  * @see SystemConfigService
- * @see QxcmpSystemConfig
+ * @see SystemConfigLoader
  */
 @Entity
 @Table

@@ -11,6 +11,8 @@
 
     <artifactId>qxcmp-module-article</artifactId>
 
+    <name>QXCMP Article Module</name>
+
     <dependencies>
         <dependency>
             <groupId>com.github.aaricchen</groupId>

@@ -1,6 +1,6 @@
 package com.qxcmp.core;
 
-import com.qxcmp.config.QxcmpSystemConfig;
+import com.qxcmp.config.SystemConfigLoader;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Aaric
  */
 @Configuration
-public class QxcmpSystemConfigConfiguration implements QxcmpSystemConfig {
+public class QxcmpSystemConfigConfiguration implements SystemConfigLoader {
 
     /*
      * 系统核心相关配置
