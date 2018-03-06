@@ -210,11 +210,43 @@ public class AccountService implements QxcmpInitializer {
     }
 
     /**
+     * 进行手机号注册
+     *
+     * @param form          注册表单
+     * @param bindingResult 错误对象
+     */
+    public void logon(AccountLogonPhoneForm form, BindingResult bindingResult) {
+        if (userService.findById(form.getUsername()).isPresent()) {
+            bindingResult.rejectValue("username", "Username.exist");
+        }
+        if (userService.findById(form.getPhone()).isPresent()) {
+            bindingResult.rejectValue("phone", "Phone.exist");
+        }
+        if (!Objects.equals(form.getPassword(), form.getPasswordConfirm())) {
+            bindingResult.rejectValue("passwordConfirm", "PasswordConfirm");
+        }
+        if (bindingResult.hasErrors()) {
+            return;
+        }
+        applicationContext.publishEvent(new UserLogonEvent(userService.create(() -> {
+            User user = userService.next();
+            user.setUsername(form.getUsername());
+            user.setPhone(form.getPhone());
+            user.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
+            user.setAccountNonExpired(true);
+            user.setAccountNonLocked(true);
+            user.setCredentialsNonExpired(true);
+            user.setEnabled(true);
+            userService.setDefaultPortrait(user);
+            return user;
+        })));
+    }
+
+    /**
      * 获取用户密保问题并对表单进行效验
      *
      * @param form          表单
      * @param bindingResult 错误对象
-     *
      * @return 用户密保问题
      */
     public AccountSecurityQuestion getUserSecurityQuestion(AccountResetUsernameForm form, BindingResult bindingResult) {
@@ -236,7 +268,6 @@ public class AccountService implements QxcmpInitializer {
      * 验证用户密保问题，如果验证成功，返回重置码
      *
      * @param form 表单
-     *
      * @return 账户重置码
      */
     public AccountCode validateSecurityQuestion(AccountResetUsernameQuestionForm form) {
@@ -290,5 +321,23 @@ public class AccountService implements QxcmpInitializer {
             return;
         }
         userOptional.ifPresent(this::sendResetEmail);
+    }
+
+    /**
+     * 手机重置用户密码
+     *
+     * @param form          表单
+     * @param bindingResult 错误对象
+     * @return 账户重置码
+     */
+    public AccountCode reset(AccountResetPhoneForm form, BindingResult bindingResult) {
+        Optional<User> userOptional = userService.findByPhone(form.getPhone());
+        if (!userOptional.isPresent()) {
+            bindingResult.rejectValue("phone", "Account.reset.noPhone");
+        }
+        if (bindingResult.hasErrors()) {
+            return null;
+        }
+        return userOptional.map(user -> codeService.nextPasswordCode(user.getId())).orElse(null);
     }
 }

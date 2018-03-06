@@ -37,8 +37,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static com.qxcmp.core.QxcmpSystemConfig.ACCOUNT_ENABLE_EMAIL;
-import static com.qxcmp.core.QxcmpSystemConfig.ACCOUNT_ENABLE_USERNAME;
+import static com.qxcmp.core.QxcmpSystemConfig.*;
 
 /**
  * 账户登录、注册、重置页面路由
@@ -97,6 +96,23 @@ public class AccountController extends QxcmpController {
                 return qxcmpPage(LogonPage.class, form, bindingResult);
             }
             return qxcmpPage(EmailSendSuccessPage.class);
+        }).orElse(qxcmpPage(LogonClosePage.class));
+    }
+
+    @GetMapping("/logon/phone")
+    public ModelAndView logonPhone(final AccountLogonPhoneForm form) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_PHONE).filter(aBoolean -> aBoolean).map(aBoolean -> qxcmpPage(LogonPage.class, form, null)).orElse(qxcmpPage(LogonClosePage.class));
+    }
+
+    @PostMapping("/logon/phone")
+    public ModelAndView logonPhone(@Valid final AccountLogonPhoneForm form, BindingResult bindingResult) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_PHONE).filter(aBoolean -> aBoolean).map(aBoolean -> {
+            verifyCaptcha(form.getCaptcha(), bindingResult);
+            accountService.logon(form, bindingResult);
+            if (bindingResult.hasErrors()) {
+                return qxcmpPage(LogonPage.class, form, bindingResult);
+            }
+            return qxcmpPage(LogonSuccessPage.class);
         }).orElse(qxcmpPage(LogonClosePage.class));
     }
 
@@ -181,6 +197,23 @@ public class AccountController extends QxcmpController {
         }).orElse(qxcmpPage(ResetClosePage.class));
     }
 
+    @GetMapping("/reset/phone")
+    public ModelAndView resetPhone(final AccountResetPhoneForm form) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_PHONE).filter(aBoolean -> aBoolean).map(aBoolean -> qxcmpPage(ResetPage.class, form, null)).orElse(qxcmpPage(ResetClosePage.class));
+    }
+
+    @PostMapping("/reset/phone")
+    public ModelAndView resetPhone(@Valid final AccountResetPhoneForm form, BindingResult bindingResult) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_PHONE).filter(aBoolean -> aBoolean).map(aBoolean -> {
+            AccountCode accountCode = accountService.reset(form, bindingResult);
+            verifyCaptcha(form.getCaptcha(), bindingResult);
+            if (bindingResult.hasErrors()) {
+                return qxcmpPage(ResetPage.class, form, bindingResult);
+            }
+            return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("短信验证成功").addLink("重置密码", "/account/reset/" + accountCode.getId()));
+        }).orElse(qxcmpPage(ResetClosePage.class));
+    }
+
     @GetMapping("/activate")
     public ModelAndView activate(final AccountActivateForm form) {
         return buildPage(segment -> segment
@@ -256,11 +289,4 @@ public class AccountController extends QxcmpController {
         return page().addComponent(new VerticallyDividedGrid().setVerticallyPadded().setTextContainer().setColumnCount(ColumnCount.ONE).addItem(new Col().addComponent(segment)));
     }
 
-    protected AbstractPage logonClosedPage() {
-        return page(new Overview(new IconHeader("注册功能已经关闭", new Icon("warning circle")).setSubTitle("请在注册功能开放时进行注册")).addLink("返回登录", "/login"));
-    }
-
-    protected AbstractPage resetClosedPage() {
-        return page(new Overview(new IconHeader("密码找回功能已经关闭", new Icon("warning circle")).setSubTitle("请与平台管理员联系")).addLink("返回登录", "/login"));
-    }
 }

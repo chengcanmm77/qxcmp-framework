@@ -38,9 +38,7 @@ public class QxcmpRunner implements ApplicationRunner {
 
         applicationContext.getBeansOfType(QxcmpInitializer.class).values().stream().sorted(new AnnotationAwareOrderComparator()).forEach(qxcmpConfigurator -> {
             try {
-                log.info(SEPARATOR);
                 log.info("--- initializing {}", qxcmpConfigurator.name());
-                log.info(SEPARATOR);
                 qxcmpConfigurator.init();
             } catch (Exception e) {
                 log.error("Can't initialize {}, cause: {}", qxcmpConfigurator.name(), e.getMessage());

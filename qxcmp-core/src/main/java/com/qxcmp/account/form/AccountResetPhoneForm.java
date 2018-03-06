@@ -19,7 +19,7 @@ import lombok.Data;
  */
 @Form(submitText = "立即重置")
 @Data
-public class AccountPhoneResetForm {
+public class AccountResetPhoneForm {
 
     @Phone
     @PhoneField(value = "手机号码", placeholder = "请输入您账户绑定的手机号码")

@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
  */
 @Form(submitText = "立即注册")
 @Data
-public class AccountPhoneLogonForm {
+public class AccountLogonPhoneForm {
 
     /**
      * 用户名
