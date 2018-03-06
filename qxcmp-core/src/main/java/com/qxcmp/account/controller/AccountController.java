@@ -130,7 +130,7 @@ public class AccountController extends QxcmpController {
             questionForm.setQuestion3(securityQuestion.getQuestion3());
             questionForm.setUserId(securityQuestion.getUserId());
             return qxcmpPage(ResetPage.class, questionForm, null).addObject(questionForm);
-        }).orElse(qxcmpPage(LogonClosePage.class));
+        }).orElse(qxcmpPage(ResetClosePage.class));
     }
 
     @PostMapping("/reset/username/question")
@@ -141,7 +141,7 @@ public class AccountController extends QxcmpController {
                 return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("密保问题回答不正确").addLink("返回", "/account/reset"));
             }
             return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("密保问题验证成功").addLink("重置密码", "/account/reset/" + accountCode.getId()));
-        }).orElse(qxcmpPage(LogonClosePage.class));
+        }).orElse(qxcmpPage(ResetClosePage.class));
     }
 
     @GetMapping("/activate")
