@@ -27,7 +27,7 @@ public class AccountResetForm {
      * <p>
      * 用户登录时候需要输入的密码
      */
-    @Size(min = 6, max = 20, message = "{Size.password}")
+    @Size(min = 6, max = 20)
     @PasswordField(value = "新的密码", placeholder = "请使用至少两种以上的字符组合", maxLength = 20)
     private String password;
 
@@ -36,7 +36,7 @@ public class AccountResetForm {
      * <p>
      * 保证用户两次输入的密码一致
      */
-    @Size(min = 6, max = 20, message = "{Size.password}")
+    @Size(min = 6, max = 20)
     @PasswordField(value = "确认密码", placeholder = "请再次输入您的登录密码", maxLength = 20)
     private String passwordConfirm;
 }

@@ -3,6 +3,7 @@ package com.qxcmp.account;
 import com.google.common.collect.Lists;
 import com.qxcmp.account.event.UserLogonEvent;
 import com.qxcmp.account.form.AccountLogonUsernameForm;
+import com.qxcmp.account.form.AccountResetForm;
 import com.qxcmp.account.form.AccountResetUsernameForm;
 import com.qxcmp.account.form.AccountResetUsernameQuestionForm;
 import com.qxcmp.config.SiteService;
@@ -13,6 +14,7 @@ import com.qxcmp.message.EmailService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -222,5 +224,23 @@ public class AccountService implements QxcmpInitializer {
         }
 
         return null;
+    }
+
+    /**
+     * 重置用户密码
+     *
+     * @param id            重置ID
+     * @param form          表单
+     * @param bindingResult 错误对象
+     */
+    public void reset(String id, AccountResetForm form, BindingResult bindingResult) {
+        AccountCode code = codeService.findOne(id).orElseThrow(RuntimeException::new);
+        if (!StringUtils.equals(form.getPassword(), form.getPasswordConfirm())) {
+            bindingResult.rejectValue("passwordConfirm", "PasswordConfirm");
+        }
+        userService.update(code.getUserId(), user -> {
+            user.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
+            codeService.delete(code);
+        });
     }
 }

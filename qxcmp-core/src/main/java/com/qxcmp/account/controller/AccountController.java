@@ -23,7 +23,6 @@ import com.qxcmp.web.view.support.ColumnCount;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,45 +94,21 @@ public class AccountController extends QxcmpController {
 
     @GetMapping("/reset/{id}")
     public ModelAndView reset(@PathVariable String id, final AccountResetForm form) {
-
-        if (codeService.isInvalidCode(id)) {
-            return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("无效的重置链接", "请确认重置链接是否正确").addLink("重新找回密码", "/account/reset").addLink("返回登录", "/login"));
-        }
-
-        return buildPage(segment -> segment
-                .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle(String.format("为用户 %s 找回密码", getResetUsername(id))).setDividing().setAlignment(Alignment.LEFT))
-                .addComponent(convertToForm(form))
-        ).addObject(form)
-                .build();
+        return codeService.isInvalidCode(id) ?
+                qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("无效的重置链接", "请确认重置链接是否正确").addLink("重新找回密码", "/account/reset").addLink("返回登录", "/login")) :
+                qxcmpPage(ResetPage.class, form, null);
     }
 
     @PostMapping("/reset/{id}")
     public ModelAndView reset(@PathVariable String id, @Valid final AccountResetForm form, BindingResult bindingResult) {
-
-        AccountCode code = codeService.findOne(id).orElse(null);
-
         if (codeService.isInvalidCode(id)) {
-            return page(new Overview(new IconHeader("无效的重置链接", new Icon("warning circle")).setSubTitle("请确认重置链接是否正确，或者重新找回密码")).addLink("重新找回密码", "/account/reset").addLink("返回登录", "/login")).build();
+            return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("无效的重置链接", "请确认重置链接是否正确").addLink("重新找回密码", "/account/reset").addLink("返回登录", "/login"));
         }
-
-        if (!StringUtils.equals(form.getPassword(), form.getPasswordConfirm())) {
-            bindingResult.rejectValue("passwordConfirm", "PasswordConfirm");
-        }
-
+        accountService.reset(id, form, bindingResult);
         if (bindingResult.hasErrors()) {
-            return buildPage(segment -> segment
-                    .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle(String.format("为用户 %s 找回密码", getResetUsername(id))).setDividing().setAlignment(Alignment.LEFT))
-                    .addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form)))
-            ).addObject(form)
-                    .build();
+            return qxcmpPage(ResetPage.class, form, bindingResult);
         }
-
-        userService.update(code.getUserId(), user -> {
-            user.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
-            codeService.delete(code);
-        });
-
-        return page(new Overview("密码重置成功", "请使用新的密码登录").addLink("现在去登录", "/login")).build();
+        return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("密码重置成功", "请使用新的密码登录").addLink("现在去登录", "/login"));
     }
 
     @GetMapping("/reset/username")
