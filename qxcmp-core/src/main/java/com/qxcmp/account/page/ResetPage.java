@@ -1,11 +1,7 @@
 package com.qxcmp.account.page;
 
 import com.qxcmp.web.view.elements.grid.Col;
-import com.qxcmp.web.view.elements.header.HeaderType;
-import com.qxcmp.web.view.elements.header.PageHeader;
-import com.qxcmp.web.view.elements.image.Image;
 import com.qxcmp.web.view.elements.segment.Segment;
-import com.qxcmp.web.view.support.Alignment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -28,7 +24,8 @@ public class ResetPage extends BaseAccountPage {
 
     @Override
     public void renderContent(Col col) {
-        col.addComponent(new Segment().addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("找回密码").setDividing().setAlignment(Alignment.LEFT))
+        col.addComponent(new Segment()
+                .addComponent(getPageHeader("找回密码"))
                 .addComponent(viewHelper.nextForm(form, bindingResult)));
     }
 }

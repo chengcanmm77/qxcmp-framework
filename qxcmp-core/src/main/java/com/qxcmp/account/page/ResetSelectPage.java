@@ -4,9 +4,6 @@ import com.qxcmp.account.AccountComponent;
 import com.qxcmp.web.view.elements.button.Button;
 import com.qxcmp.web.view.elements.divider.Divider;
 import com.qxcmp.web.view.elements.grid.Col;
-import com.qxcmp.web.view.elements.header.HeaderType;
-import com.qxcmp.web.view.elements.header.PageHeader;
-import com.qxcmp.web.view.elements.image.Image;
 import com.qxcmp.web.view.elements.list.List;
 import com.qxcmp.web.view.elements.list.item.TextItem;
 import com.qxcmp.web.view.elements.segment.Segment;
@@ -40,7 +37,7 @@ public class ResetSelectPage extends BaseAccountPage {
         accountComponents.forEach(accountComponent -> list.addItem(new TextItem(accountComponent.getResetName()).setUrl(accountComponent.getResetUrl())));
 
         col.addComponent(new Segment().setAlignment(Alignment.CENTER)
-                .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("请选择密码找回方式").setDividing().setAlignment(Alignment.LEFT))
+                .addComponent(getPageHeader("请选择密码找回方式"))
                 .addComponent(list)
                 .addComponent(new Divider())
                 .addComponent(new Button("返回登录", "/login").setBasic()));
