@@ -9,7 +9,7 @@ import lombok.Data;
 /**
  * @author Aaric
  */
-@Form(submitIcon = "sign in")
+@Form(submitIcon = "sign in", submitText = "登录")
 @Data
 public class LoginForm {
 

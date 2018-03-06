@@ -20,15 +20,18 @@ import java.util.Collection;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
- * 注册方式选择页面
+ * 账户操作选择页面
+ * <p>
+ * 用于注册方式或找回密码选择
  *
  * @author Aaric
  */
 @Scope(SCOPE_PROTOTYPE)
 @Component
 @RequiredArgsConstructor
-public class LogonSelectPage extends BaseAccountPage {
+public class AccountSelectPage extends BaseAccountPage {
 
+    private final String title;
     private final Collection<AccountComponent> accountComponents;
 
     @Override
@@ -38,7 +41,7 @@ public class LogonSelectPage extends BaseAccountPage {
         accountComponents.forEach(accountComponent -> list.addItem(new TextItem(accountComponent.getRegisterName()).setUrl(accountComponent.getRegisterUrl())));
 
         col.addComponent(new Segment().setAlignment(Alignment.CENTER)
-                .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("请选择注册方式").setDividing().setAlignment(Alignment.LEFT))
+                .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle(title).setDividing().setAlignment(Alignment.LEFT))
                 .addComponent(list)
                 .addComponent(new Divider())
                 .addComponent(new Button("返回登录", "/login").setBasic()));

@@ -5,8 +5,8 @@ import com.qxcmp.account.AccountCodeService;
 import com.qxcmp.account.AccountService;
 import com.qxcmp.account.form.AccountActivateForm;
 import com.qxcmp.account.form.AccountResetForm;
+import com.qxcmp.account.page.AccountSelectPage;
 import com.qxcmp.account.page.LogonClosePage;
-import com.qxcmp.account.page.LogonSelectPage;
 import com.qxcmp.account.page.ResetClosePage;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
@@ -21,8 +21,6 @@ import com.qxcmp.web.view.elements.header.PageHeader;
 import com.qxcmp.web.view.elements.html.P;
 import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.image.Image;
-import com.qxcmp.web.view.elements.list.List;
-import com.qxcmp.web.view.elements.list.item.TextItem;
 import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.support.ColumnCount;
@@ -41,6 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * 账户登录、注册、重置页面路由
@@ -62,7 +61,7 @@ public class AccountController extends QxcmpController {
         } else if (accountService.getRegisterItems().size() == 1) {
             return redirect(accountService.getRegisterItems().get(0).getRegisterUrl());
         } else {
-            return qxcmpPage(LogonSelectPage.class, accountService.getRegisterItems());
+            return qxcmpPage(AccountSelectPage.class, "请选择注册方式", accountService.getRegisterItems());
         }
     }
 
@@ -73,14 +72,7 @@ public class AccountController extends QxcmpController {
         } else if (accountService.getResetItems().size() == 1) {
             return redirect(accountService.getResetItems().get(0).getResetUrl());
         } else {
-            List list = new List().setSelection();
-            accountService.getRegisterItems().stream().filter(accountComponent -> !accountComponent.isDisableReset()).forEach(accountComponent -> list.addItem(new TextItem(accountComponent.getResetName()).setUrl(accountComponent.getResetUrl())));
-            return buildPage(segment -> segment.setAlignment(Alignment.CENTER)
-                    .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("请选择密码找回方式").setDividing().setAlignment(Alignment.LEFT))
-                    .addComponent(list)
-                    .addComponent(new Divider())
-                    .addComponent(new Button("返回登录", "/login").setBasic())
-            ).build();
+            return qxcmpPage(AccountSelectPage.class, "请选择密码找回方式", accountService.getRegisterItems().stream().filter(accountComponent -> !accountComponent.isDisableReset()).collect(Collectors.toList()));
         }
     }
 

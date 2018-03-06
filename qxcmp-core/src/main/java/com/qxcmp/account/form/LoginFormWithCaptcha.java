@@ -8,7 +8,7 @@ import lombok.Setter;
 /**
  * @author Aaric
  */
-@Form(submitIcon = "sign in", action = "/login")
+@Form(submitIcon = "sign in", action = "/login", submitText = "登录")
 @Getter
 @Setter
 public class LoginFormWithCaptcha extends LoginForm {
