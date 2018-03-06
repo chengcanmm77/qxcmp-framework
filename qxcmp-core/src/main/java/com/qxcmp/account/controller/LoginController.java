@@ -33,12 +33,22 @@ public class LoginController extends QxcmpController {
             loginFormWithCaptcha.setCaptcha(callback);
         }
 
+        boolean showCaptcha = isShowCaptcha();
+
+        return qxcmpPage(LoginPage.class, request, loginForm, loginFormWithCaptcha, showCaptcha);
+    }
+
+    /**
+     * 是否需要生成验证码
+     *
+     * @return 是否需要生成验证码
+     */
+    private boolean isShowCaptcha() {
         boolean showCaptcha = false;
 
         if (request.getSession().getAttribute(AuthenticationFailureHandler.AUTHENTICATION_SHOW_CAPTCHA) != null) {
             showCaptcha = (boolean) request.getSession().getAttribute(AuthenticationFailureHandler.AUTHENTICATION_SHOW_CAPTCHA);
         }
-
-        return qxcmpPage(LoginPage.class, request, loginForm, loginFormWithCaptcha, showCaptcha);
+        return showCaptcha;
     }
 }

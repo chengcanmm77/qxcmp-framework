@@ -4,6 +4,7 @@ import com.qxcmp.account.form.LoginForm;
 import com.qxcmp.account.form.LoginFormWithCaptcha;
 import com.qxcmp.web.view.elements.container.Container;
 import com.qxcmp.web.view.elements.divider.HorizontalDivider;
+import com.qxcmp.web.view.elements.grid.Col;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.PageHeader;
 import com.qxcmp.web.view.elements.html.Anchor;
@@ -37,12 +38,14 @@ public class LoginPage extends BaseAccountPage {
     private final boolean showCaptcha;
 
     @Override
-    public void renderContent(Segment segment) {
-        segment
+    public void renderContent(Col col) {
+        col.addComponent(new Segment()
                 .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setDividing())
                 .addComponent(formHelper.convert(showCaptcha ? loginFormWithCaptcha : loginForm).setErrorMessage(getLoginErrorMessage()))
                 .addComponent(new HorizontalDivider("或"))
-                .addComponent(new Container().setAlignment(Alignment.CENTER).addComponent(new Anchor("注册新用户", "/account/logon")).addComponent(new Anchor("忘记密码?", "/account/reset")));
+                .addComponent(new Container().setAlignment(Alignment.CENTER)
+                        .addComponent(new Anchor("注册新用户", "/account/logon"))
+                        .addComponent(new Anchor("忘记密码?", "/account/reset"))));
     }
 
     private ErrorMessage getLoginErrorMessage() {

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.qxcmp.core.QxcmpSystemConfig.*;
+
 /**
  * 账户模块服务
  *
@@ -22,14 +24,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AccountService implements QxcmpInitializer {
 
-    public static final String ACCOUNT_PAGE = "qxcmp-account";
-
     private final EmailService emailService;
-
     private final AccountCodeService codeService;
-
     private final SystemConfigService systemConfigService;
-
     private final SiteService siteService;
 
     /**
@@ -37,50 +34,35 @@ public class AccountService implements QxcmpInitializer {
      */
     private List<AccountComponent> activateComponents = Lists.newArrayList();
 
-    /**
-     * 获取平台注册模块
-     *
-     * @return
-     */
     public List<AccountComponent> getRegisterItems() {
         return activateComponents;
     }
 
-    /**
-     * 获取平台重置模块
-     *
-     * @return
-     */
     public List<AccountComponent> getResetItems() {
         return activateComponents.stream().filter(accountComponent -> !accountComponent.isDisableReset()).collect(Collectors.toList());
     }
 
-    /**
-     * 加载平台注册模块
-     * <p>
-     * 配置更改以后需要重新加载生效
-     */
     public void loadConfig() {
         activateComponents.clear();
 
-        if (systemConfigService.getBoolean(QxcmpSystemConfig.ACCOUNT_ENABLE_USERNAME).orElse(false)) {
+        if (systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false)) {
             activateComponents.add(AccountComponent.builder()
-                    .registerName("用户名注册").registerUrl("/account/username/logon")
-                    .resetName("密保找回").resetUrl("/account/username/reset").build());
+                    .registerName("用户名注册").registerUrl("/account/logon/username")
+                    .resetName("密保找回").resetUrl("/account/reset/username").build());
         }
-        if (systemConfigService.getBoolean(QxcmpSystemConfig.ACCOUNT_ENABLE_EMAIL).orElse(false)) {
+        if (systemConfigService.getBoolean(ACCOUNT_ENABLE_EMAIL).orElse(false)) {
             activateComponents.add(AccountComponent.builder()
-                    .registerName("邮箱注册").registerUrl("/account/email/logon")
-                    .resetName("邮箱找回").resetUrl("/account/email/reset").build());
+                    .registerName("邮箱注册").registerUrl("/account/logon/email")
+                    .resetName("邮箱找回").resetUrl("/account/reset/email").build());
         }
-        if (systemConfigService.getBoolean(QxcmpSystemConfig.ACCOUNT_ENABLE_PHONE).orElse(false)) {
+        if (systemConfigService.getBoolean(ACCOUNT_ENABLE_PHONE).orElse(false)) {
             activateComponents.add(AccountComponent.builder()
-                    .registerName("手机号注册").registerUrl("/account/phone/logon")
-                    .resetName("短信找回").resetUrl("/account/phone/reset").build());
+                    .registerName("手机号注册").registerUrl("/account/logon/phone")
+                    .resetName("短信找回").resetUrl("/account/reset/phone").build());
         }
-        if (systemConfigService.getBoolean(QxcmpSystemConfig.ACCOUNT_ENABLE_INVITE).orElse(false)) {
+        if (systemConfigService.getBoolean(ACCOUNT_ENABLE_INVITE).orElse(false)) {
             activateComponents.add(AccountComponent.builder()
-                    .registerName("邀请码注册").registerUrl("/account/invite/logon")
+                    .registerName("邀请码注册").registerUrl("/account/logon/invite")
                     .disableReset(true).build());
         }
     }

@@ -3,7 +3,6 @@ package com.qxcmp.account.page;
 import com.qxcmp.web.view.elements.grid.Col;
 import com.qxcmp.web.view.elements.grid.Row;
 import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
-import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.page.GenericQxcmpPage;
 import com.qxcmp.web.view.support.Wide;
 
@@ -16,15 +15,15 @@ public abstract class BaseAccountPage extends GenericQxcmpPage {
 
     @Override
     public final void render() {
-        Segment segment = new Segment();
-        renderContent(segment);
-        addComponent(new VerticallyDividedGrid().setVerticallyPadded().setTextContainer().addItem(new Row().addCol(new Col(Wide.SIXTEEN).addComponent(segment))));
+        Col col = new Col(Wide.SIXTEEN);
+        renderContent(col);
+        addComponent(new VerticallyDividedGrid().setVerticallyPadded().setTextContainer().addItem(new Row().addCol(col)));
     }
 
     /**
      * 渲染页面
      *
-     * @param segment 容器视图
+     * @param col 容器视图
      */
-    public abstract void renderContent(Segment segment);
+    public abstract void renderContent(Col col);
 }

@@ -15,7 +15,6 @@ import com.qxcmp.web.view.elements.image.Image;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.views.Overview;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,9 +25,8 @@ import javax.validation.Valid;
 import java.util.Objects;
 import java.util.Optional;
 
-@Controller
 @RequestMapping("/account/email/")
-public class AccountEmailController extends AccountPageController {
+public class AccountEmailController extends AccountController {
 
     public AccountEmailController(AccountService accountService, AccountCodeService codeService) {
         super(accountService, codeService);

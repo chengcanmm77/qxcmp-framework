@@ -3,30 +3,26 @@ package com.qxcmp.account.controller;
 import com.qxcmp.account.AccountCode;
 import com.qxcmp.account.AccountCodeService;
 import com.qxcmp.account.AccountService;
-import com.qxcmp.account.auth.AuthenticationFailureHandler;
 import com.qxcmp.account.form.AccountActivateForm;
 import com.qxcmp.account.form.AccountResetForm;
-import com.qxcmp.account.form.LoginForm;
-import com.qxcmp.account.form.LoginFormWithCaptcha;
+import com.qxcmp.account.page.LogonClosePage;
+import com.qxcmp.account.page.LogonSelectPage;
+import com.qxcmp.account.page.ResetClosePage;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.page.AbstractPage;
 import com.qxcmp.web.view.elements.button.Button;
-import com.qxcmp.web.view.elements.container.Container;
 import com.qxcmp.web.view.elements.divider.Divider;
-import com.qxcmp.web.view.elements.divider.HorizontalDivider;
 import com.qxcmp.web.view.elements.grid.Col;
 import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.IconHeader;
 import com.qxcmp.web.view.elements.header.PageHeader;
-import com.qxcmp.web.view.elements.html.Anchor;
 import com.qxcmp.web.view.elements.html.P;
 import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.image.Image;
 import com.qxcmp.web.view.elements.list.List;
 import com.qxcmp.web.view.elements.list.item.TextItem;
-import com.qxcmp.web.view.elements.message.ErrorMessage;
 import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.support.ColumnCount;
@@ -39,15 +35,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
-
-import static com.qxcmp.account.auth.AuthenticationFailureHandler.AUTHENTICATION_ERROR_MESSAGE;
 
 /**
  * 账户登录、注册、重置页面路由
@@ -55,55 +48,28 @@ import static com.qxcmp.account.auth.AuthenticationFailureHandler.AUTHENTICATION
  * @author Aaric
  */
 @Controller
+@RequestMapping("/account")
 @RequiredArgsConstructor
-public class AccountPageController extends QxcmpController {
+public class AccountController extends QxcmpController {
 
     protected final AccountService accountService;
     protected final AccountCodeService codeService;
 
-    public ModelAndView loginPage(@RequestParam(required = false) String callback, final LoginForm loginForm, final LoginFormWithCaptcha loginFormWithCaptcha) {
-
-        return buildPage(segment -> {
-
-            loginForm.setCallback(callback);
-            loginFormWithCaptcha.setCallback(callback);
-
-            boolean showCaptcha = false;
-
-            if (request.getSession().getAttribute(AuthenticationFailureHandler.AUTHENTICATION_SHOW_CAPTCHA) != null) {
-                showCaptcha = (boolean) request.getSession().getAttribute(AuthenticationFailureHandler.AUTHENTICATION_SHOW_CAPTCHA);
-            }
-
-            segment
-                    .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setDividing())
-                    .addComponent(convertToForm(showCaptcha ? loginFormWithCaptcha : loginForm).setErrorMessage(getLoginErrorMessage()))
-                    .addComponent(new HorizontalDivider("或"))
-                    .addComponent(new Container().setAlignment(Alignment.CENTER).addComponent(new Anchor("注册新用户", "/account/logon")).addComponent(new Anchor("忘记密码?", "/account/reset")));
-        }).build();
-    }
-
-    @GetMapping("/account/logon")
+    @GetMapping("/logon")
     public ModelAndView logon() {
         if (accountService.getRegisterItems().isEmpty()) {
-            return logonClosedPage().build();
+            return qxcmpPage(LogonClosePage.class);
         } else if (accountService.getRegisterItems().size() == 1) {
             return redirect(accountService.getRegisterItems().get(0).getRegisterUrl());
         } else {
-            List list = new List().setSelection();
-            accountService.getRegisterItems().forEach(accountComponent -> list.addItem(new TextItem(accountComponent.getRegisterName()).setUrl(accountComponent.getRegisterUrl())));
-            return buildPage(segment -> segment.setAlignment(Alignment.CENTER)
-                    .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("请选择注册方式").setDividing().setAlignment(Alignment.LEFT))
-                    .addComponent(list)
-                    .addComponent(new Divider())
-                    .addComponent(new Button("返回登录", "/login").setBasic())
-            ).build();
+            return qxcmpPage(LogonSelectPage.class, accountService.getRegisterItems());
         }
     }
 
-    @GetMapping("/account/reset")
+    @GetMapping("/reset")
     public ModelAndView reset() {
         if (accountService.getResetItems().isEmpty()) {
-            return resetClosedPage().build();
+            return qxcmpPage(ResetClosePage.class);
         } else if (accountService.getResetItems().size() == 1) {
             return redirect(accountService.getResetItems().get(0).getResetUrl());
         } else {
@@ -118,7 +84,7 @@ public class AccountPageController extends QxcmpController {
         }
     }
 
-    @GetMapping("/account/reset/{id}")
+    @GetMapping("/reset/{id}")
     public ModelAndView reset(@PathVariable String id, final AccountResetForm form) {
 
         if (codeService.isInvalidCode(id)) {
@@ -132,7 +98,7 @@ public class AccountPageController extends QxcmpController {
                 .build();
     }
 
-    @PostMapping("/account/reset/{id}")
+    @PostMapping("/reset/{id}")
     public ModelAndView reset(@PathVariable String id, @Valid final AccountResetForm form, BindingResult bindingResult) throws Exception {
 
         AccountCode code = codeService.findOne(id).orElse(null);
@@ -161,7 +127,7 @@ public class AccountPageController extends QxcmpController {
         return page(new Overview("密码重置成功", "请使用新的密码登录").addLink("现在去登录", "/login")).build();
     }
 
-    @GetMapping("/account/activate")
+    @GetMapping("/activate")
     public ModelAndView activate(final AccountActivateForm form) {
         return buildPage(segment -> segment
                 .addComponent(new PageHeader(HeaderType.H2, siteService.getTitle()).setImage(new Image(siteService.getLogo())).setSubTitle("激活账户").setDividing().setAlignment(Alignment.LEFT))
@@ -170,7 +136,7 @@ public class AccountPageController extends QxcmpController {
                 .build();
     }
 
-    @PostMapping("/account/activate")
+    @PostMapping("/activate")
     public ModelAndView activate(@Valid final AccountActivateForm form, BindingResult bindingResult) {
 
         Optional<User> userOptional = userService.findByUsername(form.getUsername());
@@ -210,7 +176,7 @@ public class AccountPageController extends QxcmpController {
         }
     }
 
-    @GetMapping("/account/activate/{id}")
+    @GetMapping("/activate/{id}")
     public ModelAndView activate(@PathVariable String id) {
         try {
             AccountCode code = codeService.findOne(id).orElseThrow(Exception::new);
@@ -242,15 +208,6 @@ public class AccountPageController extends QxcmpController {
 
     protected AbstractPage resetClosedPage() {
         return page(new Overview(new IconHeader("密码找回功能已经关闭", new Icon("warning circle")).setSubTitle("请与平台管理员联系")).addLink("返回登录", "/login"));
-    }
-
-    private ErrorMessage getLoginErrorMessage() {
-
-        if (Objects.nonNull(request.getSession().getAttribute(AUTHENTICATION_ERROR_MESSAGE))) {
-            return (ErrorMessage) new ErrorMessage("登录失败", applicationContext.getMessage(request.getSession().getAttribute(AUTHENTICATION_ERROR_MESSAGE).toString(), null, null)).setCloseable();
-        }
-
-        return null;
     }
 
     private String getResetUsername(String codeId) {

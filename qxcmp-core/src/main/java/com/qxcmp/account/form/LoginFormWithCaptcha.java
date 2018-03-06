@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class LoginFormWithCaptcha extends LoginForm {
 
-    @ImageCaptchaField("验证码")
+    @ImageCaptchaField(value = "验证码")
     private String captcha;
 
 }

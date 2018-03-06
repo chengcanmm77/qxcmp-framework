@@ -14,7 +14,6 @@ import com.qxcmp.web.view.elements.image.Image;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.views.Overview;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +26,8 @@ import java.util.Optional;
 
 import static com.qxcmp.core.QxcmpSystemConfig.ACCOUNT_ENABLE_USERNAME;
 
-@Controller
 @RequestMapping("/account/username/")
-public class AccountUsernameController extends AccountPageController {
+public class AccountUsernameController extends AccountController {
 
     private final AccountSecurityQuestionService securityQuestionService;
 
