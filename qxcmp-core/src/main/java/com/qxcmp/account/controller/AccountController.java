@@ -32,11 +32,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
+import static com.qxcmp.core.QxcmpSystemConfig.ACCOUNT_ENABLE_EMAIL;
 import static com.qxcmp.core.QxcmpSystemConfig.ACCOUNT_ENABLE_USERNAME;
 
 /**
@@ -55,12 +56,13 @@ public class AccountController extends QxcmpController {
 
     @GetMapping("/logon")
     public ModelAndView logon() {
-        if (accountService.getRegisterItems().isEmpty()) {
+        List<AccountComponent> accountComponents = accountService.getRegisterItems();
+        if (accountComponents.isEmpty()) {
             return qxcmpPage(LogonClosePage.class);
-        } else if (accountService.getRegisterItems().size() == 1) {
-            return redirect(accountService.getRegisterItems().get(0).getRegisterUrl());
+        } else if (accountComponents.size() == 1) {
+            return redirect(accountComponents.get(0).getRegisterUrl());
         } else {
-            return qxcmpPage(LogonSelectPage.class, accountService.getRegisterItems());
+            return qxcmpPage(LogonSelectPage.class, accountComponents);
         }
     }
 
@@ -81,14 +83,32 @@ public class AccountController extends QxcmpController {
         }).orElse(qxcmpPage(LogonClosePage.class));
     }
 
+    @GetMapping("/logon/email")
+    public ModelAndView logonEmail(final AccountLogonEmailForm form) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_EMAIL).filter(aBoolean -> aBoolean).map(aBoolean -> qxcmpPage(LogonPage.class, form, null)).orElse(qxcmpPage(LogonClosePage.class));
+    }
+
+    @PostMapping("/logon/email")
+    public ModelAndView logonEmail(@Valid final AccountLogonEmailForm form, BindingResult bindingResult) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_EMAIL).filter(aBoolean -> aBoolean).map(aBoolean -> {
+            verifyCaptcha(form.getCaptcha(), bindingResult);
+            accountService.logon(form, bindingResult);
+            if (bindingResult.hasErrors()) {
+                return qxcmpPage(LogonPage.class, form, bindingResult);
+            }
+            return qxcmpPage(EmailSendSuccessPage.class);
+        }).orElse(qxcmpPage(LogonClosePage.class));
+    }
+
     @GetMapping("/reset")
     public ModelAndView reset() {
-        if (accountService.getResetItems().isEmpty()) {
+        List<AccountComponent> accountComponents = accountService.getResetItems();
+        if (accountComponents.isEmpty()) {
             return qxcmpPage(ResetClosePage.class);
-        } else if (accountService.getResetItems().size() == 1) {
-            return redirect(accountService.getResetItems().get(0).getResetUrl());
+        } else if (accountComponents.size() == 1) {
+            return redirect(accountComponents.get(0).getResetUrl());
         } else {
-            return qxcmpPage(ResetSelectPage.class, accountService.getRegisterItems().stream().filter(accountComponent -> !accountComponent.isDisableReset()).collect(Collectors.toList()));
+            return qxcmpPage(ResetSelectPage.class, accountComponents);
         }
     }
 
@@ -141,6 +161,23 @@ public class AccountController extends QxcmpController {
                 return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("密保问题回答不正确").addLink("返回", "/account/reset"));
             }
             return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("密保问题验证成功").addLink("重置密码", "/account/reset/" + accountCode.getId()));
+        }).orElse(qxcmpPage(ResetClosePage.class));
+    }
+
+    @GetMapping("/reset/email")
+    public ModelAndView resetEmail(final AccountResetEmailForm form) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_EMAIL).filter(aBoolean -> aBoolean).map(aBoolean -> qxcmpPage(ResetPage.class, form, null)).orElse(qxcmpPage(ResetClosePage.class));
+    }
+
+    @PostMapping("/reset/email")
+    public ModelAndView resetEmail(@Valid final AccountResetEmailForm form, BindingResult bindingResult) {
+        return systemConfigService.getBoolean(ACCOUNT_ENABLE_EMAIL).filter(aBoolean -> aBoolean).map(aBoolean -> {
+            accountService.reset(form, bindingResult);
+            verifyCaptcha(form.getCaptcha(), bindingResult);
+            if (bindingResult.hasErrors()) {
+                return qxcmpPage(ResetPage.class, form, bindingResult);
+            }
+            return qxcmpPage(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("密码重置邮件发送成功", "请前往您的邮箱点击重置链接重置密码").addLink("返回登录", "/login"));
         }).orElse(qxcmpPage(ResetClosePage.class));
     }
 
@@ -225,23 +262,5 @@ public class AccountController extends QxcmpController {
 
     protected AbstractPage resetClosedPage() {
         return page(new Overview(new IconHeader("密码找回功能已经关闭", new Icon("warning circle")).setSubTitle("请与平台管理员联系")).addLink("返回登录", "/login"));
-    }
-
-    private String getResetUsername(String codeId) {
-        return userService.findOne(codeService.findOne(codeId).orElse(null).getUserId()).map(user -> {
-            if (StringUtils.isNotBlank(user.getUsername())) {
-                return user.getUsername();
-            }
-
-            if (StringUtils.isNotBlank(user.getEmail())) {
-                return user.getEmail();
-            }
-
-            if (StringUtils.isNotBlank(user.getPhone())) {
-                return user.getPhone();
-            }
-
-            return user.getId();
-        }).orElse("未知用户");
     }
 }

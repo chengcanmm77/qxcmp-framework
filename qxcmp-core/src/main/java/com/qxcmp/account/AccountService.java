@@ -2,10 +2,7 @@ package com.qxcmp.account;
 
 import com.google.common.collect.Lists;
 import com.qxcmp.account.event.UserLogonEvent;
-import com.qxcmp.account.form.AccountLogonUsernameForm;
-import com.qxcmp.account.form.AccountResetForm;
-import com.qxcmp.account.form.AccountResetUsernameForm;
-import com.qxcmp.account.form.AccountResetUsernameQuestionForm;
+import com.qxcmp.account.form.*;
 import com.qxcmp.config.SiteService;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpSystemConfig;
@@ -173,6 +170,46 @@ public class AccountService implements QxcmpInitializer {
     }
 
     /**
+     * 进行邮箱注册
+     *
+     * @param form          注册表单
+     * @param bindingResult 错误对象
+     */
+    public void logon(AccountLogonEmailForm form, BindingResult bindingResult) {
+
+        if (userService.findById(form.getUsername()).isPresent()) {
+            bindingResult.rejectValue("username", "Username.exist");
+        }
+
+        if (userService.findById(form.getEmail()).isPresent()) {
+            bindingResult.rejectValue("email", "Email.exist");
+        }
+
+        if (!Objects.equals(form.getPassword(), form.getPasswordConfirm())) {
+            bindingResult.rejectValue("passwordConfirm", "PasswordConfirm");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return;
+        }
+
+        User user = userService.create(() -> {
+            User next = userService.next();
+            next.setUsername(form.getUsername());
+            next.setEmail(form.getEmail());
+            next.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
+            next.setAccountNonExpired(true);
+            next.setAccountNonLocked(true);
+            next.setCredentialsNonExpired(true);
+            next.setEnabled(false);
+            userService.setDefaultPortrait(next);
+            return next;
+        });
+
+        sendActivateEmail(user);
+    }
+
+    /**
      * 获取用户密保问题并对表单进行效验
      *
      * @param form          表单
@@ -204,25 +241,19 @@ public class AccountService implements QxcmpInitializer {
      */
     public AccountCode validateSecurityQuestion(AccountResetUsernameQuestionForm form) {
         AccountSecurityQuestion securityQuestion = securityQuestionService.findByUserId(form.getUserId()).orElseThrow(RuntimeException::new);
-
         int count = 0;
-
         if (form.getAnswer1().equals(securityQuestion.getAnswer1())) {
             count++;
         }
-
         if (form.getAnswer2().equals(securityQuestion.getAnswer2())) {
             count++;
         }
-
         if (form.getAnswer3().equals(securityQuestion.getAnswer3())) {
             count++;
         }
-
         if (count >= 2) {
             return codeService.nextPasswordCode(securityQuestion.getUserId());
         }
-
         return null;
     }
 
@@ -242,5 +273,22 @@ public class AccountService implements QxcmpInitializer {
             user.setPassword(new BCryptPasswordEncoder().encode(form.getPassword()));
             codeService.delete(code);
         });
+    }
+
+    /**
+     * 邮件重置用户密码
+     *
+     * @param form          表单
+     * @param bindingResult 错误对象
+     */
+    public void reset(AccountResetEmailForm form, BindingResult bindingResult) {
+        Optional<User> userOptional = userService.findByEmail(form.getEmail());
+        if (!userOptional.isPresent()) {
+            bindingResult.rejectValue("email", "Account.reset.noEmail");
+        }
+        if (bindingResult.hasErrors()) {
+            return;
+        }
+        userOptional.ifPresent(this::sendResetEmail);
     }
 }

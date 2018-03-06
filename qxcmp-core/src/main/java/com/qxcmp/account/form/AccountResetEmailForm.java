@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.Email;
  */
 @Form(submitText = "发送重置链接", method = FormMethod.POST)
 @Data
-public class AccountEmailResetForm {
+public class AccountResetEmailForm {
 
     /**
      * 用户账户所绑定的邮箱
