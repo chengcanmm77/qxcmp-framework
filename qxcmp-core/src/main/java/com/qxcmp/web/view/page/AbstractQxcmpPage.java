@@ -1,8 +1,17 @@
 package com.qxcmp.web.view.page;
 
 import com.google.common.collect.Lists;
+import com.qxcmp.config.SiteService;
+import com.qxcmp.config.SystemConfigService;
+import com.qxcmp.config.SystemDictionaryService;
+import com.qxcmp.config.UserConfigService;
+import com.qxcmp.core.Platform;
+import com.qxcmp.core.navigation.NavigationService;
+import com.qxcmp.user.UserService;
 import com.qxcmp.web.view.Component;
+import com.qxcmp.web.view.support.utils.FormHelper;
 import com.qxcmp.web.view.support.utils.TableHelper;
+import com.qxcmp.web.view.support.utils.ViewHelper;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -21,7 +30,16 @@ import java.util.function.Supplier;
 public abstract class AbstractQxcmpPage implements QxcmpPage {
 
     protected ApplicationContext applicationContext;
+    protected UserService userService;
+    protected SystemConfigService systemConfigService;
+    protected UserConfigService userConfigService;
+    protected SystemDictionaryService systemDictionaryService;
+    protected SiteService siteService;
+    protected NavigationService navigationService;
+    protected Platform platformConfig;
+    protected ViewHelper viewHelper;
     protected TableHelper tableHelper;
+    protected FormHelper formHelper;
 
     private static final String PAGE = "qxcmp";
     private static final String BASE_MODEL_OBJECT = "page";
@@ -109,7 +127,52 @@ public abstract class AbstractQxcmpPage implements QxcmpPage {
     }
 
     @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setSystemConfigService(SystemConfigService systemConfigService) {
+        this.systemConfigService = systemConfigService;
+    }
+
+    @Autowired
+    public void setUserConfigService(UserConfigService userConfigService) {
+        this.userConfigService = userConfigService;
+    }
+
+    @Autowired
+    public void setSystemDictionaryService(SystemDictionaryService systemDictionaryService) {
+        this.systemDictionaryService = systemDictionaryService;
+    }
+
+    @Autowired
+    public void setSiteService(SiteService siteService) {
+        this.siteService = siteService;
+    }
+
+    @Autowired
+    public void setNavigationService(NavigationService navigationService) {
+        this.navigationService = navigationService;
+    }
+
+    @Autowired
+    public void setPlatformConfig(Platform platformConfig) {
+        this.platformConfig = platformConfig;
+    }
+
+    @Autowired
+    public void setViewHelper(ViewHelper viewHelper) {
+        this.viewHelper = viewHelper;
+    }
+
+    @Autowired
     public void setTableHelper(TableHelper tableHelper) {
         this.tableHelper = tableHelper;
+    }
+
+    @Autowired
+    public void setFormHelper(FormHelper formHelper) {
+        this.formHelper = formHelper;
     }
 }

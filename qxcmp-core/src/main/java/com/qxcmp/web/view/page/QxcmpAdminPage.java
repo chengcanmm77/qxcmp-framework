@@ -1,13 +1,9 @@
 package com.qxcmp.web.view.page;
 
-import com.qxcmp.config.*;
-import com.qxcmp.core.Platform;
-import com.qxcmp.core.navigation.NavigationService;
 import com.qxcmp.message.InnerMessageService;
 import com.qxcmp.message.SiteNotification;
 import com.qxcmp.message.SiteNotificationService;
 import com.qxcmp.user.User;
-import com.qxcmp.user.UserService;
 import com.qxcmp.web.view.Component;
 import com.qxcmp.web.view.elements.breadcrumb.AbstractBreadcrumb;
 import com.qxcmp.web.view.elements.breadcrumb.Breadcrumb;
@@ -57,14 +53,6 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @org.springframework.stereotype.Component
 @RequiredArgsConstructor
 public abstract class QxcmpAdminPage extends GenericQxcmpPage {
-
-    protected UserService userService;
-    protected SystemConfigService systemConfigService;
-    protected UserConfigService userConfigService;
-    protected SystemDictionaryService systemDictionaryService;
-    protected SiteService siteService;
-    protected NavigationService navigationService;
-    protected Platform platformConfig;
 
     private AbstractSidebar sidebar = new AccordionMenuSidebar().setAttachEventsSelector(".ui.bottom.fixed.menu .sidebar.item");
     private AbstractBreadcrumb breadcrumb;
@@ -294,41 +282,6 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
         }
 
         return message;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setSystemConfigService(SystemConfigService systemConfigService) {
-        this.systemConfigService = systemConfigService;
-    }
-
-    @Autowired
-    public void setUserConfigService(UserConfigService userConfigService) {
-        this.userConfigService = userConfigService;
-    }
-
-    @Autowired
-    public void setSystemDictionaryService(SystemDictionaryService systemDictionaryService) {
-        this.systemDictionaryService = systemDictionaryService;
-    }
-
-    @Autowired
-    public void setSiteService(SiteService siteService) {
-        this.siteService = siteService;
-    }
-
-    @Autowired
-    public void setNavigationService(NavigationService navigationService) {
-        this.navigationService = navigationService;
-    }
-
-    @Autowired
-    public void setPlatformConfig(Platform platformConfig) {
-        this.platformConfig = platformConfig;
     }
 
     @Autowired

@@ -1,5 +1,6 @@
-package com.qxcmp.account;
+package com.qxcmp.account.controller;
 
+import com.qxcmp.account.*;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.auth.AuthenticationFailureHandler;
@@ -54,7 +55,6 @@ public class AccountPageController extends QxcmpController {
     protected final AccountService accountService;
     protected final AccountCodeService codeService;
 
-    @GetMapping("/login")
     public ModelAndView loginPage(@RequestParam(required = false) String callback, final LoginForm loginForm, final LoginFormWithCaptcha loginFormWithCaptcha) {
 
         return buildPage(segment -> {

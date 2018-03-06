@@ -2,8 +2,8 @@ package com.qxcmp.account.username;
 
 import com.qxcmp.account.AccountCode;
 import com.qxcmp.account.AccountCodeService;
-import com.qxcmp.account.AccountPageController;
 import com.qxcmp.account.AccountService;
+import com.qxcmp.account.controller.AccountPageController;
 import com.qxcmp.user.User;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.IconHeader;

@@ -1,8 +1,8 @@
 package com.qxcmp.account.email;
 
 import com.qxcmp.account.AccountCodeService;
-import com.qxcmp.account.AccountPageController;
 import com.qxcmp.account.AccountService;
+import com.qxcmp.account.controller.AccountPageController;
 import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.user.User;
 import com.qxcmp.web.view.elements.header.HeaderType;
