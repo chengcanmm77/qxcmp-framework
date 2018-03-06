@@ -11,7 +11,7 @@ import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_SUBSCRIBE_WELCOME_MESSAGE;
+import static com.qxcmp.core.QxcmpSystemConfig.WECHAT_SUBSCRIBE_WELCOME_MESSAGE;
 
 /**
  * 平台默认微信消息事件监听器
@@ -37,7 +37,7 @@ public class WeixinMpMessageDefaultListener {
 
             wechatService.getSyncService().syncUser(wxMpUser);
 
-            event.setWxMpXmlOutMessage(WxMpXmlOutMessage.TEXT().content(systemConfigService.getString(SYSTEM_CONFIG_WECHAT_SUBSCRIBE_WELCOME_MESSAGE).orElse("")).build());
+            event.setWxMpXmlOutMessage(WxMpXmlOutMessage.TEXT().content(systemConfigService.getString(WECHAT_SUBSCRIBE_WELCOME_MESSAGE).orElse("")).build());
         } catch (WxErrorException e) {
             event.setWxMpXmlOutMessage(WxMpXmlOutMessage.TEXT().content("关注失败，平台出现错误: " + e.getMessage()).build());
         }

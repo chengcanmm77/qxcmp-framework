@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_NOTIFY_URL;
+import static com.qxcmp.core.QxcmpSystemConfig.WECHAT_NOTIFY_URL;
 
 
 /**
@@ -168,7 +168,7 @@ public class WeixinPaymentAPI extends QxcmpController {
      */
     private Map<String, String> doWeixinPayment(String tradeType, User user, DepositOrder depositOrder) throws WxPayException {
         WxPayUnifiedOrderRequest.WxPayUnifiedOrderRequestBuilder requestBuilder = WxPayUnifiedOrderRequest.newBuilder();
-        requestBuilder.notifyURL(systemConfigService.getString(SYSTEM_CONFIG_WECHAT_NOTIFY_URL).orElse(""));
+        requestBuilder.notifyURL(systemConfigService.getString(WECHAT_NOTIFY_URL).orElse(""));
         requestBuilder.deviceInfo("WEB");
         requestBuilder.body(String.format("%s-钱包充值", siteService.getTitle()));
         requestBuilder.outTradeNo(depositOrder.getId());

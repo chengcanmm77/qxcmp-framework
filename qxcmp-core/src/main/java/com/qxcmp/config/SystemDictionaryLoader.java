@@ -1,7 +1,7 @@
 package com.qxcmp.config;
 
 import com.google.common.collect.Lists;
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.core.init.QxcmpInitializer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,9 +91,9 @@ public class SystemDictionaryLoader implements QxcmpInitializer {
 
     @Override
     public void init() throws IOException {
-        if (!systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_DICTIONARY_INITIAL_FLAG).orElse(false)) {
+        if (!systemConfigService.getBoolean(QxcmpSystemConfig.DICTIONARY_INITIAL_FLAG).orElse(false)) {
             reload();
-            systemConfigService.update(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_DICTIONARY_INITIAL_FLAG, "true");
+            systemConfigService.update(QxcmpSystemConfig.DICTIONARY_INITIAL_FLAG, "true");
         }
 
         systemDictionaryService.refresh();

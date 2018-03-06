@@ -22,8 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH;
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT_VALUE;
+import static com.qxcmp.core.QxcmpSystemConfig.AUTHENTICATION_CAPTCHA_LENGTH;
+import static com.qxcmp.core.QxcmpSystemConfig.AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT;
 
 /**
  * 验证码Web API
@@ -45,7 +45,7 @@ public class CaptchaAPI extends QxcmpController {
 
     @GetMapping("image")
     public void imageCaptcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Captcha captcha = captchaComponent.next(systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH).orElse(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT_VALUE));
+        Captcha captcha = captchaComponent.next(systemConfigService.getInteger(AUTHENTICATION_CAPTCHA_LENGTH).orElse(AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT));
 
         HttpSession session = request.getSession();
         session.setAttribute(CaptchaService.CAPTCHA_SESSION_ATTR, captcha);
@@ -68,7 +68,7 @@ public class CaptchaAPI extends QxcmpController {
         }
 
         try {
-            Captcha captcha = captchaComponent.next(systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH).orElse(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT_VALUE), true);
+            Captcha captcha = captchaComponent.next(systemConfigService.getInteger(AUTHENTICATION_CAPTCHA_LENGTH).orElse(AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT), true);
 
             HttpSession session = request.getSession();
             session.setAttribute(CaptchaService.CAPTCHA_SESSION_ATTR, captcha);

@@ -27,7 +27,7 @@ import java.util.List;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.*;
+import static com.qxcmp.core.QxcmpSystemConfig.*;
 
 @Controller
 @RequestMapping(QXCMP_BACKEND_URL + "/security")
@@ -44,16 +44,16 @@ public class AdminSecurityPageController extends QxcmpController {
                 .addComponent(convertToTable(stringStringMap -> {
                     stringStringMap.put("角色总数", roleService.count());
                     stringStringMap.put("权限总数", privilegeService.count());
-                    stringStringMap.put("验证码阈值", systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_THRESHOLD).orElse(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_THRESHOLD_DEFAULT_VALUE));
-                    stringStringMap.put("验证码长度", systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH).orElse(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT_VALUE));
-                    stringStringMap.put("是否启用账户锁定", systemConfigService.getBoolean(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK).orElse(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DEFAULT_VALUE));
-                    stringStringMap.put("账户锁定阈值", systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD).orElse(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD_DEFAULT_VALUE));
-                    stringStringMap.put("账户锁定时长", systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT_VALUE));
-                    stringStringMap.put("是否启用账户过期", systemConfigService.getBoolean(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE).orElse(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT_VALUE));
-                    stringStringMap.put("账户过期时间", systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT_VALUE));
-                    stringStringMap.put("是否启用密码过期", systemConfigService.getBoolean(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE).orElse(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT_VALUE));
-                    stringStringMap.put("密码过期时间", systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT_VALUE));
-                    stringStringMap.put("是否启用唯一密码", systemConfigService.getBoolean(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_UNIQUE).orElse(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_UNIQUE_DEFAULT_VALUE));
+                    stringStringMap.put("验证码阈值", systemConfigService.getInteger(AUTHENTICATION_CAPTCHA_THRESHOLD).orElse(AUTHENTICATION_CAPTCHA_THRESHOLD_DEFAULT));
+                    stringStringMap.put("验证码长度", systemConfigService.getInteger(AUTHENTICATION_CAPTCHA_LENGTH).orElse(AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT));
+                    stringStringMap.put("是否启用账户锁定", systemConfigService.getBoolean(AUTHENTICATION_ACCOUNT_LOCK).orElse(AUTHENTICATION_ACCOUNT_LOCK_DEFAULT));
+                    stringStringMap.put("账户锁定阈值", systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD).orElse(AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD_DEFAULT));
+                    stringStringMap.put("账户锁定时长", systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT));
+                    stringStringMap.put("是否启用账户过期", systemConfigService.getBoolean(AUTHENTICATION_ACCOUNT_EXPIRE).orElse(AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT));
+                    stringStringMap.put("账户过期时间", systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT));
+                    stringStringMap.put("是否启用密码过期", systemConfigService.getBoolean(AUTHENTICATION_CREDENTIAL_EXPIRE).orElse(AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT));
+                    stringStringMap.put("密码过期时间", systemConfigService.getInteger(AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT));
+                    stringStringMap.put("是否启用唯一密码", systemConfigService.getBoolean(AUTHENTICATION_CREDENTIAL_UNIQUE).orElse(AUTHENTICATION_CREDENTIAL_UNIQUE_DEFAULT));
                 })))
                 .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置")
                 .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, "")
@@ -203,16 +203,16 @@ public class AdminSecurityPageController extends QxcmpController {
     @GetMapping("/authentication")
     public ModelAndView authenticationPage(final AdminSecurityAuthenticationForm form) {
 
-        form.setCaptchaThreshold(systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_THRESHOLD).orElse(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_THRESHOLD_DEFAULT_VALUE));
-        form.setCaptchaLength(systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH).orElse(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT_VALUE));
-        form.setLockAccount(systemConfigService.getBoolean(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK).orElse(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DEFAULT_VALUE));
-        form.setLockThreshold(systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD).orElse(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD_DEFAULT_VALUE));
-        form.setUnlockDuration(systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT_VALUE));
-        form.setExpireAccount(systemConfigService.getBoolean(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE).orElse(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT_VALUE));
-        form.setExpireAccountDuration(systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT_VALUE));
-        form.setExpireCredential(systemConfigService.getBoolean(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE).orElse(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT_VALUE));
-        form.setExpireCredentialDuration(systemConfigService.getInteger(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT_VALUE));
-        form.setUniqueCredential(systemConfigService.getBoolean(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_UNIQUE).orElse(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_UNIQUE_DEFAULT_VALUE));
+        form.setCaptchaThreshold(systemConfigService.getInteger(AUTHENTICATION_CAPTCHA_THRESHOLD).orElse(AUTHENTICATION_CAPTCHA_THRESHOLD_DEFAULT));
+        form.setCaptchaLength(systemConfigService.getInteger(AUTHENTICATION_CAPTCHA_LENGTH).orElse(AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT));
+        form.setLockAccount(systemConfigService.getBoolean(AUTHENTICATION_ACCOUNT_LOCK).orElse(AUTHENTICATION_ACCOUNT_LOCK_DEFAULT));
+        form.setLockThreshold(systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD).orElse(AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD_DEFAULT));
+        form.setUnlockDuration(systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT));
+        form.setExpireAccount(systemConfigService.getBoolean(AUTHENTICATION_ACCOUNT_EXPIRE).orElse(AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT));
+        form.setExpireAccountDuration(systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT));
+        form.setExpireCredential(systemConfigService.getBoolean(AUTHENTICATION_CREDENTIAL_EXPIRE).orElse(AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT));
+        form.setExpireCredentialDuration(systemConfigService.getInteger(AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT));
+        form.setUniqueCredential(systemConfigService.getBoolean(AUTHENTICATION_CREDENTIAL_UNIQUE).orElse(AUTHENTICATION_CREDENTIAL_UNIQUE_DEFAULT));
 
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "认证配置")
@@ -232,16 +232,16 @@ public class AdminSecurityPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                systemConfigService.update(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_THRESHOLD, String.valueOf(form.getCaptchaThreshold()));
-                systemConfigService.update(SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_LENGTH, String.valueOf(form.getCaptchaLength()));
-                systemConfigService.update(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK, String.valueOf(form.isLockAccount()));
-                systemConfigService.update(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD, String.valueOf(form.getLockThreshold()));
-                systemConfigService.update(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DURATION, String.valueOf(form.getUnlockDuration()));
-                systemConfigService.update(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE, String.valueOf(form.isExpireAccount()));
-                systemConfigService.update(SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE_DURATION, String.valueOf(form.getExpireAccountDuration()));
-                systemConfigService.update(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE, String.valueOf(form.isExpireCredential()));
-                systemConfigService.update(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION, String.valueOf(form.getExpireCredentialDuration()));
-                systemConfigService.update(SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_UNIQUE, String.valueOf(form.isUniqueCredential()));
+                systemConfigService.update(AUTHENTICATION_CAPTCHA_THRESHOLD, String.valueOf(form.getCaptchaThreshold()));
+                systemConfigService.update(AUTHENTICATION_CAPTCHA_LENGTH, String.valueOf(form.getCaptchaLength()));
+                systemConfigService.update(AUTHENTICATION_ACCOUNT_LOCK, String.valueOf(form.isLockAccount()));
+                systemConfigService.update(AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD, String.valueOf(form.getLockThreshold()));
+                systemConfigService.update(AUTHENTICATION_ACCOUNT_LOCK_DURATION, String.valueOf(form.getUnlockDuration()));
+                systemConfigService.update(AUTHENTICATION_ACCOUNT_EXPIRE, String.valueOf(form.isExpireAccount()));
+                systemConfigService.update(AUTHENTICATION_ACCOUNT_EXPIRE_DURATION, String.valueOf(form.getExpireAccountDuration()));
+                systemConfigService.update(AUTHENTICATION_CREDENTIAL_EXPIRE, String.valueOf(form.isExpireCredential()));
+                systemConfigService.update(AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION, String.valueOf(form.getExpireCredentialDuration()));
+                systemConfigService.update(AUTHENTICATION_CREDENTIAL_UNIQUE, String.valueOf(form.isUniqueCredential()));
 
                 applicationContext.publishEvent(new AdminSecurityAuthenticationEvent(currentUser().orElseThrow(RuntimeException::new)));
             } catch (Exception e) {

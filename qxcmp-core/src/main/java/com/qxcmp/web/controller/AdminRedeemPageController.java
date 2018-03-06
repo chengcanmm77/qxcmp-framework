@@ -2,7 +2,7 @@ package com.qxcmp.web.controller;
 
 import com.google.common.collect.Lists;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.core.event.AdminRedeemGenerateEvent;
 import com.qxcmp.core.event.AdminRedeemSettingsEvent;
 import com.qxcmp.redeem.RedeemKey;
@@ -30,7 +30,7 @@ import java.util.Objects;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.*;
+import static com.qxcmp.core.QxcmpSystemConfig.*;
 
 @Controller
 @RequestMapping(QXCMP_BACKEND_URL + "/redeem")
@@ -70,13 +70,13 @@ public class AdminRedeemPageController extends QxcmpController {
     @GetMapping("/generate")
     public ModelAndView redeemGeneratePage(final AdminRedeemGenerateForm form) {
 
-        form.setDateExpired(new Date(System.currentTimeMillis() + 1000 * systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_REDEEM_DEFAULT_EXPIRE_DURATION).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_REDEEM_DEFAULT_EXPIRE_DURATION_DEFAULT_VALUE)));
+        form.setDateExpired(new Date(System.currentTimeMillis() + 1000 * systemConfigService.getInteger(QxcmpSystemConfig.REDEEM_DEFAULT_EXPIRE_DURATION).orElse(QxcmpSystemConfig.REDEEM_DEFAULT_EXPIRE_DURATION_DEFAULT)));
         form.setQuantity(1);
 
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "系统工具", "tools", "兑换码管理", "redeem", "生成兑换码")
                 .setVerticalNavigation(NAVIGATION_ADMIN_REDEEM, NAVIGATION_ADMIN_REDEEM_MANAGEMENT)
-                .addObject("selection_items_type", systemConfigService.getList(SYSTEM_CONFIG_REDEEM_TYPE_LIST))
+                .addObject("selection_items_type", systemConfigService.getList(REDEEM_TYPE_LIST))
                 .build();
     }
 
@@ -88,7 +88,7 @@ public class AdminRedeemPageController extends QxcmpController {
             return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "系统工具", "tools", "兑换码管理", "redeem", "生成兑换码")
                     .setVerticalNavigation(NAVIGATION_ADMIN_REDEEM, NAVIGATION_ADMIN_REDEEM_MANAGEMENT)
-                    .addObject("selection_items_type", systemConfigService.getList(SYSTEM_CONFIG_REDEEM_TYPE_LIST))
+                    .addObject("selection_items_type", systemConfigService.getList(REDEEM_TYPE_LIST))
                     .build();
         }
 
@@ -131,9 +131,9 @@ public class AdminRedeemPageController extends QxcmpController {
     @GetMapping("/settings")
     public ModelAndView redeemSettingsPage(final AdminRedeemSettingsForm form) {
 
-        form.setEnable(systemConfigService.getBoolean(SYSTEM_CONFIG_REDEEM_ENABLE).orElse(SYSTEM_CONFIG_REDEEM_ENABLE_DEFAULT_VALUE));
-        form.setExpireDuration(systemConfigService.getInteger(SYSTEM_CONFIG_REDEEM_DEFAULT_EXPIRE_DURATION).orElse(SYSTEM_CONFIG_REDEEM_DEFAULT_EXPIRE_DURATION_DEFAULT_VALUE));
-        form.setType(systemConfigService.getList(SYSTEM_CONFIG_REDEEM_TYPE_LIST));
+        form.setEnable(systemConfigService.getBoolean(REDEEM_ENABLE).orElse(REDEEM_ENABLE_DEFAULT));
+        form.setExpireDuration(systemConfigService.getInteger(REDEEM_DEFAULT_EXPIRE_DURATION).orElse(REDEEM_DEFAULT_EXPIRE_DURATION_DEFAULT));
+        form.setType(systemConfigService.getList(REDEEM_TYPE_LIST));
 
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "系统工具", "tools", "兑换码管理", "redeem", "兑换码配置")
@@ -171,9 +171,9 @@ public class AdminRedeemPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                systemConfigService.update(SYSTEM_CONFIG_REDEEM_ENABLE, String.valueOf(form.isEnable()));
-                systemConfigService.update(SYSTEM_CONFIG_REDEEM_DEFAULT_EXPIRE_DURATION, String.valueOf(form.getExpireDuration()));
-                systemConfigService.update(SYSTEM_CONFIG_REDEEM_TYPE_LIST, form.getType());
+                systemConfigService.update(REDEEM_ENABLE, String.valueOf(form.isEnable()));
+                systemConfigService.update(REDEEM_DEFAULT_EXPIRE_DURATION, String.valueOf(form.getExpireDuration()));
+                systemConfigService.update(REDEEM_TYPE_LIST, form.getType());
 
                 applicationContext.publishEvent(new AdminRedeemSettingsEvent(currentUser().orElseThrow(RuntimeException::new)));
             } catch (Exception e) {

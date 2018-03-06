@@ -24,7 +24,7 @@ import java.util.Objects;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MALL_COMMODITY_CATALOG;
+import static com.qxcmp.core.QxcmpSystemConfig.MALL_COMMODITY_CATALOG;
 
 @Controller
 @RequestMapping(QXCMP_BACKEND_URL + "/mall")
@@ -139,7 +139,7 @@ public class AdminMallPageController extends QxcmpController {
     @GetMapping("/settings")
     public ModelAndView mallSettingsPage(final AdminMallSettingsForm form) {
 
-        form.setCatalogs(systemConfigService.getList(SYSTEM_CONFIG_MALL_COMMODITY_CATALOG));
+        form.setCatalogs(systemConfigService.getList(MALL_COMMODITY_CATALOG));
 
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "商城管理", "mall", "商城设置")
@@ -175,7 +175,7 @@ public class AdminMallPageController extends QxcmpController {
         }
         return submitForm(form, context -> {
             try {
-                systemConfigService.update(SYSTEM_CONFIG_MALL_COMMODITY_CATALOG, form.getCatalogs());
+                systemConfigService.update(MALL_COMMODITY_CATALOG, form.getCatalogs());
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }

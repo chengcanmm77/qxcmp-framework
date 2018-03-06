@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_SESSION_TIMEOUT;
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_SESSION_TIMEOUT_DEFAULT_VALUE;
+import static com.qxcmp.core.QxcmpSystemConfig.SESSION_TIMEOUT;
+import static com.qxcmp.core.QxcmpSystemConfig.SESSION_TIMEOUT_DEFAULT;
 
 /**
  * 认证成功处理器，属于框架基本功能，供平台和前端共同使用
@@ -46,7 +46,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
             redirectStrategy.sendRedirect(request, response, request.getParameter("callback"));
         }
 
-        request.getSession().setMaxInactiveInterval(systemConfigService.getInteger(SYSTEM_CONFIG_SESSION_TIMEOUT).orElse(SYSTEM_CONFIG_SESSION_TIMEOUT_DEFAULT_VALUE));
+        request.getSession().setMaxInactiveInterval(systemConfigService.getInteger(SESSION_TIMEOUT).orElse(SESSION_TIMEOUT_DEFAULT));
 
         try {
             String username = request.getParameter("username");

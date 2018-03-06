@@ -1,7 +1,7 @@
 package com.qxcmp.core.jobs;
 
 import com.qxcmp.config.SystemConfigService;
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -37,7 +37,7 @@ public class FileUploadCleanupJob {
     public void cleanUp() {
         log.info("Clean up upload file tmp folder...");
         long currentTimeMillis = System.currentTimeMillis();
-        int duration = systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION_DEFAULT_VALUE) * 60 * 1000;
+        int duration = systemConfigService.getInteger(QxcmpSystemConfig.FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION).orElse(QxcmpSystemConfig.FILE_UPLOAD_TEMP_FILE_RESERVE_DURATION_DEFAULT) * 60 * 1000;
 
         FileUtils.listFilesAndDirs(new File(QXCMP_FILE_UPLOAD_TEMP_FOLDER), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE).stream().filter(File::isDirectory).forEach(file -> {
             try {

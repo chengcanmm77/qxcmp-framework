@@ -2,7 +2,7 @@ package com.qxcmp.web.controller;
 
 import com.google.gson.GsonBuilder;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.core.event.AdminWeixinSettingsEvent;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.form.AdminWeixinMenuForm;
@@ -45,7 +45,7 @@ import java.util.Objects;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.*;
+import static com.qxcmp.core.QxcmpSystemConfig.*;
 import static me.chanjar.weixin.common.api.WxConsts.OAuth2Scope.SNSAPI_USERINFO;
 
 /**
@@ -65,14 +65,14 @@ public class AdminWeixinPageController extends QxcmpController {
     public ModelAndView weixinPage() {
         return page().addComponent(new Overview("微信公众平台")
                 .addComponent(convertToTable(stringObjectMap -> {
-                    stringObjectMap.put("App ID", systemConfigService.getString(SYSTEM_CONFIG_WECHAT_APP_ID).orElse(""));
-                    stringObjectMap.put("App Secret", systemConfigService.getString(SYSTEM_CONFIG_WECHAT_SECRET).orElse(""));
-                    stringObjectMap.put("Token", systemConfigService.getString(SYSTEM_CONFIG_WECHAT_TOKEN).orElse(""));
-                    stringObjectMap.put("AES Key", systemConfigService.getString(SYSTEM_CONFIG_WECHAT_AES_KEY).orElse(""));
-                    stringObjectMap.put("授权回调链接", systemConfigService.getString(SYSTEM_CONFIG_WECHAT_OAUTH2_CALLBACK_URL).orElse(""));
-                    stringObjectMap.put("网页授权链接", systemConfigService.getString(SYSTEM_CONFIG_WECHAT_OAUTH2_AUTHORIZATION_URL).orElse(""));
-                    stringObjectMap.put("调试模式", systemConfigService.getString(SYSTEM_CONFIG_WECHAT_DEBUG).orElse(""));
-                    stringObjectMap.put("欢迎语", systemConfigService.getString(SYSTEM_CONFIG_WECHAT_SUBSCRIBE_WELCOME_MESSAGE).orElse(""));
+                    stringObjectMap.put("App ID", systemConfigService.getString(WECHAT_APP_ID).orElse(""));
+                    stringObjectMap.put("App Secret", systemConfigService.getString(WECHAT_SECRET).orElse(""));
+                    stringObjectMap.put("Token", systemConfigService.getString(WECHAT_TOKEN).orElse(""));
+                    stringObjectMap.put("AES Key", systemConfigService.getString(WECHAT_AES_KEY).orElse(""));
+                    stringObjectMap.put("授权回调链接", systemConfigService.getString(WECHAT_OAUTH2_CALLBACK_URL).orElse(""));
+                    stringObjectMap.put("网页授权链接", systemConfigService.getString(WECHAT_OAUTH2_AUTHORIZATION_URL).orElse(""));
+                    stringObjectMap.put("调试模式", systemConfigService.getString(WECHAT_DEBUG).orElse(""));
+                    stringObjectMap.put("欢迎语", systemConfigService.getString(WECHAT_SUBSCRIBE_WELCOME_MESSAGE).orElse(""));
                 })))
                 .setBreadcrumb("控制台", "", "微信公众平台")
                 .setVerticalNavigation(NAVIGATION_ADMIN_WEIXIN, "")
@@ -118,13 +118,13 @@ public class AdminWeixinPageController extends QxcmpController {
     @GetMapping("/settings")
     public ModelAndView weixinMpPage(final AdminWeixinSettingsForm form) {
 
-        form.setDebug(systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_DEBUG).orElse(false));
-        form.setAppId(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_APP_ID).orElse(""));
-        form.setSecret(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_SECRET).orElse(""));
-        form.setToken(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_TOKEN).orElse(""));
-        form.setAesKey(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_AES_KEY).orElse(""));
-        form.setOauth2Url(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_OAUTH2_CALLBACK_URL).orElse(""));
-        form.setSubscribeMessage(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_SUBSCRIBE_WELCOME_MESSAGE).orElse(""));
+        form.setDebug(systemConfigService.getBoolean(QxcmpSystemConfig.WECHAT_DEBUG).orElse(false));
+        form.setAppId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_APP_ID).orElse(""));
+        form.setSecret(systemConfigService.getString(QxcmpSystemConfig.WECHAT_SECRET).orElse(""));
+        form.setToken(systemConfigService.getString(QxcmpSystemConfig.WECHAT_TOKEN).orElse(""));
+        form.setAesKey(systemConfigService.getString(QxcmpSystemConfig.WECHAT_AES_KEY).orElse(""));
+        form.setOauth2Url(systemConfigService.getString(QxcmpSystemConfig.WECHAT_OAUTH2_CALLBACK_URL).orElse(""));
+        form.setSubscribeMessage(systemConfigService.getString(QxcmpSystemConfig.WECHAT_SUBSCRIBE_WELCOME_MESSAGE).orElse(""));
 
         return page()
                 .addComponent(new Segment().addComponent(convertToForm(form)))
@@ -146,13 +146,13 @@ public class AdminWeixinPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                systemConfigService.update(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_DEBUG, String.valueOf(form.isDebug()));
-                systemConfigService.update(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_APP_ID, form.getAppId());
-                systemConfigService.update(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_SECRET, form.getSecret());
-                systemConfigService.update(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_TOKEN, form.getToken());
-                systemConfigService.update(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_AES_KEY, form.getAesKey());
-                systemConfigService.update(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_OAUTH2_CALLBACK_URL, form.getOauth2Url());
-                systemConfigService.update(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_SUBSCRIBE_WELCOME_MESSAGE, form.getSubscribeMessage());
+                systemConfigService.update(QxcmpSystemConfig.WECHAT_DEBUG, String.valueOf(form.isDebug()));
+                systemConfigService.update(QxcmpSystemConfig.WECHAT_APP_ID, form.getAppId());
+                systemConfigService.update(QxcmpSystemConfig.WECHAT_SECRET, form.getSecret());
+                systemConfigService.update(QxcmpSystemConfig.WECHAT_TOKEN, form.getToken());
+                systemConfigService.update(QxcmpSystemConfig.WECHAT_AES_KEY, form.getAesKey());
+                systemConfigService.update(QxcmpSystemConfig.WECHAT_OAUTH2_CALLBACK_URL, form.getOauth2Url());
+                systemConfigService.update(QxcmpSystemConfig.WECHAT_SUBSCRIBE_WELCOME_MESSAGE, form.getSubscribeMessage());
 
                 WxMpInMemoryConfigStorage configStorage = (WxMpInMemoryConfigStorage) wxMpConfigStorage;
                 configStorage.setAppId(form.getAppId());
@@ -164,7 +164,7 @@ public class AdminWeixinPageController extends QxcmpController {
                     try {
                         String oauth2Url = wxMpService.oauth2buildAuthorizationUrl(form.getOauth2Url(), SNSAPI_USERINFO, null);
                         context.put("oauth2Url", oauth2Url);
-                        systemConfigService.update(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_OAUTH2_AUTHORIZATION_URL, oauth2Url);
+                        systemConfigService.update(QxcmpSystemConfig.WECHAT_OAUTH2_AUTHORIZATION_URL, oauth2Url);
                     } catch (Exception e) {
                         throw new ActionException("Can't build Oauth2 Url", e);
                     }

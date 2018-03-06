@@ -1,7 +1,7 @@
 package com.qxcmp.web;
 
 import com.qxcmp.config.SystemConfigService;
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.security.PrivilegeAutowired;
 import com.qxcmp.statistics.AccessAddressService;
 import com.qxcmp.user.UserService;
@@ -198,8 +198,8 @@ public class QxcmpWebConfiguration extends WebSecurityConfigurerAdapter {
                 .and().formLogin().loginPage(QXCMP_LOGIN_URL).permitAll()
                 .and().logout()
                 .and().sessionManagement()
-                .maximumSessions(systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_SESSION_MAX_ACTIVE_COUNT).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_SESSION_MAX_ACTIVE_COUNT_DEFAULT_VALUE))
-                .maxSessionsPreventsLogin(systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_SESSION_MAX_PREVENT_LOGIN).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_SESSION_MAX_PREVENT_LOGIN_DEFAULT_VALUE))
+                .maximumSessions(systemConfigService.getInteger(QxcmpSystemConfig.SESSION_MAX_ACTIVE_COUNT).orElse(QxcmpSystemConfig.SESSION_MAX_ACTIVE_COUNT_DEFAULT))
+                .maxSessionsPreventsLogin(systemConfigService.getBoolean(QxcmpSystemConfig.SESSION_MAX_PREVENT_LOGIN).orElse(QxcmpSystemConfig.SESSION_MAX_PREVENT_LOGIN_DEFAULT))
                 .expiredUrl("/login?expired")
                 .sessionRegistry(sessionRegistry())
                 .and().and().addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)

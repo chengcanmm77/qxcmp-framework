@@ -60,9 +60,9 @@ public class QxcmpConfiguration {
     @Bean
     public TaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
-        threadPoolTaskExecutor.setCorePoolSize(systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_TASK_EXECUTOR_CORE_POOL_SIZE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_TASK_EXECUTOR_CORE_POOL_SIZE_DEFAULT_VALUE));
-        threadPoolTaskExecutor.setMaxPoolSize(systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_TASK_EXECUTOR_MAX_POOL_SIZE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_TASK_EXECUTOR_MAX_POOL_SIZE_DEFAULT_VALUE));
-        threadPoolTaskExecutor.setQueueCapacity(systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_TASK_EXECUTOR_QUEUE_CAPACITY).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_TASK_EXECUTOR_QUEUE_CAPACITY_DEFAULT_VALUE));
+        threadPoolTaskExecutor.setCorePoolSize(systemConfigService.getInteger(QxcmpSystemConfig.TASK_EXECUTOR_CORE_POOL_SIZE).orElse(QxcmpSystemConfig.TASK_EXECUTOR_CORE_POOL_SIZE_DEFAULT));
+        threadPoolTaskExecutor.setMaxPoolSize(systemConfigService.getInteger(QxcmpSystemConfig.TASK_EXECUTOR_MAX_POOL_SIZE).orElse(QxcmpSystemConfig.TASK_EXECUTOR_MAX_POOL_SIZE_DEFAULT));
+        threadPoolTaskExecutor.setQueueCapacity(systemConfigService.getInteger(QxcmpSystemConfig.TASK_EXECUTOR_QUEUE_CAPACITY).orElse(QxcmpSystemConfig.TASK_EXECUTOR_QUEUE_CAPACITY_DEFAULT));
         threadPoolTaskExecutor.initialize();
         return threadPoolTaskExecutor;
     }
@@ -71,16 +71,16 @@ public class QxcmpConfiguration {
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setProtocol("smtp");
-        javaMailSender.setHost(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_HOSTNAME).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_HOSTNAME_DEFAULT_VALUE));
-        javaMailSender.setPort(systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_PORT).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_PORT_DEFAULT_VALUE));
-        javaMailSender.setUsername(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_USERNAME).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_USERNAME_DEFAULT_VALUE));
-        javaMailSender.setPassword(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_PASSWORD).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_PASSWORD_DEFAULT_VALUE));
+        javaMailSender.setHost(systemConfigService.getString(QxcmpSystemConfig.MESSAGE_EMAIL_HOSTNAME).orElse(QxcmpSystemConfig.MESSAGE_EMAIL_HOSTNAME_DEFAULT));
+        javaMailSender.setPort(systemConfigService.getInteger(QxcmpSystemConfig.MESSAGE_EMAIL_PORT).orElse(QxcmpSystemConfig.MESSAGE_EMAIL_PORT_DEFAULT));
+        javaMailSender.setUsername(systemConfigService.getString(QxcmpSystemConfig.MESSAGE_EMAIL_USERNAME).orElse(QxcmpSystemConfig.MESSAGE_EMAIL_USERNAME_DEFAULT));
+        javaMailSender.setPassword(systemConfigService.getString(QxcmpSystemConfig.MESSAGE_EMAIL_PASSWORD).orElse(QxcmpSystemConfig.MESSAGE_EMAIL_PASSWORD_DEFAULT));
 
         Properties properties = System.getProperties();
-        properties.setProperty("mail.smtp.host", systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_HOSTNAME).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_HOSTNAME_DEFAULT_VALUE));
+        properties.setProperty("mail.smtp.host", systemConfigService.getString(QxcmpSystemConfig.MESSAGE_EMAIL_HOSTNAME).orElse(QxcmpSystemConfig.MESSAGE_EMAIL_HOSTNAME_DEFAULT));
         properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         properties.put("mail.smtp.socketFactory.fallback", "false");
-        properties.put("mail.smtp.port", systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_PORT).orElse(String.valueOf(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_EMAIL_PORT_DEFAULT_VALUE)));
+        properties.put("mail.smtp.port", systemConfigService.getString(QxcmpSystemConfig.MESSAGE_EMAIL_PORT).orElse(String.valueOf(QxcmpSystemConfig.MESSAGE_EMAIL_PORT_DEFAULT)));
         properties.put("mail.smtp.socketFactory.port", javaMailSender.getPort());
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.timeout", "5000");
@@ -100,10 +100,10 @@ public class QxcmpConfiguration {
     @Bean
     public WxMpConfigStorage wxMpConfigStorage() {
         WxMpInMemoryConfigStorage configStorage = new WxMpInMemoryConfigStorage();
-        configStorage.setAppId(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_APP_ID).orElse(""));
-        configStorage.setSecret(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_SECRET).orElse(""));
-        configStorage.setToken(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_TOKEN).orElse(""));
-        configStorage.setAesKey(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_AES_KEY).orElse(""));
+        configStorage.setAppId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_APP_ID).orElse(""));
+        configStorage.setSecret(systemConfigService.getString(QxcmpSystemConfig.WECHAT_SECRET).orElse(""));
+        configStorage.setToken(systemConfigService.getString(QxcmpSystemConfig.WECHAT_TOKEN).orElse(""));
+        configStorage.setAesKey(systemConfigService.getString(QxcmpSystemConfig.WECHAT_AES_KEY).orElse(""));
         return configStorage;
     }
 
@@ -124,13 +124,13 @@ public class QxcmpConfiguration {
     @Bean
     public WxPayConfig wxPayConfig() {
         WxPayConfig wxPayConfig = new WxPayConfig();
-        wxPayConfig.setAppId(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_APP_ID).orElse(""));
-        wxPayConfig.setMchId(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_MCH_ID).orElse(""));
-        wxPayConfig.setMchKey(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_MCH_KEY).orElse(""));
-        wxPayConfig.setSubAppId(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_SUB_APP_ID).orElse(""));
-        wxPayConfig.setSubMchId(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_SUB_MCH_ID).orElse(""));
-        wxPayConfig.setNotifyUrl(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_NOTIFY_URL).orElse(""));
-        wxPayConfig.setKeyPath(systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_WECHAT_KEY_PATH).orElse(""));
+        wxPayConfig.setAppId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_APP_ID).orElse(""));
+        wxPayConfig.setMchId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_MCH_ID).orElse(""));
+        wxPayConfig.setMchKey(systemConfigService.getString(QxcmpSystemConfig.WECHAT_MCH_KEY).orElse(""));
+        wxPayConfig.setSubAppId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_SUB_APP_ID).orElse(""));
+        wxPayConfig.setSubMchId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_SUB_MCH_ID).orElse(""));
+        wxPayConfig.setNotifyUrl(systemConfigService.getString(QxcmpSystemConfig.WECHAT_NOTIFY_URL).orElse(""));
+        wxPayConfig.setKeyPath(systemConfigService.getString(QxcmpSystemConfig.WECHAT_KEY_PATH).orElse(""));
         wxPayConfig.setTradeType("JSAPI");
         return wxPayConfig;
     }

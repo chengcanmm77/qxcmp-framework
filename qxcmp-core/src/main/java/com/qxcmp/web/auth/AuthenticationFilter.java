@@ -2,7 +2,7 @@ package com.qxcmp.web.auth;
 
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpConfiguration;
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import com.qxcmp.util.Captcha;
@@ -78,10 +78,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         Date dateLock = user.getDateLock();
 
         if (dateLock != null) {
-            boolean enableAccountLock = systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DEFAULT_VALUE);
+            boolean enableAccountLock = systemConfigService.getBoolean(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DEFAULT);
 
             if (enableAccountLock) {
-                int lockDuration = systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT_VALUE) * 1000 * 60;
+                int lockDuration = systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT) * 1000 * 60;
 
                 if (System.currentTimeMillis() - dateLock.getTime() > lockDuration) {
                     userService.update(userLoginId, u -> u.setAccountNonLocked(true));
@@ -102,10 +102,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         Date dateLogin = user.getDateLogin();
 
         if (dateLogin != null) {
-            boolean enableAccountExpire = systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT_VALUE);
+            boolean enableAccountExpire = systemConfigService.getBoolean(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT);
 
             if (enableAccountExpire) {
-                int expireDuration = systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT_VALUE) * 1000 * 60 * 60 * 24;
+                int expireDuration = systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT) * 1000 * 60 * 60 * 24;
 
                 if (System.currentTimeMillis() - dateLogin.getTime() > expireDuration) {
                     userService.update(userLoginId, u -> u.setAccountNonExpired(false));
@@ -129,10 +129,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             dateCredential = user.getDateCreated();
         }
 
-        boolean enableCredentialExpire = systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT_VALUE);
+        boolean enableCredentialExpire = systemConfigService.getBoolean(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE).orElse(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT);
 
         if (enableCredentialExpire) {
-            int expireCredentialDuration = systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT_VALUE) * 1000 * 60 * 60 * 24;
+            int expireCredentialDuration = systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT) * 1000 * 60 * 60 * 24;
 
             if (System.currentTimeMillis() - dateCredential.getTime() > expireCredentialDuration) {
                 userService.update(userLoginId, u -> u.setCredentialsNonExpired(false));

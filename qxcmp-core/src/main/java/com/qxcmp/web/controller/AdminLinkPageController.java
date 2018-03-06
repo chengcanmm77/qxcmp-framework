@@ -31,7 +31,7 @@ import java.util.Objects;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_LINK_TYPE;
+import static com.qxcmp.core.QxcmpSystemConfig.LINK_TYPE;
 
 @Controller
 @RequestMapping(QXCMP_BACKEND_URL + "/link")
@@ -52,7 +52,7 @@ public class AdminLinkPageController extends QxcmpController {
 
     @GetMapping("/new")
     public ModelAndView linkNewPage(final AdminLinkNewForm form) {
-        List<String> types = systemConfigService.getList(SYSTEM_CONFIG_LINK_TYPE);
+        List<String> types = systemConfigService.getList(LINK_TYPE);
 
         if (!types.isEmpty()) {
             form.setType(types.get(0));
@@ -70,7 +70,7 @@ public class AdminLinkPageController extends QxcmpController {
 
     @PostMapping("/new")
     public ModelAndView linkNewPage(@Valid final AdminLinkNewForm form, BindingResult bindingResult) {
-        List<String> types = systemConfigService.getList(SYSTEM_CONFIG_LINK_TYPE);
+        List<String> types = systemConfigService.getList(LINK_TYPE);
 
         if (bindingResult.hasErrors()) {
             return page().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form)))
@@ -122,7 +122,7 @@ public class AdminLinkPageController extends QxcmpController {
 
             return page().addComponent(convertToForm(form))
                     .setBreadcrumb("控制台", "", "系统工具", "tools", "链接管理", "new", "编辑链接")
-                    .addObject("selection_items_type", systemConfigService.getList(SYSTEM_CONFIG_LINK_TYPE))
+                    .addObject("selection_items_type", systemConfigService.getList(LINK_TYPE))
                     .addObject("selection_items_target", SUPPORT_TARGET)
                     .setVerticalNavigation(NAVIGATION_ADMIN_LINK, NAVIGATION_ADMIN_LINK_ALL)
                     .build();
@@ -136,7 +136,7 @@ public class AdminLinkPageController extends QxcmpController {
             if (bindingResult.hasErrors()) {
                 return page().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form)))
                         .setBreadcrumb("控制台", "", "系统工具", "tools", "链接管理", "new", "编辑链接")
-                        .addObject("selection_items_type", systemConfigService.getList(SYSTEM_CONFIG_LINK_TYPE))
+                        .addObject("selection_items_type", systemConfigService.getList(LINK_TYPE))
                         .addObject("selection_items_target", SUPPORT_TARGET)
                         .setVerticalNavigation(NAVIGATION_ADMIN_LINK, NAVIGATION_ADMIN_LINK_ALL)
                         .build();
@@ -178,7 +178,7 @@ public class AdminLinkPageController extends QxcmpController {
 
     @GetMapping("/settings")
     public ModelAndView linkSettingPage(final AdminLinkSettingsForm form) {
-        form.setType(systemConfigService.getList(SYSTEM_CONFIG_LINK_TYPE));
+        form.setType(systemConfigService.getList(LINK_TYPE));
         return page().addComponent(convertToForm(form))
                 .setBreadcrumb("控制台", "", "系统工具", "tools", "链接管理", "new", "链接设置")
                 .setVerticalNavigation(NAVIGATION_ADMIN_LINK, NAVIGATION_ADMIN_LINK_SETTINGS)
@@ -215,7 +215,7 @@ public class AdminLinkPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                systemConfigService.update(SYSTEM_CONFIG_LINK_TYPE, form.getType());
+                systemConfigService.update(LINK_TYPE, form.getType());
                 applicationContext.publishEvent(new AdminLinkSettingsEvent(currentUser().orElseThrow(RuntimeException::new)));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);

@@ -9,7 +9,7 @@ import com.aliyun.mns.model.RawTopicMessage;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.qxcmp.config.SystemConfigService;
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -73,12 +73,12 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public void config() {
-        accessKey = systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_KEY).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_KEY_DEFAULT_VALUE);
-        accessSecret = systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_SECRET).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_SECRET_DEFAULT_VALUE);
-        endPoint = systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_END_POINT).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_END_POINT_DEFAULT_VALUE);
-        topicRef = systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_TOPIC_REF).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_TOPIC_REF_DEFAULT_VALUE);
-        sign = systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_SIGN).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_SIGN_DEFAULT_VALUE);
-        captchaTemplateCode = systemConfigService.getString(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE_DEFAULT_VALUE);
+        accessKey = systemConfigService.getString(QxcmpSystemConfig.MESSAGE_SMS_ACCESS_KEY).orElse("");
+        accessSecret = systemConfigService.getString(QxcmpSystemConfig.MESSAGE_SMS_ACCESS_SECRET).orElse("");
+        endPoint = systemConfigService.getString(QxcmpSystemConfig.MESSAGE_SMS_END_POINT).orElse("");
+        topicRef = systemConfigService.getString(QxcmpSystemConfig.MESSAGE_SMS_TOPIC_REF).orElse("");
+        sign = systemConfigService.getString(QxcmpSystemConfig.MESSAGE_SMS_SIGN).orElse("");
+        captchaTemplateCode = systemConfigService.getString(QxcmpSystemConfig.MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE).orElse("");
     }
 
 }

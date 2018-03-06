@@ -4,7 +4,7 @@ import com.qxcmp.account.AccountCode;
 import com.qxcmp.account.AccountCodeService;
 import com.qxcmp.account.AccountPageController;
 import com.qxcmp.account.AccountService;
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.user.User;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.IconHeader;
@@ -42,7 +42,7 @@ public class AccountPhoneController extends AccountPageController {
     @GetMapping("logon")
     public ModelAndView logon(final AccountPhoneLogonForm form) {
 
-        if (!systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_ACCOUNT_ENABLE_PHONE).orElse(false)) {
+        if (!systemConfigService.getBoolean(QxcmpSystemConfig.ACCOUNT_ENABLE_PHONE).orElse(false)) {
             return logonClosedPage().build();
         }
 
@@ -55,7 +55,7 @@ public class AccountPhoneController extends AccountPageController {
     @PostMapping("logon")
     public ModelAndView logon(@Valid final AccountPhoneLogonForm form, BindingResult bindingResult) {
 
-        if (!systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_ACCOUNT_ENABLE_PHONE).orElse(false)) {
+        if (!systemConfigService.getBoolean(QxcmpSystemConfig.ACCOUNT_ENABLE_PHONE).orElse(false)) {
             return logonClosedPage().build();
         }
 
@@ -103,7 +103,7 @@ public class AccountPhoneController extends AccountPageController {
     @GetMapping("reset")
     public ModelAndView reset(final AccountPhoneResetForm form) {
 
-        if (!systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_ACCOUNT_ENABLE_PHONE).orElse(false)) {
+        if (!systemConfigService.getBoolean(QxcmpSystemConfig.ACCOUNT_ENABLE_PHONE).orElse(false)) {
             return resetClosedPage().build();
         }
 
@@ -116,7 +116,7 @@ public class AccountPhoneController extends AccountPageController {
     @PostMapping("reset")
     public ModelAndView reset(@Valid final AccountPhoneResetForm form, BindingResult bindingResult) {
 
-        if (!systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_ACCOUNT_ENABLE_PHONE).orElse(false)) {
+        if (!systemConfigService.getBoolean(QxcmpSystemConfig.ACCOUNT_ENABLE_PHONE).orElse(false)) {
             return resetClosedPage().build();
         }
 

@@ -30,7 +30,7 @@ import javax.validation.Valid;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_NEWS;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_NEWS_CHANNEL;
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_ARTICLE_CHANNEL_CATALOG;
+import static com.qxcmp.core.QxcmpSystemConfig.ARTICLE_CHANNEL_CATALOG;
 
 @Controller
 @RequestMapping(QXCMP_BACKEND_URL + "/news/channel")
@@ -69,7 +69,7 @@ public class AdminNewsChannelPageController extends QxcmpController {
                 .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_CHANNEL)
                 .addObject("selection_items_owner", userService.findAll())
                 .addObject("selection_items_admins", userService.findAll())
-                .addObject("selection_items_catalogs", systemConfigService.getList(SYSTEM_CONFIG_ARTICLE_CHANNEL_CATALOG))
+                .addObject("selection_items_catalogs", systemConfigService.getList(ARTICLE_CHANNEL_CATALOG))
                 .build();
     }
 
@@ -82,7 +82,7 @@ public class AdminNewsChannelPageController extends QxcmpController {
                     .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_CHANNEL)
                     .addObject("selection_items_owner", userService.findAll())
                     .addObject("selection_items_admins", userService.findAll())
-                    .addObject("selection_items_catalogs", systemConfigService.getList(SYSTEM_CONFIG_ARTICLE_CHANNEL_CATALOG))
+                    .addObject("selection_items_catalogs", systemConfigService.getList(ARTICLE_CHANNEL_CATALOG))
                     .build();
         }
 
@@ -120,7 +120,7 @@ public class AdminNewsChannelPageController extends QxcmpController {
                     .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_CHANNEL)
                     .addObject("selection_items_owner", userService.findAll())
                     .addObject("selection_items_admins", userService.findAll())
-                    .addObject("selection_items_catalogs", systemConfigService.getList(SYSTEM_CONFIG_ARTICLE_CHANNEL_CATALOG))
+                    .addObject("selection_items_catalogs", systemConfigService.getList(ARTICLE_CHANNEL_CATALOG))
                     .build();
         }).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/news/channel")).build());
     }
@@ -135,7 +135,7 @@ public class AdminNewsChannelPageController extends QxcmpController {
                         .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_CHANNEL)
                         .addObject("selection_items_owner", userService.findAll())
                         .addObject("selection_items_admins", userService.findAll())
-                        .addObject("selection_items_catalogs", systemConfigService.getList(SYSTEM_CONFIG_ARTICLE_CHANNEL_CATALOG))
+                        .addObject("selection_items_catalogs", systemConfigService.getList(ARTICLE_CHANNEL_CATALOG))
                         .build();
             }
 

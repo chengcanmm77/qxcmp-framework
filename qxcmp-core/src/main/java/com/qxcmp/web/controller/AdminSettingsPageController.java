@@ -38,7 +38,7 @@ import java.util.Objects;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.*;
+import static com.qxcmp.core.QxcmpSystemConfig.*;
 
 /**
  * @author Aaric
@@ -68,30 +68,30 @@ public class AdminSettingsPageController extends QxcmpController {
     @GetMapping("/site")
     public ModelAndView sitePage(final AdminSettingsSiteForm form) {
 
-        form.setLogo(systemConfigService.getString(SYSTEM_CONFIG_SITE_LOGO).orElse(SYSTEM_CONFIG_SITE_LOGO_DEFAULT_VALUE));
-        form.setFavicon(systemConfigService.getString(SYSTEM_CONFIG_SITE_FAVICON).orElse(SYSTEM_CONFIG_SITE_FAVICON_DEFAULT_VALUE));
-        form.setDomain(systemConfigService.getString(SYSTEM_CONFIG_SITE_DOMAIN).orElse(""));
-        form.setTitle(systemConfigService.getString(SYSTEM_CONFIG_SITE_TITLE).orElse(""));
-        form.setKeywords(systemConfigService.getString(SYSTEM_CONFIG_SITE_KEYWORDS).orElse(""));
-        form.setDescription(systemConfigService.getString(SYSTEM_CONFIG_SITE_DESCRIPTION).orElse(""));
+        form.setLogo(systemConfigService.getString(SITE_LOGO).orElse(SITE_LOGO_DEFAULT));
+        form.setFavicon(systemConfigService.getString(SITE_FAVICON).orElse(SITE_FAVICON_DEFAULT));
+        form.setDomain(systemConfigService.getString(SITE_DOMAIN).orElse(""));
+        form.setTitle(systemConfigService.getString(SITE_TITLE).orElse(""));
+        form.setKeywords(systemConfigService.getString(SITE_KEYWORDS).orElse(""));
+        form.setDescription(systemConfigService.getString(SITE_DESCRIPTION).orElse(""));
 
-        form.setWatermarkEnabled(systemConfigService.getBoolean(SYSTEM_CONFIG_IMAGE_WATERMARK_ENABLE).orElse(SYSTEM_CONFIG_IMAGE_WATERMARK_ENABLE_DEFAULT_VALUE));
-        form.setWatermarkName(systemConfigService.getString(SYSTEM_CONFIG_IMAGE_WATERMARK_NAME).orElse(siteService.getTitle()));
-        form.setWatermarkPosition(WATERMARK_POSITIONS.get(systemConfigService.getInteger(SYSTEM_CONFIG_IMAGE_WATERMARK_POSITION).orElse(SYSTEM_CONFIG_IMAGE_WATERMARK_POSITION_DEFAULT_VALUE)));
-        form.setWatermarkFontSize(systemConfigService.getInteger(SYSTEM_CONFIG_IMAGE_WATERMARK_FONT_SIZE).orElse(SYSTEM_CONFIG_IMAGE_WATERMARK_FONT_SIZE_DEFAULT_VALUE));
+        form.setWatermarkEnabled(systemConfigService.getBoolean(IMAGE_WATERMARK_ENABLE).orElse(IMAGE_WATERMARK_ENABLE_DEFAULT));
+        form.setWatermarkName(systemConfigService.getString(IMAGE_WATERMARK_NAME).orElse(siteService.getTitle()));
+        form.setWatermarkPosition(WATERMARK_POSITIONS.get(systemConfigService.getInteger(IMAGE_WATERMARK_POSITION).orElse(IMAGE_WATERMARK_POSITION_DEFAULT)));
+        form.setWatermarkFontSize(systemConfigService.getInteger(IMAGE_WATERMARK_FONT_SIZE).orElse(IMAGE_WATERMARK_FONT_SIZE_DEFAULT));
 
-        form.setAccountEnableUsername(systemConfigService.getBoolean(SYSTEM_CONFIG_ACCOUNT_ENABLE_USERNAME).orElse(false));
-        form.setAccountEnableEmail(systemConfigService.getBoolean(SYSTEM_CONFIG_ACCOUNT_ENABLE_EMAIL).orElse(false));
-        form.setAccountEnablePhone(systemConfigService.getBoolean(SYSTEM_CONFIG_ACCOUNT_ENABLE_PHONE).orElse(false));
-        form.setAccountEnableInvite(systemConfigService.getBoolean(SYSTEM_CONFIG_ACCOUNT_ENABLE_INVITE).orElse(false));
+        form.setAccountEnableUsername(systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false));
+        form.setAccountEnableEmail(systemConfigService.getBoolean(ACCOUNT_ENABLE_EMAIL).orElse(false));
+        form.setAccountEnablePhone(systemConfigService.getBoolean(ACCOUNT_ENABLE_PHONE).orElse(false));
+        form.setAccountEnableInvite(systemConfigService.getBoolean(ACCOUNT_ENABLE_INVITE).orElse(false));
 
-        form.setThreadPoolSize(systemConfigService.getInteger(SYSTEM_CONFIG_TASK_EXECUTOR_CORE_POOL_SIZE).orElse(SYSTEM_CONFIG_TASK_EXECUTOR_CORE_POOL_SIZE_DEFAULT_VALUE));
-        form.setMaxPoolSize(systemConfigService.getInteger(SYSTEM_CONFIG_TASK_EXECUTOR_MAX_POOL_SIZE).orElse(SYSTEM_CONFIG_TASK_EXECUTOR_MAX_POOL_SIZE_DEFAULT_VALUE));
-        form.setQueueSize(systemConfigService.getInteger(SYSTEM_CONFIG_TASK_EXECUTOR_QUEUE_CAPACITY).orElse(SYSTEM_CONFIG_TASK_EXECUTOR_QUEUE_CAPACITY_DEFAULT_VALUE));
+        form.setThreadPoolSize(systemConfigService.getInteger(TASK_EXECUTOR_CORE_POOL_SIZE).orElse(TASK_EXECUTOR_CORE_POOL_SIZE_DEFAULT));
+        form.setMaxPoolSize(systemConfigService.getInteger(TASK_EXECUTOR_MAX_POOL_SIZE).orElse(TASK_EXECUTOR_MAX_POOL_SIZE_DEFAULT));
+        form.setQueueSize(systemConfigService.getInteger(TASK_EXECUTOR_QUEUE_CAPACITY).orElse(TASK_EXECUTOR_QUEUE_CAPACITY_DEFAULT));
 
-        form.setSessionTimeout(systemConfigService.getInteger(SYSTEM_CONFIG_SESSION_TIMEOUT).orElse(SYSTEM_CONFIG_SESSION_TIMEOUT_DEFAULT_VALUE));
-        form.setMaxSessionCount(systemConfigService.getInteger(SYSTEM_CONFIG_SESSION_MAX_ACTIVE_COUNT).orElse(SYSTEM_CONFIG_SESSION_MAX_ACTIVE_COUNT_DEFAULT_VALUE));
-        form.setPreventLogin(systemConfigService.getBoolean(SYSTEM_CONFIG_SESSION_MAX_PREVENT_LOGIN).orElse(SYSTEM_CONFIG_SESSION_MAX_PREVENT_LOGIN_DEFAULT_VALUE));
+        form.setSessionTimeout(systemConfigService.getInteger(SESSION_TIMEOUT).orElse(SESSION_TIMEOUT_DEFAULT));
+        form.setMaxSessionCount(systemConfigService.getInteger(SESSION_MAX_ACTIVE_COUNT).orElse(SESSION_MAX_ACTIVE_COUNT_DEFAULT));
+        form.setPreventLogin(systemConfigService.getBoolean(SESSION_MAX_PREVENT_LOGIN).orElse(SESSION_MAX_PREVENT_LOGIN_DEFAULT));
 
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "系统设置", "settings", "网站配置")
@@ -113,30 +113,30 @@ public class AdminSettingsPageController extends QxcmpController {
 
         return submitForm(form, (context) -> {
             try {
-                systemConfigService.update(SYSTEM_CONFIG_SITE_LOGO, form.getLogo());
-                systemConfigService.update(SYSTEM_CONFIG_SITE_FAVICON, form.getFavicon());
-                systemConfigService.update(SYSTEM_CONFIG_SITE_DOMAIN, form.getDomain());
-                systemConfigService.update(SYSTEM_CONFIG_SITE_TITLE, form.getTitle());
-                systemConfigService.update(SYSTEM_CONFIG_SITE_KEYWORDS, form.getKeywords());
-                systemConfigService.update(SYSTEM_CONFIG_SITE_DESCRIPTION, form.getDescription());
+                systemConfigService.update(SITE_LOGO, form.getLogo());
+                systemConfigService.update(SITE_FAVICON, form.getFavicon());
+                systemConfigService.update(SITE_DOMAIN, form.getDomain());
+                systemConfigService.update(SITE_TITLE, form.getTitle());
+                systemConfigService.update(SITE_KEYWORDS, form.getKeywords());
+                systemConfigService.update(SITE_DESCRIPTION, form.getDescription());
 
-                systemConfigService.update(SYSTEM_CONFIG_IMAGE_WATERMARK_ENABLE, String.valueOf(form.isWatermarkEnabled()));
-                systemConfigService.update(SYSTEM_CONFIG_IMAGE_WATERMARK_NAME, form.getWatermarkName());
-                systemConfigService.update(SYSTEM_CONFIG_IMAGE_WATERMARK_POSITION, String.valueOf(WATERMARK_POSITIONS.indexOf(form.getWatermarkPosition())));
-                systemConfigService.update(SYSTEM_CONFIG_IMAGE_WATERMARK_FONT_SIZE, String.valueOf(form.getWatermarkFontSize()));
+                systemConfigService.update(IMAGE_WATERMARK_ENABLE, String.valueOf(form.isWatermarkEnabled()));
+                systemConfigService.update(IMAGE_WATERMARK_NAME, form.getWatermarkName());
+                systemConfigService.update(IMAGE_WATERMARK_POSITION, String.valueOf(WATERMARK_POSITIONS.indexOf(form.getWatermarkPosition())));
+                systemConfigService.update(IMAGE_WATERMARK_FONT_SIZE, String.valueOf(form.getWatermarkFontSize()));
 
-                systemConfigService.update(SYSTEM_CONFIG_ACCOUNT_ENABLE_USERNAME, String.valueOf(form.isAccountEnableUsername()));
-                systemConfigService.update(SYSTEM_CONFIG_ACCOUNT_ENABLE_EMAIL, String.valueOf(form.isAccountEnableEmail()));
-                systemConfigService.update(SYSTEM_CONFIG_ACCOUNT_ENABLE_PHONE, String.valueOf(form.isAccountEnablePhone()));
-                systemConfigService.update(SYSTEM_CONFIG_ACCOUNT_ENABLE_INVITE, String.valueOf(form.isAccountEnableInvite()));
+                systemConfigService.update(ACCOUNT_ENABLE_USERNAME, String.valueOf(form.isAccountEnableUsername()));
+                systemConfigService.update(ACCOUNT_ENABLE_EMAIL, String.valueOf(form.isAccountEnableEmail()));
+                systemConfigService.update(ACCOUNT_ENABLE_PHONE, String.valueOf(form.isAccountEnablePhone()));
+                systemConfigService.update(ACCOUNT_ENABLE_INVITE, String.valueOf(form.isAccountEnableInvite()));
 
-                systemConfigService.update(SYSTEM_CONFIG_TASK_EXECUTOR_CORE_POOL_SIZE, String.valueOf(form.getThreadPoolSize()));
-                systemConfigService.update(SYSTEM_CONFIG_TASK_EXECUTOR_MAX_POOL_SIZE, String.valueOf(form.getMaxPoolSize()));
-                systemConfigService.update(SYSTEM_CONFIG_TASK_EXECUTOR_QUEUE_CAPACITY, String.valueOf(form.getQueueSize()));
+                systemConfigService.update(TASK_EXECUTOR_CORE_POOL_SIZE, String.valueOf(form.getThreadPoolSize()));
+                systemConfigService.update(TASK_EXECUTOR_MAX_POOL_SIZE, String.valueOf(form.getMaxPoolSize()));
+                systemConfigService.update(TASK_EXECUTOR_QUEUE_CAPACITY, String.valueOf(form.getQueueSize()));
 
-                systemConfigService.update(SYSTEM_CONFIG_SESSION_TIMEOUT, String.valueOf(form.getSessionTimeout()));
-                systemConfigService.update(SYSTEM_CONFIG_SESSION_MAX_ACTIVE_COUNT, String.valueOf(form.getMaxSessionCount()));
-                systemConfigService.update(SYSTEM_CONFIG_SESSION_MAX_PREVENT_LOGIN, String.valueOf(form.isPreventLogin()));
+                systemConfigService.update(SESSION_TIMEOUT, String.valueOf(form.getSessionTimeout()));
+                systemConfigService.update(SESSION_MAX_ACTIVE_COUNT, String.valueOf(form.getMaxSessionCount()));
+                systemConfigService.update(SESSION_MAX_PREVENT_LOGIN, String.valueOf(form.isPreventLogin()));
 
                 accountService.loadConfig();
 

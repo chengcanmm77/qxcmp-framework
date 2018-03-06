@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.*;
+import static com.qxcmp.core.QxcmpSystemConfig.*;
 
 /**
  * 消息服务后台页面
@@ -59,15 +59,15 @@ public class AdminMessageController extends QxcmpController {
     public ModelAndView messagePage() {
         return page().addComponent(new Overview("消息服务")
                 .addComponent(convertToTable(stringStringMap -> {
-                    stringStringMap.put("邮件服务 - 主机名", systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_HOSTNAME).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_HOSTNAME_DEFAULT_VALUE));
-                    stringStringMap.put("邮件服务 - 端口", systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_PORT).orElse(String.valueOf(SYSTEM_CONFIG_MESSAGE_EMAIL_PORT_DEFAULT_VALUE)));
-                    stringStringMap.put("邮件服务 - 用户名", systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_USERNAME).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_USERNAME_DEFAULT_VALUE));
-                    stringStringMap.put("邮件服务 - 密码", systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_PASSWORD).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_PASSWORD_DEFAULT_VALUE));
-                    stringStringMap.put("短信服务 - AccessKey", systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_KEY).orElse(SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_KEY_DEFAULT_VALUE));
-                    stringStringMap.put("短信服务 - AccessSecret", systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_SECRET).orElse(SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_SECRET_DEFAULT_VALUE));
-                    stringStringMap.put("短信服务 - EndPoint", systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_END_POINT).orElse(SYSTEM_CONFIG_MESSAGE_SMS_END_POINT_DEFAULT_VALUE));
-                    stringStringMap.put("短信服务 - 主题名称", systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_TOPIC_REF).orElse(SYSTEM_CONFIG_MESSAGE_SMS_TOPIC_REF_DEFAULT_VALUE));
-                    stringStringMap.put("短信服务 - 短信签名ID", systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_SIGN).orElse(SYSTEM_CONFIG_MESSAGE_SMS_SIGN_DEFAULT_VALUE));
+                    stringStringMap.put("邮件服务 - 主机名", systemConfigService.getString(MESSAGE_EMAIL_HOSTNAME).orElse(MESSAGE_EMAIL_HOSTNAME_DEFAULT));
+                    stringStringMap.put("邮件服务 - 端口", systemConfigService.getString(MESSAGE_EMAIL_PORT).orElse(String.valueOf(MESSAGE_EMAIL_PORT_DEFAULT)));
+                    stringStringMap.put("邮件服务 - 用户名", systemConfigService.getString(MESSAGE_EMAIL_USERNAME).orElse(MESSAGE_EMAIL_USERNAME_DEFAULT));
+                    stringStringMap.put("邮件服务 - 密码", systemConfigService.getString(MESSAGE_EMAIL_PASSWORD).orElse(MESSAGE_EMAIL_PASSWORD_DEFAULT));
+                    stringStringMap.put("短信服务 - AccessKey", systemConfigService.getString(MESSAGE_SMS_ACCESS_KEY).orElse(""));
+                    stringStringMap.put("短信服务 - AccessSecret", systemConfigService.getString(MESSAGE_SMS_ACCESS_SECRET).orElse(""));
+                    stringStringMap.put("短信服务 - EndPoint", systemConfigService.getString(MESSAGE_SMS_END_POINT).orElse(""));
+                    stringStringMap.put("短信服务 - 主题名称", systemConfigService.getString(MESSAGE_SMS_TOPIC_REF).orElse(""));
+                    stringStringMap.put("短信服务 - 短信签名ID", systemConfigService.getString(MESSAGE_SMS_SIGN).orElse(""));
                 })))
                 .setBreadcrumb("控制台", "", "消息服务")
                 .setVerticalNavigation(NAVIGATION_ADMIN_MESSAGE, "")
@@ -80,7 +80,7 @@ public class AdminMessageController extends QxcmpController {
         smsMessageParameter.setKey("captcha");
         smsMessageParameter.setValue(RandomStringUtils.randomNumeric(6));
 
-        form.setTemplateCode(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE).orElse(""));
+        form.setTemplateCode(systemConfigService.getString(MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE).orElse(""));
         form.getParameters().add(smsMessageParameter);
         form.getPhones().add(currentUser().orElseThrow(null).getPhone());
 
@@ -233,16 +233,16 @@ public class AdminMessageController extends QxcmpController {
     @GetMapping("/email/settings")
     public ModelAndView emailSettingsPage(final AdminMessageEmailSettingsForm form) {
 
-        form.setHost(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_HOSTNAME).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_HOSTNAME_DEFAULT_VALUE));
-        form.setPort(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_PORT).orElse(String.valueOf(SYSTEM_CONFIG_MESSAGE_EMAIL_PORT_DEFAULT_VALUE)));
-        form.setUsername(systemConfigService.getString(SYSTEM_CONFIG_ACCOUNT_ENABLE_USERNAME).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_USERNAME_DEFAULT_VALUE));
-        form.setPassword(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_PASSWORD).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_PASSWORD_DEFAULT_VALUE));
-        form.setActivateSubject(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_ACTIVATE_SUBJECT).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_ACTIVATE_SUBJECT_DEFAULT_VALUE));
-        form.setActivateContent(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_ACTIVATE_CONTENT).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_ACTIVATE_CONTENT_DEFAULT_VALUE));
-        form.setResetSubject(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_RESET_SUBJECT).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_RESET_SUBJECT_DEFAULT_VALUE));
-        form.setResetContent(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_RESET_CONTENT).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_RESET_CONTENT_DEFAULT_VALUE));
-        form.setBindingSubject(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_BINDING_SUBJECT).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_BINDING_SUBJECT_DEFAULT_VALUE));
-        form.setBindingContent(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_BINDING_CONTENT).orElse(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_BINDING_CONTENT_DEFAULT_VALUE));
+        form.setHost(systemConfigService.getString(MESSAGE_EMAIL_HOSTNAME).orElse(MESSAGE_EMAIL_HOSTNAME_DEFAULT));
+        form.setPort(systemConfigService.getString(MESSAGE_EMAIL_PORT).orElse(String.valueOf(MESSAGE_EMAIL_PORT_DEFAULT)));
+        form.setUsername(systemConfigService.getString(ACCOUNT_ENABLE_USERNAME).orElse(MESSAGE_EMAIL_USERNAME_DEFAULT));
+        form.setPassword(systemConfigService.getString(MESSAGE_EMAIL_PASSWORD).orElse(MESSAGE_EMAIL_PASSWORD_DEFAULT));
+        form.setActivateSubject(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_SUBJECT).orElse(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_SUBJECT_DEFAULT));
+        form.setActivateContent(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_CONTENT).orElse(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_CONTENT_DEFAULT));
+        form.setResetSubject(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_RESET_SUBJECT).orElse(MESSAGE_EMAIL_ACCOUNT_RESET_SUBJECT_DEFAULT));
+        form.setResetContent(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_RESET_CONTENT).orElse(MESSAGE_EMAIL_ACCOUNT_RESET_CONTENT_DEFAULT));
+        form.setBindingSubject(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_BINDING_SUBJECT).orElse(MESSAGE_EMAIL_ACCOUNT_BINDING_SUBJECT_DEFAULT));
+        form.setBindingContent(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_BINDING_CONTENT).orElse(MESSAGE_EMAIL_ACCOUNT_BINDING_CONTENT_DEFAULT));
 
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "消息服务", "message", "邮件服务配置")
@@ -261,16 +261,16 @@ public class AdminMessageController extends QxcmpController {
         }
 
         return submitForm(form, context -> {
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_EMAIL_HOSTNAME, form.getHost());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_EMAIL_PORT, form.getPort());
-            systemConfigService.update(SYSTEM_CONFIG_ACCOUNT_ENABLE_USERNAME, form.getUsername());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_EMAIL_PASSWORD, form.getPassword());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_ACTIVATE_SUBJECT, form.getActivateSubject());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_ACTIVATE_CONTENT, form.getActivateContent());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_RESET_SUBJECT, form.getResetSubject());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_RESET_CONTENT, form.getResetContent());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_BINDING_SUBJECT, form.getBindingSubject());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_EMAIL_ACCOUNT_BINDING_CONTENT, form.getBindingContent());
+            systemConfigService.update(MESSAGE_EMAIL_HOSTNAME, form.getHost());
+            systemConfigService.update(MESSAGE_EMAIL_PORT, form.getPort());
+            systemConfigService.update(ACCOUNT_ENABLE_USERNAME, form.getUsername());
+            systemConfigService.update(MESSAGE_EMAIL_PASSWORD, form.getPassword());
+            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_SUBJECT, form.getActivateSubject());
+            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_CONTENT, form.getActivateContent());
+            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_RESET_SUBJECT, form.getResetSubject());
+            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_RESET_CONTENT, form.getResetContent());
+            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_BINDING_SUBJECT, form.getBindingSubject());
+            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_BINDING_CONTENT, form.getBindingContent());
 
             emailService.config();
         });
@@ -280,12 +280,12 @@ public class AdminMessageController extends QxcmpController {
     @GetMapping("/sms/settings")
     public ModelAndView smsSettingsPage(final AdminMessageSmsSettingsForm form) {
 
-        form.setAccessKey(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_KEY).orElse(SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_KEY_DEFAULT_VALUE));
-        form.setAccessSecret(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_SECRET).orElse(SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_SECRET_DEFAULT_VALUE));
-        form.setEndPoint(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_END_POINT).orElse(SYSTEM_CONFIG_MESSAGE_SMS_END_POINT_DEFAULT_VALUE));
-        form.setTopicRef(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_TOPIC_REF).orElse(SYSTEM_CONFIG_MESSAGE_SMS_TOPIC_REF_DEFAULT_VALUE));
-        form.setSign(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_SIGN).orElse(SYSTEM_CONFIG_MESSAGE_SMS_SIGN_DEFAULT_VALUE));
-        form.setCaptchaTemplate(systemConfigService.getString(SYSTEM_CONFIG_MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE).orElse(SYSTEM_CONFIG_MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE_DEFAULT_VALUE));
+        form.setAccessKey(systemConfigService.getString(MESSAGE_SMS_ACCESS_KEY).orElse(""));
+        form.setAccessSecret(systemConfigService.getString(MESSAGE_SMS_ACCESS_SECRET).orElse(""));
+        form.setEndPoint(systemConfigService.getString(MESSAGE_SMS_END_POINT).orElse(""));
+        form.setTopicRef(systemConfigService.getString(MESSAGE_SMS_TOPIC_REF).orElse(""));
+        form.setSign(systemConfigService.getString(MESSAGE_SMS_SIGN).orElse(""));
+        form.setCaptchaTemplate(systemConfigService.getString(MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE).orElse(""));
         form.setTemplates(smsTemplateService.findAll());
 
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
@@ -327,12 +327,12 @@ public class AdminMessageController extends QxcmpController {
         }
 
         return submitForm(form, context -> {
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_KEY, form.getAccessKey());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_SMS_ACCESS_SECRET, form.getAccessSecret());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_SMS_END_POINT, form.getEndPoint());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_SMS_TOPIC_REF, form.getTopicRef());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_SMS_SIGN, form.getSign());
-            systemConfigService.update(SYSTEM_CONFIG_MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE, form.getCaptchaTemplate());
+            systemConfigService.update(MESSAGE_SMS_ACCESS_KEY, form.getAccessKey());
+            systemConfigService.update(MESSAGE_SMS_ACCESS_SECRET, form.getAccessSecret());
+            systemConfigService.update(MESSAGE_SMS_END_POINT, form.getEndPoint());
+            systemConfigService.update(MESSAGE_SMS_TOPIC_REF, form.getTopicRef());
+            systemConfigService.update(MESSAGE_SMS_SIGN, form.getSign());
+            systemConfigService.update(MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE, form.getCaptchaTemplate());
 
             form.getTemplates().stream()
                     .filter(smsTemplate -> StringUtils.isNotBlank(smsTemplate.getId()) && StringUtils.isNotBlank(smsTemplate.getTitle()) && StringUtils.isNotBlank(smsTemplate.getTemplate()))

@@ -1,6 +1,6 @@
 package com.qxcmp.web.api;
 
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.core.validation.ImageValidator;
 import com.qxcmp.image.Image;
 import com.qxcmp.image.ImageService;
@@ -54,8 +54,8 @@ public class ImageAPI extends QxcmpController {
             if (new ImageValidator().isValid(file, null)) {
                 Image image = imageService.store(file.getInputStream(), fileExtension);
 
-                if (systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_ENABLE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_ENABLE_DEFAULT_VALUE)) {
-                    imageService.addWatermark(image, siteService.getTitle(), Positions.values()[systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_POSITION).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_POSITION_DEFAULT_VALUE)], systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_FONT_SIZE).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_IMAGE_WATERMARK_FONT_SIZE_DEFAULT_VALUE));
+                if (systemConfigService.getBoolean(QxcmpSystemConfig.IMAGE_WATERMARK_ENABLE).orElse(QxcmpSystemConfig.IMAGE_WATERMARK_ENABLE_DEFAULT)) {
+                    imageService.addWatermark(image, siteService.getTitle(), Positions.values()[systemConfigService.getInteger(QxcmpSystemConfig.IMAGE_WATERMARK_POSITION).orElse(QxcmpSystemConfig.IMAGE_WATERMARK_POSITION_DEFAULT)], systemConfigService.getInteger(QxcmpSystemConfig.IMAGE_WATERMARK_FONT_SIZE).orElse(QxcmpSystemConfig.IMAGE_WATERMARK_FONT_SIZE_DEFAULT));
                 }
 
                 return ResponseEntity.ok(String.format("/api/image/%s.%s", image.getId(), image.getType()));

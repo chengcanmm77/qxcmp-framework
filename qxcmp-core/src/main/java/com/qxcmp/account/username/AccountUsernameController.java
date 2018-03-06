@@ -25,7 +25,7 @@ import javax.validation.Valid;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.qxcmp.core.QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_ACCOUNT_ENABLE_USERNAME;
+import static com.qxcmp.core.QxcmpSystemConfig.ACCOUNT_ENABLE_USERNAME;
 
 @Controller
 @RequestMapping("/account/username/")
@@ -41,7 +41,7 @@ public class AccountUsernameController extends AccountPageController {
     @GetMapping("logon")
     public ModelAndView logon(final AccountUsernameLogonForm form) {
 
-        if (!systemConfigService.getBoolean(SYSTEM_CONFIG_ACCOUNT_ENABLE_USERNAME).orElse(false)) {
+        if (!systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false)) {
             return logonClosedPage().build();
         }
 
@@ -54,7 +54,7 @@ public class AccountUsernameController extends AccountPageController {
     @PostMapping("logon")
     public ModelAndView logonEmailPost(@Valid AccountUsernameLogonForm form, BindingResult bindingResult) {
 
-        if (!systemConfigService.getBoolean(SYSTEM_CONFIG_ACCOUNT_ENABLE_USERNAME).orElse(false)) {
+        if (!systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false)) {
             return logonClosedPage().build();
         }
 
@@ -98,7 +98,7 @@ public class AccountUsernameController extends AccountPageController {
     @GetMapping("reset")
     public ModelAndView reset(final AccountUsernameResetForm form) {
 
-        if (!systemConfigService.getBoolean(SYSTEM_CONFIG_ACCOUNT_ENABLE_USERNAME).orElse(false)) {
+        if (!systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false)) {
             return resetClosedPage().build();
         }
 
@@ -111,7 +111,7 @@ public class AccountUsernameController extends AccountPageController {
     @PostMapping("reset")
     public ModelAndView reset(@Valid final AccountUsernameResetForm form, BindingResult bindingResult) {
 
-        if (!systemConfigService.getBoolean(SYSTEM_CONFIG_ACCOUNT_ENABLE_USERNAME).orElse(false)) {
+        if (!systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false)) {
             return resetClosedPage().build();
         }
 
@@ -152,7 +152,7 @@ public class AccountUsernameController extends AccountPageController {
     @PostMapping("reset/question")
     public ModelAndView securityQuestion(@Valid final AccountUsernameResetQuestionForm form, BindingResult bindingResult) {
 
-        if (!systemConfigService.getBoolean(SYSTEM_CONFIG_ACCOUNT_ENABLE_USERNAME).orElse(false)) {
+        if (!systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false)) {
             return resetClosedPage().build();
         }
 

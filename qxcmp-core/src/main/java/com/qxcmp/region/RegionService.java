@@ -1,7 +1,7 @@
 package com.qxcmp.region;
 
 import com.qxcmp.config.SystemConfigService;
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.core.entity.AbstractEntityService;
 import com.qxcmp.core.init.QxcmpInitializer;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +42,9 @@ public class RegionService extends AbstractEntityService<Region, String, RegionR
 
     @Override
     public void init() {
-        if (!systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_REGION_INITIAL_FLAG).orElse(false)) {
+        if (!systemConfigService.getBoolean(QxcmpSystemConfig.REGION_INITIAL_FLAG).orElse(false)) {
             reload();
-            systemConfigService.update(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_REGION_INITIAL_FLAG, "true");
+            systemConfigService.update(QxcmpSystemConfig.REGION_INITIAL_FLAG, "true");
         }
     }
 

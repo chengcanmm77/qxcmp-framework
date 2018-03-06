@@ -1,7 +1,7 @@
 package com.qxcmp.web.auth;
 
 import com.qxcmp.config.SystemConfigService;
-import com.qxcmp.core.QxcmpSystemConfigConfiguration;
+import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.*;
@@ -102,7 +102,7 @@ public class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailure
     /**
      * 计算是否生成验证码
      * <p>
-     * 如果认证失败次数超过 {@link QxcmpSystemConfigConfiguration#SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_THRESHOLD} 以后则生成验证码
+     * 如果认证失败次数超过 {@link QxcmpSystemConfig#AUTHENTICATION_CAPTCHA_THRESHOLD} 以后则生成验证码
      *
      * @param request 认证请求
      */
@@ -110,7 +110,7 @@ public class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailure
 
         int failedCount = (int) request.getSession().getAttribute(AUTHENTICATION_ERROR_TIMES);
 
-        if (failedCount >= systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_THRESHOLD).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_CAPTCHA_THRESHOLD_DEFAULT_VALUE)) {
+        if (failedCount >= systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_CAPTCHA_THRESHOLD).orElse(QxcmpSystemConfig.AUTHENTICATION_CAPTCHA_THRESHOLD_DEFAULT)) {
             request.getSession().setAttribute(AUTHENTICATION_SHOW_CAPTCHA, true);
         }
     }
@@ -118,7 +118,7 @@ public class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailure
     /**
      * 计算是否锁定账户
      * <p>
-     * 如果开启了账户锁定功能，并且认证失败次数超过了 {@link QxcmpSystemConfigConfiguration#SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD}
+     * 如果开启了账户锁定功能，并且认证失败次数超过了 {@link QxcmpSystemConfig#AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD}
      * 则锁定该账户
      *
      * @param request 认证请求
@@ -127,9 +127,9 @@ public class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailure
 
         int failedCount = (int) request.getSession().getAttribute(AUTHENTICATION_ERROR_TIMES);
 
-        boolean lockAccount = systemConfigService.getBoolean(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_DEFAULT_VALUE);
+        boolean lockAccount = systemConfigService.getBoolean(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DEFAULT);
 
-        if (lockAccount && failedCount >= systemConfigService.getInteger(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD).orElse(QxcmpSystemConfigConfiguration.SYSTEM_CONFIG_AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD_DEFAULT_VALUE)) {
+        if (lockAccount && failedCount >= systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD_DEFAULT)) {
             userService.update(request.getParameter("username"), user -> {
                 user.setAccountNonLocked(false);
                 user.setDateLock(new Date());
