@@ -1,6 +1,10 @@
 package com.qxcmp.account.controller;
 
 import com.qxcmp.account.*;
+import com.qxcmp.account.form.AccountActivateForm;
+import com.qxcmp.account.form.AccountResetForm;
+import com.qxcmp.account.form.LoginForm;
+import com.qxcmp.account.form.LoginFormWithCaptcha;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.auth.AuthenticationFailureHandler;

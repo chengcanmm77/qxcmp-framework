@@ -1,7 +1,7 @@
 package com.qxcmp.account.page;
 
-import com.qxcmp.account.LoginForm;
-import com.qxcmp.account.LoginFormWithCaptcha;
+import com.qxcmp.account.form.LoginForm;
+import com.qxcmp.account.form.LoginFormWithCaptcha;
 import com.qxcmp.web.view.elements.container.Container;
 import com.qxcmp.web.view.elements.divider.HorizontalDivider;
 import com.qxcmp.web.view.elements.header.HeaderType;

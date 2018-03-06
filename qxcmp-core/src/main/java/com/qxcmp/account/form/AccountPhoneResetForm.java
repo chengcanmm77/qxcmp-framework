@@ -1,4 +1,4 @@
-package com.qxcmp.account.phone;
+package com.qxcmp.account.form;
 
 import com.qxcmp.account.AccountCode;
 import com.qxcmp.core.validation.Phone;

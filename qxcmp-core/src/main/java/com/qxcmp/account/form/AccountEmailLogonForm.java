@@ -1,24 +1,23 @@
-package com.qxcmp.account.username;
+package com.qxcmp.account.form;
 
 import com.qxcmp.core.validation.Username;
-import com.qxcmp.web.view.annotation.form.Form;
-import com.qxcmp.web.view.annotation.form.ImageCaptchaField;
-import com.qxcmp.web.view.annotation.form.PasswordField;
-import com.qxcmp.web.view.annotation.form.TextInputField;
+import com.qxcmp.web.view.annotation.form.*;
 import lombok.Data;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 
 /**
- * 用户名账户注册平台统一表单
+ * 邮箱账户注册平台统一表单
  * <p>
- * 用户在使用用户名账户注册的时候需要填写的信息
+ * 用户在使用邮箱注册账户的时候需要填写的信息
  *
  * @author aaric
  */
 @Form(submitText = "立即注册")
 @Data
-public class AccountUsernameLogonForm {
+public class AccountEmailLogonForm {
 
     /**
      * 用户名
@@ -29,6 +28,16 @@ public class AccountUsernameLogonForm {
     @Username
     @TextInputField(value = "用户名", tooltip = "用户名只能由字母、数字、下划线组成，且长度在6到20个字符之间", maxLength = 20, placeholder = "用户名只能由字母、数字、下划线组成", autoFocus = true)
     private String username;
+
+    /**
+     * 用户邮箱
+     * <p>
+     * 全局唯一，注册的时候需要检查邮箱是否已经被占用
+     */
+    @Email(message = "{Email}")
+    @NotEmpty(message = "{NotEmpty.emailRegisterForm.email}")
+    @EmailField(value = "邮箱", placeholder = "请输入你的注册邮箱")
+    private String email;
 
     /**
      * 登录密码

@@ -1,4 +1,4 @@
-package com.qxcmp.account;
+package com.qxcmp.account.form;
 
 import com.qxcmp.web.view.annotation.form.Form;
 import com.qxcmp.web.view.annotation.form.HiddenField;
