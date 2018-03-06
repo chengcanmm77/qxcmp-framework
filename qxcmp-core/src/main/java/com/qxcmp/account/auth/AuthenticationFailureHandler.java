@@ -1,4 +1,4 @@
-package com.qxcmp.web.auth;
+package com.qxcmp.account.auth;
 
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpSystemConfig;

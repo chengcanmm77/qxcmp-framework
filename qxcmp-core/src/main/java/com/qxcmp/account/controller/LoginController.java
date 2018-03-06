@@ -1,10 +1,10 @@
 package com.qxcmp.account.controller;
 
+import com.qxcmp.account.auth.AuthenticationFailureHandler;
 import com.qxcmp.account.form.LoginForm;
 import com.qxcmp.account.form.LoginFormWithCaptcha;
 import com.qxcmp.account.page.LoginPage;
 import com.qxcmp.web.QxcmpController;
-import com.qxcmp.web.auth.AuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;

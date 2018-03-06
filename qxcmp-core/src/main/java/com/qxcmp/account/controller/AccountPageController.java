@@ -1,13 +1,15 @@
 package com.qxcmp.account.controller;
 
-import com.qxcmp.account.*;
+import com.qxcmp.account.AccountCode;
+import com.qxcmp.account.AccountCodeService;
+import com.qxcmp.account.AccountService;
+import com.qxcmp.account.auth.AuthenticationFailureHandler;
 import com.qxcmp.account.form.AccountActivateForm;
 import com.qxcmp.account.form.AccountResetForm;
 import com.qxcmp.account.form.LoginForm;
 import com.qxcmp.account.form.LoginFormWithCaptcha;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
-import com.qxcmp.web.auth.AuthenticationFailureHandler;
 import com.qxcmp.web.page.AbstractPage;
 import com.qxcmp.web.view.elements.button.Button;
 import com.qxcmp.web.view.elements.container.Container;
@@ -45,7 +47,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static com.qxcmp.web.auth.AuthenticationFailureHandler.AUTHENTICATION_ERROR_MESSAGE;
+import static com.qxcmp.account.auth.AuthenticationFailureHandler.AUTHENTICATION_ERROR_MESSAGE;
 
 /**
  * 账户登录、注册、重置页面路由

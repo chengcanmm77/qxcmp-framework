@@ -1,4 +1,4 @@
-package com.qxcmp.web.auth;
+package com.qxcmp.account.auth;
 
 import lombok.Data;
 

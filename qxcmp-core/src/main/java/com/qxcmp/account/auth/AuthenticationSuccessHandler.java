@@ -1,10 +1,11 @@
-package com.qxcmp.web.auth;
+package com.qxcmp.account.auth;
 
+import com.qxcmp.account.event.UserLoginEvent;
 import com.qxcmp.config.SystemConfigService;
-import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -15,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 
 import static com.qxcmp.core.QxcmpSystemConfig.SESSION_TIMEOUT;
 import static com.qxcmp.core.QxcmpSystemConfig.SESSION_TIMEOUT_DEFAULT;
@@ -33,8 +33,8 @@ import static com.qxcmp.core.QxcmpSystemConfig.SESSION_TIMEOUT_DEFAULT;
 @RequiredArgsConstructor
 public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
+    private final ApplicationContext applicationContext;
     private final UserService userService;
-
     private final SystemConfigService systemConfigService;
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
@@ -49,11 +49,15 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
         request.getSession().setMaxInactiveInterval(systemConfigService.getInteger(SESSION_TIMEOUT).orElse(SESSION_TIMEOUT_DEFAULT));
 
         try {
-            String username = request.getParameter("username");
-            userService.update(userService.findByUsername(username).map(User::getId).orElse(""), user -> user.setDateLogin(new Date()));
+            String userId = request.getParameter("username");
+            userService.findById(userId).ifPresent(user -> {
+                userService.updateLoginDate(user);
+                applicationContext.publishEvent(new UserLoginEvent(user));
+            });
         } catch (Exception ignored) {
 
         }
+
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

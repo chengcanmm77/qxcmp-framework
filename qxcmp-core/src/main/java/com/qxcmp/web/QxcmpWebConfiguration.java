@@ -1,12 +1,12 @@
 package com.qxcmp.web;
 
+import com.qxcmp.account.auth.AuthenticationFilter;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.security.PrivilegeAutowired;
 import com.qxcmp.statistics.AccessAddressService;
 import com.qxcmp.user.UserService;
 import com.qxcmp.util.IpAddressResolver;
-import com.qxcmp.web.auth.AuthenticationFilter;
 import com.qxcmp.web.filter.QxcmpFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

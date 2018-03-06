@@ -2,13 +2,13 @@ package com.qxcmp.user;
 
 import com.google.common.collect.Maps;
 import com.google.common.hash.Hashing;
+import com.qxcmp.account.auth.UserAuthenticationToken;
 import com.qxcmp.core.entity.AbstractEntityService;
 import com.qxcmp.core.support.IDGenerator;
 import com.qxcmp.core.support.ImageGenerator;
 import com.qxcmp.image.Image;
 import com.qxcmp.image.ImageService;
 import com.qxcmp.security.Role;
-import com.qxcmp.web.auth.UserAuthenticationToken;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -252,6 +252,15 @@ public class UserService extends AbstractEntityService<User, String, UserReposit
      */
     public List<User> findByDateLogin(Date date) {
         return repository.findAllByDateLoginAfterOrderByDateCreatedDesc(date);
+    }
+
+    /**
+     * 更新用户登录日期
+     *
+     * @param user 要更新的用户
+     */
+    public void updateLoginDate(User user) {
+        update(user.getId(), u -> u.setDateLogin(DateTime.now().toDate()));
     }
 
     @Override

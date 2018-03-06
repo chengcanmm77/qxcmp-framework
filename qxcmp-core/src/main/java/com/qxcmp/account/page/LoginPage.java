@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
-import static com.qxcmp.web.auth.AuthenticationFailureHandler.AUTHENTICATION_ERROR_MESSAGE;
+import static com.qxcmp.account.auth.AuthenticationFailureHandler.AUTHENTICATION_ERROR_MESSAGE;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
