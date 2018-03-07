@@ -8,7 +8,7 @@ import com.qxcmp.web.view.support.Color;
 import lombok.Data;
 import us.codecraft.webmagic.Spider;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 蜘蛛运行时信息
@@ -17,7 +17,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
  *
  * @author aaric
  */
-@EntityTable(value = "蜘蛛运行状态", action = QXCMP_BACKEND_URL + "/spider/status", entityIndex = "name",
+@EntityTable(value = "蜘蛛运行状态", action = QXCMP_ADMIN_URL + "/spider/status", entityIndex = "name",
         rowActions = @RowAction(value = "终止", action = "stop", method = FormMethod.POST, color = Color.RED))
 @Data
 public class SpiderRuntime {

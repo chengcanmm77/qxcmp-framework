@@ -12,14 +12,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 访问记录实体
  *
  * @author Aaric
  */
-@EntityTable(value = "访问记录", action = QXCMP_BACKEND_URL + "/statistics/access/history")
+@EntityTable(value = "访问记录", action = QXCMP_ADMIN_URL + "/statistics/access/history")
 @Entity
 @Table
 @Data

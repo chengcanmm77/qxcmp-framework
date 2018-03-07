@@ -29,12 +29,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 import static com.qxcmp.core.QxcmpSystemConfig.LINK_TYPE;
 
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/link")
+@RequestMapping(QXCMP_ADMIN_URL + "/link")
 @RequiredArgsConstructor
 public class AdminLinkPageController extends QxcmpController {
 
@@ -101,7 +101,7 @@ public class AdminLinkPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/link").addLink("继续添加链接", ""));
+        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/link").addLink("继续添加链接", ""));
     }
 
     @GetMapping("/{id}/edit")
@@ -126,7 +126,7 @@ public class AdminLinkPageController extends QxcmpController {
                     .addObject("selection_items_target", SUPPORT_TARGET)
                     .setVerticalNavigation(NAVIGATION_ADMIN_LINK, NAVIGATION_ADMIN_LINK_ALL)
                     .build();
-        }).orElse(page(viewHelper.nextWarningOverview("链接不存在", "").addLink("返回", QXCMP_BACKEND_URL + "/link")).build());
+        }).orElse(page(viewHelper.nextWarningOverview("链接不存在", "").addLink("返回", QXCMP_ADMIN_URL + "/link")).build());
     }
 
     @PostMapping("/{id}/edit")
@@ -160,8 +160,8 @@ public class AdminLinkPageController extends QxcmpController {
                 } catch (Exception e) {
                     throw new ActionException(e.getMessage(), e);
                 }
-            }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/link"));
-        }).orElse(page(viewHelper.nextWarningOverview("链接不存在", "").addLink("返回", QXCMP_BACKEND_URL + "/link")).build());
+            }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/link"));
+        }).orElse(page(viewHelper.nextWarningOverview("链接不存在", "").addLink("返回", QXCMP_ADMIN_URL + "/link")).build());
     }
 
     @PostMapping("/{id}/remove")

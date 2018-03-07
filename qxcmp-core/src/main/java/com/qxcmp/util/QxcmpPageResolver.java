@@ -41,7 +41,7 @@ public class QxcmpPageResolver {
     }
 
     public AbstractPage resolveByPath(String path, HttpServletRequest request, HttpServletResponse response) {
-        if (StringUtils.startsWith(path, QXCMP_BACKEND_URL)) {
+        if (StringUtils.startsWith(path, QXCMP_ADMIN_URL)) {
             return applicationContext.getBean(BackendPage.class, request, response);
         } else if (StringUtils.startsWith(path, QXCMP_ACCOUNT_URL) || StringUtils.startsWith(path, QXCMP_LOGIN_URL) || StringUtils.startsWith(path, QXCMP_LOGOUT_URL)) {
             return applicationContext.getBean(NormalPage.class, request, response);

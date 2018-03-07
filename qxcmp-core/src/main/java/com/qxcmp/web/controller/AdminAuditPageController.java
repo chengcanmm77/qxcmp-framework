@@ -24,13 +24,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.text.SimpleDateFormat;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/audit")
+@RequestMapping(QXCMP_ADMIN_URL + "/audit")
 @RequiredArgsConstructor
 public class AdminAuditPageController extends QxcmpController {
 
@@ -50,16 +50,16 @@ public class AdminAuditPageController extends QxcmpController {
                         .addComponent(convertToTable(stringObjectMap -> {
                             stringObjectMap.put("ID", auditLog.getId());
                             stringObjectMap.put("操作名称", auditLog.getTitle());
-                            stringObjectMap.put("操作人", auditLog.getOwner() == null ? "无" : new TextValueCell(auditLog.getOwner().getDisplayName(), QXCMP_BACKEND_URL + "/user/" + auditLog.getOwner().getId() + "/details"));
+                            stringObjectMap.put("操作人", auditLog.getOwner() == null ? "无" : new TextValueCell(auditLog.getOwner().getDisplayName(), QXCMP_ADMIN_URL + "/user/" + auditLog.getOwner().getId() + "/details"));
                             stringObjectMap.put("操作链接", auditLog.getUrl());
                             stringObjectMap.put("操作时间", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(auditLog.getDateCreated()));
                             stringObjectMap.put("操作状态", auditLog.getStatus().equals(AuditLog.Status.SUCCESS) ? new ComponentCell(new Icon("check circle").setColor(Color.GREEN)) : new ComponentCell(new Icon("warning circle").setColor(Color.RED)));
                             stringObjectMap.put("备注信息", auditLog.getComments());
                         }))
                         .addComponent(new Segment().addComponent(new ContentHeader("操作内容", Size.SMALL).setDividing()).addComponent(new P(auditLog.getContent())))
-                        .addLink("返回", QXCMP_BACKEND_URL + "/audit")
+                        .addLink("返回", QXCMP_ADMIN_URL + "/audit")
                 ))
                 .setBreadcrumb("控制台", "", "系统工具", "tools", "系统日志", "audit", "日志详情")
-                .build()).orElse(page(new Overview(new IconHeader("日志不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/audit")).build());
+                .build()).orElse(page(new Overview(new IconHeader("日志不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/audit")).build());
     }
 }

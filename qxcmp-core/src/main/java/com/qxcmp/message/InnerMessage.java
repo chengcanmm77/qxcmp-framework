@@ -14,14 +14,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 站内消息
  *
  * @author Aaric
  */
-@EntityTable(value = "我的站内消息", action = QXCMP_BACKEND_URL + "/profile/message", disableFilter = true,
+@EntityTable(value = "我的站内消息", action = QXCMP_ADMIN_URL + "/profile/message", disableFilter = true,
         rowActions = {
                 @RowAction(value = "查看", action = "details"),
                 @RowAction(value = "标为已读", action = "read", method = FormMethod.POST),

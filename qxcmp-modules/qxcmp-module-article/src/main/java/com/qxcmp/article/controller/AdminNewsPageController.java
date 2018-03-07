@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_NEWS;
 
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/news")
+@RequestMapping(QXCMP_ADMIN_URL + "/news")
 public class AdminNewsPageController extends QxcmpController {
 
     @GetMapping("")

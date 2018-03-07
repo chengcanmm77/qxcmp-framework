@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_PROFILE;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_SIDEBAR;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
@@ -97,7 +97,7 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
             } else {
                 String url = breadcrumb[i + 1];
                 if (Objects.nonNull(url)) {
-                    bc.addItem(new BreadcrumbItem(text, QXCMP_BACKEND_URL + "/" + url));
+                    bc.addItem(new BreadcrumbItem(text, QXCMP_ADMIN_URL + "/" + url));
                 } else {
                     bc.addItem(new BreadcrumbItem(text));
                 }

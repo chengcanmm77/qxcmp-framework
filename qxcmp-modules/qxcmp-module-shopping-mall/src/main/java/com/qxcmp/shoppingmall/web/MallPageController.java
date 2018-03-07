@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 @Controller
 @RequestMapping("/mall")
@@ -55,7 +55,7 @@ public class MallPageController extends QxcmpController {
                 .map(commodity -> page().addComponent(device.isMobile() ? mallPageHelper.nextMobileCommodityDetails(commodity) : mallPageHelper.nextMobileCommodityDetails(commodity))
                         .setTitle(String.format("%s_%s", commodity.getTitle(), siteService.getTitle()))
                         .hideMobileBottomMenu()
-                        .build()).orElse(page(new Overview(new IconHeader("商品已下架或被删除", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/mall")).build());
+                        .build()).orElse(page(new Overview(new IconHeader("商品已下架或被删除", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/mall")).build());
     }
 
     @GetMapping("/item/version-select")

@@ -57,14 +57,14 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/user")
+@RequestMapping(QXCMP_ADMIN_URL + "/user")
 @RequiredArgsConstructor
 public class AdminUserPageController extends QxcmpController {
 
@@ -100,7 +100,7 @@ public class AdminUserPageController extends QxcmpController {
 
     @GetMapping("/all/{id}/details")
     public ModelAndView userAllDetailsPage(@PathVariable String id) {
-        return redirect(QXCMP_BACKEND_URL + "/user/" + id + "/details");
+        return redirect(QXCMP_ADMIN_URL + "/user/" + id + "/details");
     }
 
     @GetMapping("/weixin")
@@ -124,7 +124,7 @@ public class AdminUserPageController extends QxcmpController {
 
     @GetMapping("/weixin/{id}/details")
     public ModelAndView userWeixinDetailsPage(@PathVariable String id) {
-        return redirect(QXCMP_BACKEND_URL + "/user/" + id + "/details");
+        return redirect(QXCMP_ADMIN_URL + "/user/" + id + "/details");
     }
 
     @PostMapping("/weixin/sync")
@@ -141,7 +141,7 @@ public class AdminUserPageController extends QxcmpController {
 
             Buttons toolbar = new Buttons();
 
-            userDetailsPageToolbarExtensionPoint.getExtensions().forEach(extension -> toolbar.addButton(new Button(extension.getTitle(), QXCMP_BACKEND_URL + "/user/" + id + "/" + extension.getSuffix(), extension.getTarget()).setBasic().setSecondary()));
+            userDetailsPageToolbarExtensionPoint.getExtensions().forEach(extension -> toolbar.addButton(new Button(extension.getTitle(), QXCMP_ADMIN_URL + "/user/" + id + "/" + extension.getSuffix(), extension.getTarget()).setBasic().setSecondary()));
 
                     return page()
                             .addComponent(new VerticallyDividedGrid().setVerticallyPadded()
@@ -191,7 +191,7 @@ public class AdminUserPageController extends QxcmpController {
                             .setBreadcrumb("控制台", "", "用户管理", "user", "用户详情")
                             .build();
                 }
-        ).orElse(page(new Overview(new IconHeader("用户不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/user")).build());
+        ).orElse(page(new Overview(new IconHeader("用户不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/user")).build());
     }
 
     @GetMapping("/{id}/role")
@@ -204,7 +204,7 @@ public class AdminUserPageController extends QxcmpController {
                     .setBreadcrumb("控制台", "", "用户管理", "user", "用户详情", "user/" + id + "/details", "编辑用户角色")
                     .addObject("selection_items_roles", roleService.findAll())
                     .build();
-        }).orElse(page(new Overview(new IconHeader("用户不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/user")).build());
+        }).orElse(page(new Overview(new IconHeader("用户不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/user")).build());
     }
 
     @PostMapping("/{id}/role")
@@ -224,7 +224,7 @@ public class AdminUserPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/user/" + id + "/details"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/user/" + id + "/details"));
     }
 
     @GetMapping("/{id}/status")
@@ -241,7 +241,7 @@ public class AdminUserPageController extends QxcmpController {
                     .addComponent(new TextContainer().addComponent(new Segment().addComponent(convertToForm(form))))
                     .setBreadcrumb("控制台", "", "用户管理", "user", "用户详情", "user/" + id + "/details", "编辑用户状态")
                     .build();
-        }).orElse(page(new Overview(new IconHeader("用户不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/user")).build());
+        }).orElse(page(new Overview(new IconHeader("用户不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/user")).build());
     }
 
     @PostMapping("/{id}/status")
@@ -265,6 +265,6 @@ public class AdminUserPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/user/" + id + "/details"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/user/" + id + "/details"));
     }
 }

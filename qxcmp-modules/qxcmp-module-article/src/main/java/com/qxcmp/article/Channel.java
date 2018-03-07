@@ -18,13 +18,13 @@ import java.util.Set;
  *
  * @author aaric
  */
-@EntityTable(value = "我的栏目", name = "user", action = QxcmpConfiguration.QXCMP_BACKEND_URL + "/news/user/channel",
+@EntityTable(value = "我的栏目", name = "user", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/user/channel",
         rowActions = {
                 @RowAction(value = "文章管理", action = "article"),
                 @RowAction(value = "查看", action = "details"),
                 @RowAction(value = "编辑", action = "edit")
         })
-@EntityTable(value = "栏目管理", name = "admin", action = QxcmpConfiguration.QXCMP_BACKEND_URL + "/news/channel",
+@EntityTable(value = "栏目管理", name = "admin", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/channel",
         tableActions = @TableAction(value = "新建栏目", action = "new", primary = true),
         rowActions = {
                 @RowAction(value = "预览", action = "preview"),

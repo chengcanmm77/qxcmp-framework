@@ -21,7 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 @Controller
 @RequestMapping("/mall/cart")
@@ -75,7 +75,7 @@ public class ShoppingCartController extends QxcmpController {
                     .build();
         } catch (ShoppingCartServiceException e) {
             return page().addComponent(new Grid().setVerticallyPadded().setContainer().addItem(new Row().addCol(new Col()
-                    .addComponent(new Overview(new IconHeader("加入购物车失败", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/mall")))))
+                    .addComponent(new Overview(new IconHeader("加入购物车失败", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/mall")))))
                     .setTitle("我的购物车")
                     .build();
         }
@@ -107,7 +107,7 @@ public class ShoppingCartController extends QxcmpController {
 
         return commodityOrderService.order(user.getId(), items, shoppingCart).map(commodityOrder -> redirect("/mall/cashier/" + commodityOrder.getId()))
                 .orElse(page().addComponent(new Grid().setVerticallyPadded().setContainer().addItem(new Row().addCol(new Col()
-                        .addComponent(new Overview(new IconHeader("下单失败", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/mall/cart")))))
+                        .addComponent(new Overview(new IconHeader("下单失败", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/mall/cart")))))
                         .setTitle("我的购物车")
                         .build());
 

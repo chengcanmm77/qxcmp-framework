@@ -24,14 +24,14 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/finance")
+@RequestMapping(QXCMP_ADMIN_URL + "/finance")
 @RequiredArgsConstructor
 public class AdminFinancePageController extends QxcmpController {
 
@@ -142,6 +142,6 @@ public class AdminFinancePageController extends QxcmpController {
             wxPayConfig.setSubMchId(form.getSubMchId());
             wxPayConfig.setNotifyUrl(form.getNotifyUrl());
             wxPayConfig.setKeyPath(form.getKeyPath());
-        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/finance/weixin"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/finance/weixin"));
     }
 }

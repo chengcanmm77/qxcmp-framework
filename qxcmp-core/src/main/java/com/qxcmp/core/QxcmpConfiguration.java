@@ -45,7 +45,7 @@ import java.util.Properties;
 public class QxcmpConfiguration {
 
     public static final String QXCMP = "清醒内容管理平台";
-    public static final String QXCMP_BACKEND_URL = "/admin";
+    public static final String QXCMP_ADMIN_URL = "/admin";
     public static final String QXCMP_ACCOUNT_URL = "/account";
     public static final String QXCMP_LOGIN_URL = "/login";
     public static final String QXCMP_LOGOUT_URL = "/logout";

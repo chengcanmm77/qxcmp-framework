@@ -25,12 +25,12 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 import static com.qxcmp.core.QxcmpSystemConfig.*;
 
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/security")
+@RequestMapping(QXCMP_ADMIN_URL + "/security")
 @RequiredArgsConstructor
 public class AdminSecurityPageController extends QxcmpController {
 
@@ -99,7 +99,7 @@ public class AdminSecurityPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回角色管理", QXCMP_BACKEND_URL + "/security/role").addLink("继续新建角色", QXCMP_BACKEND_URL + "/security/role/new"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回角色管理", QXCMP_ADMIN_URL + "/security/role").addLink("继续新建角色", QXCMP_ADMIN_URL + "/security/role/new"));
     }
 
     @GetMapping("/role/{id}/edit")
@@ -114,7 +114,7 @@ public class AdminSecurityPageController extends QxcmpController {
                     .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, NAVIGATION_ADMIN_SECURITY_ROLE)
                     .addObject("selection_items_privileges", privilegeService.findAll())
                     .build();
-        }).orElse(page(new Overview(new IconHeader("角色不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/security/role")).build());
+        }).orElse(page(new Overview(new IconHeader("角色不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/security/role")).build());
     }
 
     @PostMapping("/role/{id}/edit")
@@ -138,7 +138,7 @@ public class AdminSecurityPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/security/role"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/security/role"));
     }
 
     @PostMapping("/role/{id}/remove")

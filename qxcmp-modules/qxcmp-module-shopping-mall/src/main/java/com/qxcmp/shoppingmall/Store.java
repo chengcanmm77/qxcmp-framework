@@ -11,14 +11,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Date;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 商城店铺实体
  *
  * @author Aaric
  */
-@EntityTable(value = "店铺管理", name = "store", action = QXCMP_BACKEND_URL + "/mall/store",
+@EntityTable(value = "店铺管理", name = "store", action = QXCMP_ADMIN_URL + "/mall/store",
         tableActions = @TableAction(value = "创建店铺", action = "new", primary = true),
         rowActions = {
                 @RowAction(value = "编辑", action = "edit")

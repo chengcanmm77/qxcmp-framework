@@ -9,14 +9,14 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 系统字典配置
  *
  * @author aaric
  */
-@EntityTable(value = "系统字典", action = QXCMP_BACKEND_URL + "/settings/dictionary", entityIndex = "name",
+@EntityTable(value = "系统字典", action = QXCMP_ADMIN_URL + "/settings/dictionary", entityIndex = "name",
         rowActions = @RowAction(value = "编辑", action = "edit", primary = true))
 @Entity
 @Table

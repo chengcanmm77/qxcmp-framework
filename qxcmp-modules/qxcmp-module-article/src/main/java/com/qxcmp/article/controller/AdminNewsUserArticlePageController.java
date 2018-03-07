@@ -44,11 +44,11 @@ import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/news/user/article")
+@RequestMapping(QXCMP_ADMIN_URL + "/news/user/article")
 @RequiredArgsConstructor
 public class AdminNewsUserArticlePageController extends QxcmpController {
 
@@ -188,10 +188,10 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
         }, (context, overview) -> {
             Article article = (Article) context.get("article");
             overview
-                    .addLink("我的文章", QXCMP_BACKEND_URL + "/news/user/article")
-                    .addLink("草稿箱", QXCMP_BACKEND_URL + "/news/user/article/draft")
-                    .addLink("预览文章", QXCMP_BACKEND_URL + "/news/user/article/" + article.getId() + "/preview")
-                    .addLink("继续新建文章", QXCMP_BACKEND_URL + "/news/user/article/new");
+                    .addLink("我的文章", QXCMP_ADMIN_URL + "/news/user/article")
+                    .addLink("草稿箱", QXCMP_ADMIN_URL + "/news/user/article/draft")
+                    .addLink("预览文章", QXCMP_ADMIN_URL + "/news/user/article/" + article.getId() + "/preview")
+                    .addLink("继续新建文章", QXCMP_ADMIN_URL + "/news/user/article/new");
         });
     }
 
@@ -218,7 +218,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                             .setVerticalNavigation(NAVIGATION_ADMIN_NEWS_USER_ARTICLE_MANAGEMENT, NAVIGATION_ADMIN_NEWS_USER_ARTICLE_MANAGEMENT_DRAFT)
                             .addObject("selection_items_channels", channelService.findByUserId(user)), user)
                             .build();
-                }).orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/news/user/article")).build());
+                }).orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/article")).build());
     }
 
     @PostMapping("/{id}/edit")
@@ -263,15 +263,15 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                     }, (context, overview) -> {
                         if (article.getStatus().equals(ArticleStatus.NEW)) {
                             overview
-                                    .addLink("我的文章", QXCMP_BACKEND_URL + "/news/user/article")
-                                    .addLink("草稿箱", QXCMP_BACKEND_URL + "/news/user/article/draft")
-                                    .addLink("预览文章", QXCMP_BACKEND_URL + "/news/user/article/" + article.getId() + "/preview")
-                                    .addLink("新建文章", QXCMP_BACKEND_URL + "/news/user/article/new");
+                                    .addLink("我的文章", QXCMP_ADMIN_URL + "/news/user/article")
+                                    .addLink("草稿箱", QXCMP_ADMIN_URL + "/news/user/article/draft")
+                                    .addLink("预览文章", QXCMP_ADMIN_URL + "/news/user/article/" + article.getId() + "/preview")
+                                    .addLink("新建文章", QXCMP_ADMIN_URL + "/news/user/article/new");
                         } else if (article.getStatus().equals(ArticleStatus.REJECT)) {
-                            overview.addLink("返回", QXCMP_BACKEND_URL + "/news/user/article/rejected");
+                            overview.addLink("返回", QXCMP_ADMIN_URL + "/news/user/article/rejected");
                         }
                     });
-                }).orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/news/user/article")).build());
+                }).orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/article")).build());
     }
 
     @GetMapping("/{id}/preview")
@@ -283,13 +283,13 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                 .filter(article -> StringUtils.equals(article.getUserId(), user.getId()))
                 .map(article -> calculateBadge(page().addComponent(new Overview(article.getTitle(), article.getAuthor()).setAlignment(Alignment.CENTER)
                         .addComponent(getArticlePreviewContent(article))
-                        .addLink("返回我的文章", QXCMP_BACKEND_URL + "/news/user/article")
-                        .addLink("返回草稿箱", QXCMP_BACKEND_URL + "/news/user/article/draft")
-                        .addLink("新建文章", QXCMP_BACKEND_URL + "/news/user/article/new"))
+                        .addLink("返回我的文章", QXCMP_ADMIN_URL + "/news/user/article")
+                        .addLink("返回草稿箱", QXCMP_ADMIN_URL + "/news/user/article/draft")
+                        .addLink("新建文章", QXCMP_ADMIN_URL + "/news/user/article/new"))
                         .setBreadcrumb("控制台", "", "新闻管理", "news", "我的文章", "news/user/article", "预览文章")
                         .setVerticalNavigation(NAVIGATION_ADMIN_NEWS_USER_ARTICLE_MANAGEMENT, ""), user)
                         .build())
-                .orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/news/user/article")).build());
+                .orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/article")).build());
     }
 
     @PostMapping("/{id}/remove")
@@ -322,13 +322,13 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                 .filter(article -> article.getStatus().equals(ArticleStatus.NEW) || article.getStatus().equals(ArticleStatus.REJECT))
                 .map(article -> calculateBadge(page().addComponent(new Overview(article.getTitle(), article.getAuthor()).setAlignment(Alignment.CENTER)
                         .addComponent(getArticleAuditContent(article, form))
-                        .addLink("返回我的文章", QXCMP_BACKEND_URL + "/news/user/article")
-                        .addLink("返回草稿箱", QXCMP_BACKEND_URL + "/news/user/article/draft")
-                        .addLink("新建文章", QXCMP_BACKEND_URL + "/news/user/article/new"))
+                        .addLink("返回我的文章", QXCMP_ADMIN_URL + "/news/user/article")
+                        .addLink("返回草稿箱", QXCMP_ADMIN_URL + "/news/user/article/draft")
+                        .addLink("新建文章", QXCMP_ADMIN_URL + "/news/user/article/new"))
                         .setBreadcrumb("控制台", "", "新闻管理", "news", "我的文章", "news/user/article", "申请审核")
                         .setVerticalNavigation(NAVIGATION_ADMIN_NEWS_USER_ARTICLE_MANAGEMENT, ""), user)
                         .build())
-                .orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/news/user/article")).build());
+                .orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/article")).build());
     }
 
     @PostMapping("/{id}/audit")
@@ -350,11 +350,11 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                                 throw new ActionException(e.getMessage(), e);
                             }
                         }, (stringObjectMap, overview) -> overview
-                                .addLink("我的文章", QXCMP_BACKEND_URL + "/news/user/article")
-                                .addLink("草稿箱", QXCMP_BACKEND_URL + "/news/user/article/draft")
-                                .addLink("未通过文章", QXCMP_BACKEND_URL + "/news/user/article/rejected")
+                                .addLink("我的文章", QXCMP_ADMIN_URL + "/news/user/article")
+                                .addLink("草稿箱", QXCMP_ADMIN_URL + "/news/user/article/draft")
+                                .addLink("未通过文章", QXCMP_ADMIN_URL + "/news/user/article/rejected")
                 ))
-                .orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/news/user/article")).build());
+                .orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/article")).build());
     }
 
     @PostMapping("/{id}/repeal")

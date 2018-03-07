@@ -43,7 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.Objects;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 import static com.qxcmp.core.QxcmpSystemConfig.*;
 import static me.chanjar.weixin.common.api.WxConsts.OAuth2Scope.SNSAPI_USERINFO;
@@ -52,7 +52,7 @@ import static me.chanjar.weixin.common.api.WxConsts.OAuth2Scope.SNSAPI_USERINFO;
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/weixin")
+@RequestMapping(QXCMP_ADMIN_URL + "/weixin")
 @RequiredArgsConstructor
 public class AdminWeixinPageController extends QxcmpController {
 
@@ -108,7 +108,7 @@ public class AdminWeixinPageController extends QxcmpController {
         return weixinMpMaterialService.findOne(id)
                 .filter(weixinMpMaterial -> weixinMpMaterial.getType().equals(WeixinMpMaterialType.NEWS))
                 .map(weixinMpMaterial -> page()
-                        .addComponent(new Segment().addComponent(new Button("转换为文章", String.format(QXCMP_BACKEND_URL + "/weixin/material/%s/convert", id)).setPrimary())
+                        .addComponent(new Segment().addComponent(new Button("转换为文章", String.format(QXCMP_ADMIN_URL + "/weixin/material/%s/convert", id)).setPrimary())
                                 .addComponent(new Overview(weixinMpMaterial.getTitle(), weixinMpMaterial.getAuthor()).addComponent(new HtmlText(weixinMpMaterial.getContent()))))
                         .setBreadcrumb("控制台", "", "微信公众平台", "weixin", "素材管理", "weixin/material", "图文查看")
                         .setVerticalNavigation(NAVIGATION_ADMIN_WEIXIN, NAVIGATION_ADMIN_WEIXIN_MATERIAL))
@@ -193,7 +193,7 @@ public class AdminWeixinPageController extends QxcmpController {
         } catch (Exception e) {
             return page(viewHelper.nextWarningOverview("无法获取公众号菜单", "")
                     .addComponent(new P(e.getMessage()))
-                    .addLink("返回", QXCMP_BACKEND_URL + "/weixin")).build();
+                    .addLink("返回", QXCMP_ADMIN_URL + "/weixin")).build();
         }
     }
 

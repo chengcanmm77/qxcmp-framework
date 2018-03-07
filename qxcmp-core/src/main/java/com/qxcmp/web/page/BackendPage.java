@@ -45,7 +45,7 @@ import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_PROFILE;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_SIDEBAR;
 
@@ -102,7 +102,7 @@ public class BackendPage extends AbstractPage {
             } else {
                 String url = breadcrumb[i + 1];
                 if (Objects.nonNull(url)) {
-                    bc.addItem(new BreadcrumbItem(text, QXCMP_BACKEND_URL + "/" + url));
+                    bc.addItem(new BreadcrumbItem(text, QXCMP_ADMIN_URL + "/" + url));
                 } else {
                     bc.addItem(new BreadcrumbItem(text));
                 }
@@ -207,7 +207,7 @@ public class BackendPage extends AbstractPage {
         menu.setInverted().setFixed(Fixed.BOTTOM);
         menu.addItem(new SidebarIconItem());
         RightMenu rightMenu = new RightMenu();
-        rightMenu.addItem(new TextItem("关于", QXCMP_BACKEND_URL + "/about"));
+        rightMenu.addItem(new TextItem("关于", QXCMP_ADMIN_URL + "/about"));
         menu.setRightMenu(rightMenu);
         sidebar.setBottomFixedMenu(menu);
     }

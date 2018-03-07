@@ -14,7 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 链接实体
@@ -23,7 +23,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
  *
  * @author Aaric
  */
-@EntityTable(value = "链接管理", action = QXCMP_BACKEND_URL + "/link",
+@EntityTable(value = "链接管理", action = QXCMP_ADMIN_URL + "/link",
         tableActions = @TableAction(value = "添加链接", action = "new", primary = true),
         rowActions = {
                 @RowAction(value = "编辑", action = "edit", secondary = true),

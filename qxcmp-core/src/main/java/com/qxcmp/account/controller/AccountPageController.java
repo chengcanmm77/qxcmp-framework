@@ -28,7 +28,7 @@ import static com.qxcmp.core.QxcmpSystemConfig.*;
 @Controller
 @RequestMapping("/account")
 @RequiredArgsConstructor
-public class AccountController extends QxcmpController {
+public class AccountPageController extends QxcmpController {
 
     protected final AccountService accountService;
     protected final AccountCodeService codeService;

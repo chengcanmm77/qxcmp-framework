@@ -21,7 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/login")
 @RequiredArgsConstructor
-public class LoginController extends QxcmpController {
+public class LoginPageController extends QxcmpController {
 
     @GetMapping
     public ModelAndView login(@RequestParam(required = false) String callback,

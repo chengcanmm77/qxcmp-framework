@@ -40,14 +40,14 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/statistic")
+@RequestMapping(QXCMP_ADMIN_URL + "/statistic")
 @RequiredArgsConstructor
 public class AdminStatisticPageController extends QxcmpController {
 

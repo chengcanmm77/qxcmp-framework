@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 平台商品
  *
  * @author aaric
  */
-@EntityTable(value = "商品管理", name = "userStoreCommodity", action = QXCMP_BACKEND_URL + "/mall/user/store/commodity",
+@EntityTable(value = "商品管理", name = "userStoreCommodity", action = QXCMP_ADMIN_URL + "/mall/user/store/commodity",
         tableActions = @TableAction(value = "添加商品", action = "new", primary = true),
         rowActions = {
                 @RowAction(value = "编辑", action = "edit", color = Color.BLACK),

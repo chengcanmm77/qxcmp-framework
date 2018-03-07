@@ -22,12 +22,12 @@ import javax.validation.Valid;
 import java.util.Date;
 import java.util.Objects;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 import static com.qxcmp.core.QxcmpSystemConfig.MALL_COMMODITY_CATALOG;
 
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/mall")
+@RequestMapping(QXCMP_ADMIN_URL + "/mall")
 @RequiredArgsConstructor
 public class AdminMallPageController extends QxcmpController {
 
@@ -88,7 +88,7 @@ public class AdminMallPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回店铺管理", QXCMP_BACKEND_URL + "/mall/store").addLink("继续新建店铺", QXCMP_BACKEND_URL + "/mall/store/new"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回店铺管理", QXCMP_ADMIN_URL + "/mall/store").addLink("继续新建店铺", QXCMP_ADMIN_URL + "/mall/store/new"));
     }
 
     @GetMapping("/store/{id}/edit")
@@ -104,7 +104,7 @@ public class AdminMallPageController extends QxcmpController {
                     .addObject("selection_items_owner", userService.findAll())
                     .addObject("selection_items_admins", userService.findAll())
                     .build();
-        }).orElse(page(new Overview(new IconHeader("店铺不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/mall/store")).build());
+        }).orElse(page(new Overview(new IconHeader("店铺不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/mall/store")).build());
     }
 
     @PostMapping("/store/{id}/edit")
@@ -132,8 +132,8 @@ public class AdminMallPageController extends QxcmpController {
                 } catch (Exception e) {
                     throw new ActionException(e.getMessage(), e);
                 }
-            }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/mall/store"));
-        }).orElse(page(new Overview(new IconHeader("店铺不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/mall/store")).build());
+            }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/mall/store"));
+        }).orElse(page(new Overview(new IconHeader("店铺不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/mall/store")).build());
     }
 
     @GetMapping("/settings")
@@ -179,6 +179,6 @@ public class AdminMallPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/mall"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/mall"));
     }
 }

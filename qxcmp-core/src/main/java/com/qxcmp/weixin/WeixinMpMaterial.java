@@ -13,14 +13,14 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.util.Date;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 微信素材实体
  *
  * @author Aaric
  */
-@EntityTable(value = "公众号素材管理", action = QXCMP_BACKEND_URL + "/weixin/material", disableFilter = true,
+@EntityTable(value = "公众号素材管理", action = QXCMP_ADMIN_URL + "/weixin/material", disableFilter = true,
         tableActions = @TableAction(value = "同步素材", action = "sync", method = FormMethod.POST, primary = true, showConfirmDialog = true, confirmDialogTitle = "微信素材同步", confirmDialogDescription = "素材同步将需要较长时间，点击是继续"),
         rowActions = @RowAction(value = "查看", action = "preview"))
 @Entity

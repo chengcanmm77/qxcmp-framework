@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 用户实体定义
@@ -33,9 +33,9 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
  *
  * @author aaric
  */
-@EntityTable(value = "全部用户", name = "all", action = QXCMP_BACKEND_URL + "/user/all",
+@EntityTable(value = "全部用户", name = "all", action = QXCMP_ADMIN_URL + "/user/all",
         rowActions = {@RowAction(value = "查看", action = "details", primary = true)})
-@EntityTable(value = "微信用户", name = "weixin", action = QXCMP_BACKEND_URL + "/user/weixin", disableFilter = true,
+@EntityTable(value = "微信用户", name = "weixin", action = QXCMP_ADMIN_URL + "/user/weixin", disableFilter = true,
         tableActions = @TableAction(value = "开始同步", action = "sync", method = FormMethod.POST, primary = true),
         rowActions = {@RowAction(value = "查看", action = "details", primary = true)})
 @Entity

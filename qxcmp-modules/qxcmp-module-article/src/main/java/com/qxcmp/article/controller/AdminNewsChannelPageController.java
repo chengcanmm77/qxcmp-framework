@@ -27,13 +27,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_NEWS;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_NEWS_CHANNEL;
 import static com.qxcmp.core.QxcmpSystemConfig.ARTICLE_CHANNEL_CATALOG;
 
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/news/channel")
+@RequestMapping(QXCMP_ADMIN_URL + "/news/channel")
 @RequiredArgsConstructor
 public class AdminNewsChannelPageController extends QxcmpController {
 
@@ -51,10 +51,10 @@ public class AdminNewsChannelPageController extends QxcmpController {
     public ModelAndView newsChannelPreviewPage(@PathVariable String id) {
         return channelService.findOne(id).map(channel -> page().addComponent(new Overview(channel.getName()).setAlignment(Alignment.CENTER)
                 .addComponent(new HtmlText(channel.getContent()))
-                .addLink("返回", QXCMP_BACKEND_URL + "/news/channel"))
+                .addLink("返回", QXCMP_ADMIN_URL + "/news/channel"))
                 .setBreadcrumb("控制台", "", "新闻管理", "news", "栏目管理", "news/channel", "栏目预览")
                 .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_CHANNEL)
-                .build()).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/news/channel")).build());
+                .build()).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/channel")).build());
     }
 
     @GetMapping("/new")
@@ -101,7 +101,7 @@ public class AdminNewsChannelPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回栏目管理", QXCMP_BACKEND_URL + "/news/channel").addLink("继续新建栏目", QXCMP_BACKEND_URL + "/news/channel/new"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回栏目管理", QXCMP_ADMIN_URL + "/news/channel").addLink("继续新建栏目", QXCMP_ADMIN_URL + "/news/channel/new"));
     }
 
     @GetMapping("/{id}/edit")
@@ -122,7 +122,7 @@ public class AdminNewsChannelPageController extends QxcmpController {
                     .addObject("selection_items_admins", userService.findAll())
                     .addObject("selection_items_catalogs", systemConfigService.getList(ARTICLE_CHANNEL_CATALOG))
                     .build();
-        }).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/news/channel")).build());
+        }).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/channel")).build());
     }
 
     @PostMapping("/{id}/edit")
@@ -154,8 +154,8 @@ public class AdminNewsChannelPageController extends QxcmpController {
                 } catch (Exception e) {
                     throw new ActionException(e.getMessage(), e);
                 }
-            }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/news/channel"));
-        }).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/news/channel")).build());
+            }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/news/channel"));
+        }).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/channel")).build());
     }
 
     @PostMapping("/{id}/remove")

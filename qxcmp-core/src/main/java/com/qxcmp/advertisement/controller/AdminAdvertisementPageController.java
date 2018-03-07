@@ -1,4 +1,4 @@
-package com.qxcmp.web.controller;
+package com.qxcmp.advertisement.controller;
 
 import com.google.common.collect.ImmutableList;
 import com.qxcmp.advertisement.Advertisement;
@@ -28,10 +28,15 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
+/**
+ * 广告后台管理页面
+ *
+ * @author Aaric
+ */
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/advertisement")
+@RequestMapping(QXCMP_ADMIN_URL + "/advertisement")
 @RequiredArgsConstructor
 public class AdminAdvertisementPageController extends QxcmpController {
 
@@ -82,7 +87,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回广告列表", QXCMP_BACKEND_URL + "/advertisement").addLink("继续新建广告", QXCMP_BACKEND_URL + "/advertisement/new"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回广告列表", QXCMP_ADMIN_URL + "/advertisement").addLink("继续新建广告", QXCMP_ADMIN_URL + "/advertisement/new"));
     }
 
     @GetMapping("/{id}/edit")
@@ -98,7 +103,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
                     .setBreadcrumb("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告")
                     .addObject("selection_items_type", SUPPORT_TYPES)
                     .build();
-        }).orElse(page(new Overview(new IconHeader("广告不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/advertisement")).build());
+        }).orElse(page(new Overview(new IconHeader("广告不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/advertisement")).build());
     }
 
     @PostMapping("/{id}/edit")
@@ -126,7 +131,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回广告列表", QXCMP_BACKEND_URL + "/advertisement"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回广告列表", QXCMP_ADMIN_URL + "/advertisement"));
     }
 
     @PostMapping("/{id}/remove")

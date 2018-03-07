@@ -12,14 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 兑换码实体
  *
  * @author aaric
  */
-@EntityTable(value = "兑换码管理", action = QXCMP_BACKEND_URL + "/redeem",
+@EntityTable(value = "兑换码管理", action = QXCMP_ADMIN_URL + "/redeem",
         tableActions = @TableAction(value = "生成兑换码", action = "generate", primary = true),
         rowActions = @RowAction(value = "查看", action = "details"))
 @Entity

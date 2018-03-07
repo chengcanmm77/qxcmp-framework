@@ -15,7 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 访问地址实体
@@ -28,7 +28,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
  *
  * @author Aaric
  */
-@EntityTable(value = "访问地址管理", action = QXCMP_BACKEND_URL + "/statistic/access/address", entityIndex = "address",
+@EntityTable(value = "访问地址管理", action = QXCMP_ADMIN_URL + "/statistic/access/address", entityIndex = "address",
         rowActions = {
                 @RowAction(value = "普通", action = "normal", method = FormMethod.POST),
                 @RowAction(value = "黑名单", action = "black", method = FormMethod.POST),

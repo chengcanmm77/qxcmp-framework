@@ -28,12 +28,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 import static com.qxcmp.core.QxcmpSystemConfig.*;
 
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/redeem")
+@RequestMapping(QXCMP_ADMIN_URL + "/redeem")
 @RequiredArgsConstructor
 public class AdminRedeemPageController extends QxcmpController {
 
@@ -61,10 +61,10 @@ public class AdminRedeemPageController extends QxcmpController {
                             stringObjectMap.put("使用时间", redeemKey.getDateUsed());
                             stringObjectMap.put("创建时间", redeemKey.getDateCreated());
                             stringObjectMap.put("过期时间", redeemKey.getDateExpired());
-                        })).addLink("返回", QXCMP_BACKEND_URL + "/redeem")))
+                        })).addLink("返回", QXCMP_ADMIN_URL + "/redeem")))
                 .setBreadcrumb("控制台", "", "系统工具", "tools", "兑换码管理", "redeem", "兑换码详情")
                 .setVerticalNavigation(NAVIGATION_ADMIN_REDEEM, NAVIGATION_ADMIN_REDEEM_MANAGEMENT)
-                .build()).orElse(page(new Overview(new IconHeader("兑换码不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/redeem")).build());
+                .build()).orElse(page(new Overview(new IconHeader("兑换码不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/redeem")).build());
     }
 
     @GetMapping("/generate")
@@ -125,7 +125,7 @@ public class AdminRedeemPageController extends QxcmpController {
                     stringObjectMap.put(String.valueOf(i + 1), redeemKey.getId());
                 }
             }
-        })).addLink("返回", QXCMP_BACKEND_URL + "/redeem").addLink("继续生成", QXCMP_BACKEND_URL + "/redeem/generate"));
+        })).addLink("返回", QXCMP_ADMIN_URL + "/redeem").addLink("继续生成", QXCMP_ADMIN_URL + "/redeem/generate"));
     }
 
     @GetMapping("/settings")

@@ -10,14 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 import javax.persistence.*;
 import java.util.Set;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 角色实体定义
  *
  * @author aaric
  */
-@EntityTable(value = "角色列表", action = QXCMP_BACKEND_URL + "/security/role",
+@EntityTable(value = "角色列表", action = QXCMP_ADMIN_URL + "/security/role",
         tableActions = {@TableAction(value = "新建", action = "new", primary = true)},
         batchActions = @BatchAction(value = "批量删除", action = "remove", color = Color.RED),
         rowActions = {@RowAction(value = "编辑", action = "edit", secondary = true), @RowAction(value = "删除", action = "remove", method = FormMethod.POST, color = Color.RED)}

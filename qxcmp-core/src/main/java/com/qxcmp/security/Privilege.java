@@ -10,14 +10,14 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 权限实体定义
  *
  * @author aaric
  */
-@EntityTable(value = "权限列表", action = QXCMP_BACKEND_URL + "/security/privilege",
+@EntityTable(value = "权限列表", action = QXCMP_ADMIN_URL + "/security/privilege",
         rowActions = {
                 @RowAction(value = "激活", action = "enable", method = FormMethod.POST, color = Color.GREEN),
                 @RowAction(value = "禁用", action = "disable", method = FormMethod.POST, color = Color.RED, showConfirmDialog = true, confirmDialogTitle = "禁用权限", confirmDialogDescription = "确认要禁用该权限，权限禁用后将不能使用权限所控制的功能")

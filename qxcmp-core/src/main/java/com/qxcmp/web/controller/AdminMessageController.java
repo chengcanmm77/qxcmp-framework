@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 import static com.qxcmp.core.QxcmpSystemConfig.*;
 
@@ -42,7 +42,7 @@ import static com.qxcmp.core.QxcmpSystemConfig.*;
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/message")
+@RequestMapping(QXCMP_ADMIN_URL + "/message")
 @RequiredArgsConstructor
 public class AdminMessageController extends QxcmpController {
 
@@ -390,7 +390,7 @@ public class AdminMessageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/message/site/notification").addLink("继续新建", QXCMP_BACKEND_URL + "/message/site/notification/new"));
+        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/message/site/notification").addLink("继续新建", QXCMP_ADMIN_URL + "/message/site/notification/new"));
     }
 
     @GetMapping("/site/notification/{id}/edit")
@@ -410,7 +410,7 @@ public class AdminMessageController extends QxcmpController {
                             .addObject("selection_items_type", SITE_NOTIFICATION_TYPE)
                             .build();
                 })
-                .orElse(page(viewHelper.nextWarningOverview("网站通知不存在", "").addLink("返回", QXCMP_BACKEND_URL + "/message/site/notification")).build());
+                .orElse(page(viewHelper.nextWarningOverview("网站通知不存在", "").addLink("返回", QXCMP_ADMIN_URL + "/message/site/notification")).build());
     }
 
     @PostMapping("/site/notification/{id}/edit")
@@ -439,9 +439,9 @@ public class AdminMessageController extends QxcmpController {
                         } catch (Exception e) {
                             throw new ActionException(e.getMessage(), e);
                         }
-                    }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/message/site/notification"));
+                    }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/message/site/notification"));
                 })
-                .orElse(page(viewHelper.nextWarningOverview("网站通知不存在", "").addLink("返回", QXCMP_BACKEND_URL + "/message/site/notification")).build());
+                .orElse(page(viewHelper.nextWarningOverview("网站通知不存在", "").addLink("返回", QXCMP_ADMIN_URL + "/message/site/notification")).build());
     }
 
 
@@ -551,6 +551,6 @@ public class AdminMessageController extends QxcmpController {
                             objectObjectMap.put("成功发送条数", stringObjectMap.get("successCount"));
                         }
                 ))
-                .addLink("返回消息服务", QXCMP_BACKEND_URL + "/message").addLink("继续发送站内信", ""));
+                .addLink("返回消息服务", QXCMP_ADMIN_URL + "/message").addLink("继续发送站内信", ""));
     }
 }

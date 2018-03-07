@@ -16,7 +16,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Map;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 审计日志实体
@@ -27,7 +27,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
  *
  * @author aaric
  */
-@EntityTable(value = "系统日志", action = QXCMP_BACKEND_URL + "/audit",
+@EntityTable(value = "系统日志", action = QXCMP_ADMIN_URL + "/audit",
         rowActions = @RowAction(value = "查看", action = "details"))
 @Entity
 @Table

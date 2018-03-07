@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP;
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
@@ -33,7 +33,7 @@ public class AdminAboutPage extends QxcmpAdminPage {
     @Override
     public void render() {
         setBreadcrumb("控制台", "", "关于");
-        addComponent(new TextContainer().addComponent(new Overview(new PageHeader(HeaderType.H1, QXCMP)).addComponent(getTableView()).addLink("返回", QXCMP_BACKEND_URL)));
+        addComponent(new TextContainer().addComponent(new Overview(new PageHeader(HeaderType.H1, QXCMP)).addComponent(getTableView()).addLink("返回", QXCMP_ADMIN_URL)));
     }
 
     private AbstractTable getTableView() {

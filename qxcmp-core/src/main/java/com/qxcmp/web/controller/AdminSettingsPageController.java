@@ -36,7 +36,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 import static com.qxcmp.core.QxcmpSystemConfig.*;
 
@@ -44,7 +44,7 @@ import static com.qxcmp.core.QxcmpSystemConfig.*;
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_BACKEND_URL + "/settings")
+@RequestMapping(QXCMP_ADMIN_URL + "/settings")
 @RequiredArgsConstructor
 public class AdminSettingsPageController extends QxcmpController {
 
@@ -190,7 +190,7 @@ public class AdminSettingsPageController extends QxcmpController {
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
-        })).orElse(page(viewHelper.nextWarningOverview("字典不存在", "").addLink("返回", QXCMP_BACKEND_URL + "/settings/dictionary")).build());
+        })).orElse(page(viewHelper.nextWarningOverview("字典不存在", "").addLink("返回", QXCMP_ADMIN_URL + "/settings/dictionary")).build());
     }
 
     @GetMapping("/dictionary/{name}/edit")
@@ -203,7 +203,7 @@ public class AdminSettingsPageController extends QxcmpController {
                     .setBreadcrumb("控制台", "", "系统设置", "settings", "系统字典", "settings/dictionary", "系统字典编辑")
                     .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_DICTIONARY)
                     .build();
-        }).orElse(page(new Overview(new IconHeader("字典不存在", new Icon("warning circle"))).addLink("返回", QXCMP_BACKEND_URL + "/settings/dictionary")).build());
+        }).orElse(page(new Overview(new IconHeader("字典不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/settings/dictionary")).build());
     }
 
     @GetMapping("/region")
@@ -242,7 +242,7 @@ public class AdminSettingsPageController extends QxcmpController {
                             .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_REGION)
                             .build();
                 })
-                .orElse(page(viewHelper.nextWarningOverview("地区不存在", "").addLink("返回", QXCMP_BACKEND_URL + "/settings/region")).build());
+                .orElse(page(viewHelper.nextWarningOverview("地区不存在", "").addLink("返回", QXCMP_ADMIN_URL + "/settings/region")).build());
     }
 
     @PostMapping("/region/{id}/new")
@@ -281,9 +281,9 @@ public class AdminSettingsPageController extends QxcmpController {
                         } catch (Exception e) {
                             throw new ActionException(e.getMessage(), e);
                         }
-                    }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_BACKEND_URL + "/settings/region").addLink("继续添加", ""));
+                    }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/settings/region").addLink("继续添加", ""));
                 })
-                .orElse(page(viewHelper.nextWarningOverview("地区不存在", "").addLink("返回", QXCMP_BACKEND_URL + "/settings/region")).build());
+                .orElse(page(viewHelper.nextWarningOverview("地区不存在", "").addLink("返回", QXCMP_ADMIN_URL + "/settings/region")).build());
     }
 
     @PostMapping("/region/{code}/disable")

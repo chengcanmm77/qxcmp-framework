@@ -12,7 +12,7 @@ public class LogoImageItem extends ImageItem {
     private String title;
 
     public LogoImageItem(String source, String title) {
-        super(new Image(source, QxcmpConfiguration.QXCMP_BACKEND_URL).setRounded());
+        super(new Image(source, QxcmpConfiguration.QXCMP_ADMIN_URL).setRounded());
         this.title = title;
     }
 

@@ -8,7 +8,7 @@ import org.assertj.core.util.Lists;
 
 import java.util.List;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 蜘蛛元数据定义
@@ -17,7 +17,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_BACKEND_URL;
  *
  * @author aaric
  */
-@EntityTable(value = "蜘蛛管理", action = QXCMP_BACKEND_URL + "/spider", entityIndex = "name",
+@EntityTable(value = "蜘蛛管理", action = QXCMP_ADMIN_URL + "/spider", entityIndex = "name",
         batchActions = @BatchAction(value = "批量禁用", action = "remove", color = Color.RED),
         rowActions = {
                 @RowAction(value = "启用", action = "enable", method = FormMethod.POST, color = Color.GREEN),
