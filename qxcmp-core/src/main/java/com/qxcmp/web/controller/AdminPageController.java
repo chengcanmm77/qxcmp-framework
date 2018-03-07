@@ -21,14 +21,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import static com.qxcmp.core.Platform.Pages.ABOUT;
-import static com.qxcmp.core.Platform.Pages.ADMIN;
+import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(ADMIN)
+@RequestMapping(QXCMP_ADMIN_URL)
 @RequiredArgsConstructor
 public class AdminPageController extends QxcmpController {
 
@@ -42,7 +41,7 @@ public class AdminPageController extends QxcmpController {
         return qxcmpPage(AdminHomePage.class, feeds);
     }
 
-    @GetMapping(ABOUT)
+    @GetMapping("/about")
     public ModelAndView aboutPage() {
         return qxcmpPage(AdminAboutPage.class);
     }
