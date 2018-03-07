@@ -1,4 +1,4 @@
-package com.qxcmp.web.view.page;
+package com.qxcmp.admin.page;
 
 import com.qxcmp.message.InnerMessageService;
 import com.qxcmp.message.SiteNotification;
@@ -24,6 +24,8 @@ import com.qxcmp.web.view.elements.message.*;
 import com.qxcmp.web.view.modules.accordion.AccordionItem;
 import com.qxcmp.web.view.modules.sidebar.AbstractSidebar;
 import com.qxcmp.web.view.modules.sidebar.AccordionMenuSidebar;
+import com.qxcmp.web.view.page.AbstractPage;
+import com.qxcmp.web.view.page.AbstractQxcmpPage;
 import com.qxcmp.web.view.support.Color;
 import com.qxcmp.web.view.support.Fixed;
 import com.qxcmp.web.view.support.Wide;
@@ -39,13 +41,14 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_PROFILE;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_SIDEBAR;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
- * 平台后台页面抽象类
+ * 后台页面抽象类
  *
  * @author Aaric
  */
@@ -191,7 +194,7 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         menu.setInverted().setFixed(Fixed.BOTTOM);
         menu.addItem(new SidebarIconItem());
         RightMenu rightMenu = new RightMenu();
-        rightMenu.addItem(new TextItem("关于", "about"));
+        rightMenu.addItem(new TextItem("关于", ADMIN_URL + "/about"));
         menu.setRightMenu(rightMenu);
         sidebar.setBottomFixedMenu(menu);
     }

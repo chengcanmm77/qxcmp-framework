@@ -1,4 +1,4 @@
-package com.qxcmp.web.page;
+package com.qxcmp.admin.page;
 
 import com.jcabi.manifests.Manifests;
 import com.qxcmp.core.QxcmpConfiguration;
@@ -6,7 +6,6 @@ import com.qxcmp.web.view.elements.container.TextContainer;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.PageHeader;
 import com.qxcmp.web.view.modules.table.AbstractTable;
-import com.qxcmp.web.view.page.AbstractQxcmpAdminPage;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
