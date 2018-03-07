@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>qxcmp-module-shopping-mall</artifactId>
+    <version>1.0.0.RELEASE</version>
 
     <name>QXCMP Shopping Mall Module</name>
 

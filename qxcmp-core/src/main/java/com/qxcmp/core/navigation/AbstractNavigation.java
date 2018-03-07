@@ -99,6 +99,7 @@ public abstract class AbstractNavigation {
      * 若该导航有子菜单，同样需要判断子菜单是否可见
      *
      * @param user 用户
+     *
      * @return 是否可见
      */
     public boolean isVisible(User user) {

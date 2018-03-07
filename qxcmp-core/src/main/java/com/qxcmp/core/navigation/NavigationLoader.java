@@ -1,30 +1,19 @@
 package com.qxcmp.core.navigation;
 
-import com.qxcmp.core.init.QxcmpInitializer;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.annotation.AnnotationAwareOrderComparator;
-import org.springframework.stereotype.Component;
 
 /**
- * 平台后端侧边导航栏加载
+ * 导航栏配置接口 实现该接口的Spring Bean会在平台启动时自动加载并配置导航栏
+ * <p>
+ * 使用 {@link org.springframework.core.annotation.Order} 标注顺序
  *
  * @author aaric
  */
-@Slf4j
-@Component
-@RequiredArgsConstructor
-public class NavigationLoader implements QxcmpInitializer {
+public interface NavigationLoader {
 
-    private final ApplicationContext applicationContext;
-    private final NavigationService navigationService;
-
-    @Override
-    public void init() {
-        applicationContext.getBeansOfType(NavigationConfigurator.class).values().stream().sorted(new AnnotationAwareOrderComparator()).forEach(navigationConfigurator -> {
-            log.info("--- loading navigation {}", navigationConfigurator.getClass().getSimpleName());
-            navigationConfigurator.configureNavigation(navigationService);
-        });
-    }
+    /**
+     * 配置导航栏
+     *
+     * @param navigationService 导航栏服务
+     */
+    void configNavigation(NavigationService navigationService);
 }

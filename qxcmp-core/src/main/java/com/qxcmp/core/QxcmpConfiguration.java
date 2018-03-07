@@ -4,8 +4,6 @@ import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
 import com.qxcmp.config.SystemConfigService;
-import com.qxcmp.statistics.AccessAddressService;
-import com.qxcmp.util.IpAddressResolver;
 import com.qxcmp.weixin.WeixinMpMessageHandler;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
@@ -13,7 +11,6 @@ import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -53,9 +50,6 @@ public class QxcmpConfiguration {
 
     private final WeixinMpMessageHandler defaultMessageHandler;
     private final SystemConfigService systemConfigService;
-    private final ApplicationContext applicationContext;
-    private final AccessAddressService accessAddressService;
-    private final IpAddressResolver ipAddressResolver;
 
     @Bean
     public TaskExecutor taskExecutor() {
@@ -139,4 +133,5 @@ public class QxcmpConfiguration {
     public DeviceResolver deviceResolver() {
         return new LiteDeviceResolver();
     }
+
 }

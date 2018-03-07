@@ -1,11 +1,15 @@
 package com.qxcmp.core.navigation;
 
+/**
+ * @author Aaric
+ */
 public interface NavigationService {
 
     /**
      * 获取一个用户所属的导航栏
      *
      * @param id 全局 ID
+     *
      * @return 如果导航栏不存在，抛出异常
      */
     AbstractNavigation get(String id);

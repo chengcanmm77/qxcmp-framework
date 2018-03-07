@@ -2,7 +2,7 @@ package com.qxcmp.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.qxcmp.core.navigation.Navigation;
-import com.qxcmp.core.navigation.NavigationConfigurator;
+import com.qxcmp.core.navigation.NavigationLoader;
 import com.qxcmp.core.navigation.NavigationService;
 import com.qxcmp.web.view.elements.icon.Icon;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ import static com.qxcmp.core.QxcmpSecurityConfiguration.*;
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Configuration
-public class QxcmpNavigationConfiguration implements NavigationConfigurator {
+public class QxcmpNavigationConfiguration implements NavigationLoader {
 
     /*
      * 移动端导航栏扩展
@@ -196,7 +196,7 @@ public class QxcmpNavigationConfiguration implements NavigationConfigurator {
     public static final String NAVIGATION_ADMIN_STATISTIC_SETTINGS = NAVIGATION_ADMIN_STATISTIC + "-SETTINGS";
 
     @Override
-    public void configureNavigation(NavigationService navigationService) {
+    public void configNavigation(NavigationService navigationService) {
         navigationService.add(new Navigation(NAVIGATION_ADMIN_SIDEBAR, "侧边导航栏")
                 .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_USER, "用户管理", QXCMP_ADMIN_URL + "/user").setIcon(new Icon("users")).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_USER)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_NEWS, "新闻管理", QXCMP_ADMIN_URL + "/news").setIcon(new Icon("newspaper")).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_NEWS)))
@@ -206,7 +206,7 @@ public class QxcmpNavigationConfiguration implements NavigationConfigurator {
                 .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_FINANCE, "财务管理", QXCMP_ADMIN_URL + "/finance").setIcon(new Icon("yen")).setOrder(60).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_STATISTIC, "网站统计", QXCMP_ADMIN_URL + "/statistic").setIcon(new Icon("bar chart")).setOrder(70).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_TOOLS, "系统工具", QXCMP_ADMIN_URL + "/tools").setIcon(new Icon("lab")).setOrder(80).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_TOOL)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_SETTINGS, "系统设置", QXCMP_ADMIN_URL + "/settings").setIcon(new Icon("settings")).setOrder(90).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
+                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_SETTINGS, "设置中心", QXCMP_ADMIN_URL + "/settings").setIcon(new Icon("settings")).setOrder(90).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
         );
 
         navigationService.add(new Navigation(NAVIGATION_ADMIN_PROFILE, "个人中心导航栏")
