@@ -1,14 +1,14 @@
-package com.qxcmp.web.controller;
+package com.qxcmp.spider.controller;
 
 import com.google.common.collect.Lists;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.core.event.AdminSpiderDisableEvent;
-import com.qxcmp.core.event.AdminSpiderEnableEvent;
-import com.qxcmp.core.event.AdminSpiderStopEvent;
-import com.qxcmp.spdier.SpiderContextHolder;
-import com.qxcmp.spdier.SpiderDefinition;
-import com.qxcmp.spdier.SpiderLogService;
-import com.qxcmp.spdier.SpiderRuntime;
+import com.qxcmp.spider.SpiderContextHolder;
+import com.qxcmp.spider.SpiderDefinition;
+import com.qxcmp.spider.SpiderLogService;
+import com.qxcmp.spider.SpiderRuntime;
+import com.qxcmp.spider.event.AdminSpiderDisableEvent;
+import com.qxcmp.spider.event.AdminSpiderEnableEvent;
+import com.qxcmp.spider.event.AdminSpiderStopEvent;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;
 import lombok.RequiredArgsConstructor;

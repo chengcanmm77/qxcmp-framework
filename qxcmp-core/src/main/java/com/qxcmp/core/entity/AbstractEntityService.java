@@ -1,5 +1,6 @@
 package com.qxcmp.core.entity;
 
+import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -116,7 +117,7 @@ public abstract class AbstractEntityService<T, ID extends Serializable, R extend
 
     @Override
     public List<T> createAll(Iterable<T> iterable) {
-        List<T> filtered = org.assertj.core.util.Lists.newArrayList();
+        List<T> filtered = Lists.newArrayList();
 
         iterable.forEach(t -> {
             if (!exist(getEntityId(t))) {

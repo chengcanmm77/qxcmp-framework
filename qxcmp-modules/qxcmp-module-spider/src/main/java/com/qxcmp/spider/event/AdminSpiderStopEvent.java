@@ -1,6 +1,6 @@
-package com.qxcmp.core.event;
+package com.qxcmp.spider.event;
 
-import com.qxcmp.spdier.SpiderRuntime;
+import com.qxcmp.spider.SpiderRuntime;
 import com.qxcmp.user.User;
 import lombok.Getter;
 

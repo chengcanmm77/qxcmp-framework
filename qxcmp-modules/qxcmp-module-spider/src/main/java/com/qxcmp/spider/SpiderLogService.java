@@ -1,4 +1,4 @@
-package com.qxcmp.spdier;
+package com.qxcmp.spider;
 
 import com.qxcmp.core.entity.AbstractEntityService;
 import com.qxcmp.core.support.TimeDurationHelper;

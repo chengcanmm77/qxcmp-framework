@@ -1,7 +1,7 @@
-package com.qxcmp.core.event;
+package com.qxcmp.spider.event;
 
-import com.qxcmp.spdier.SpiderDefinition;
-import com.qxcmp.spdier.SpiderPageProcessor;
+import com.qxcmp.spider.SpiderDefinition;
+import com.qxcmp.spider.SpiderPageProcessor;
 import lombok.Getter;
 
 /**

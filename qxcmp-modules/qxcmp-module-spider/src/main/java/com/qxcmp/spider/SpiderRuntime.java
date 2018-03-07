@@ -1,4 +1,4 @@
-package com.qxcmp.spdier;
+package com.qxcmp.spider;
 
 import com.qxcmp.web.view.annotation.table.EntityTable;
 import com.qxcmp.web.view.annotation.table.RowAction;
@@ -28,7 +28,7 @@ public class SpiderRuntime {
     @TableField("蜘蛛名称")
     private String name;
 
-    private us.codecraft.webmagic.Spider spider;
+    private Spider spider;
 
     private SpiderPageProcessor spiderPageProcessor;
 

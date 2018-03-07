@@ -1,4 +1,4 @@
-package com.qxcmp.spdier;
+package com.qxcmp.spider;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

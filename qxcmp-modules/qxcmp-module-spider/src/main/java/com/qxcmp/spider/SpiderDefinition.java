@@ -1,4 +1,4 @@
-package com.qxcmp.spdier;
+package com.qxcmp.spider;
 
 import com.qxcmp.web.view.annotation.table.*;
 import com.qxcmp.web.view.modules.form.FormMethod;

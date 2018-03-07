@@ -1,4 +1,4 @@
-package com.qxcmp.spdier;
+package com.qxcmp.spider;
 
 import com.qxcmp.web.view.annotation.table.EntityTable;
 import com.qxcmp.web.view.annotation.table.TableField;

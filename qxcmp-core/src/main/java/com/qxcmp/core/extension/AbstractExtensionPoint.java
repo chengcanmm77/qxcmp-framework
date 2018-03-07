@@ -1,7 +1,7 @@
 package com.qxcmp.core.extension;
 
+import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
-import org.assertj.core.util.Lists;
 
 import java.util.Comparator;
 import java.util.List;

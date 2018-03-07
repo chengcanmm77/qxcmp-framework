@@ -13,6 +13,7 @@
     <modules>
         <module>qxcmp-module-shopping-mall</module>
         <module>qxcmp-module-article</module>
+        <module>qxcmp-module-spider</module>
     </modules>
 
     <artifactId>qxcmp-modules</artifactId>

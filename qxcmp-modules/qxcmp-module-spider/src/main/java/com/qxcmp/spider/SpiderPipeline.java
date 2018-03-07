@@ -1,4 +1,4 @@
-package com.qxcmp.spdier;
+package com.qxcmp.spider;
 
 import lombok.Getter;
 import us.codecraft.webmagic.ResultItems;

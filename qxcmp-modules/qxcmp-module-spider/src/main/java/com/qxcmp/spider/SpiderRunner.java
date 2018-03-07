@@ -1,7 +1,7 @@
-package com.qxcmp.spdier;
+package com.qxcmp.spider;
 
-import com.qxcmp.core.event.AdminSpiderFinishEvent;
 import com.qxcmp.core.init.QxcmpInitializer;
+import com.qxcmp.spider.event.AdminSpiderFinishEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
