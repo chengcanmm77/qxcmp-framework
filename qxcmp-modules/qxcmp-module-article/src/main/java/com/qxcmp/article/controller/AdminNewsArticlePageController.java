@@ -13,8 +13,7 @@ import com.qxcmp.audit.ActionException;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;
-import com.qxcmp.web.page.AbstractPage;
-import com.qxcmp.web.page.BackendPage;
+import com.qxcmp.web.page.AbstractLegacyPage;
 import com.qxcmp.web.view.Component;
 import com.qxcmp.web.view.elements.grid.AbstractGrid;
 import com.qxcmp.web.view.elements.grid.Col;
@@ -123,7 +122,7 @@ public class AdminNewsArticlePageController extends QxcmpController {
                 .filter(article -> article.getStatus().equals(ArticleStatus.AUDITING))
                 .map(article -> {
                     form.setOperation("通过文章");
-                    return calculateBadge((BackendPage) page().addComponent(new Overview(article.getTitle(), article.getAuthor()).setAlignment(Alignment.CENTER)
+                    return calculateBadge((AbstractLegacyPage) page().addComponent(new Overview(article.getTitle(), article.getAuthor()).setAlignment(Alignment.CENTER)
                             .addComponent(getArticleAuditContent(article, form))
                             .addLink("返回", QXCMP_ADMIN_URL + "/news/article/auditing"))
                             .setBreadcrumb("控制台", "", "新闻管理", "news", "文章管理", "news/article", "审核文章")
@@ -342,7 +341,7 @@ public class AdminNewsArticlePageController extends QxcmpController {
         return grid;
     }
 
-    private AbstractPage calculateBadge(AbstractPage backendPage) {
+    private AbstractLegacyPage calculateBadge(AbstractLegacyPage backendPage) {
 
         final int MAX_COUNT = 100;
 

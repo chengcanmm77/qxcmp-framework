@@ -20,7 +20,7 @@ import com.qxcmp.util.CaptchaService;
 import com.qxcmp.util.IpAddressResolver;
 import com.qxcmp.util.QxcmpPageResolver;
 import com.qxcmp.web.model.RestfulResponse;
-import com.qxcmp.web.page.AbstractPage;
+import com.qxcmp.web.page.AbstractLegacyPage;
 import com.qxcmp.web.view.annotation.form.Form;
 import com.qxcmp.web.view.elements.grid.Col;
 import com.qxcmp.web.view.elements.grid.Grid;
@@ -128,7 +128,7 @@ public abstract class QxcmpController {
      *
      * @see QxcmpPageResolver
      */
-    protected AbstractPage page() {
+    protected AbstractLegacyPage page() {
         return pageResolver.resolve(request, response);
     }
 
@@ -141,7 +141,7 @@ public abstract class QxcmpController {
      *
      * @see Overview
      */
-    protected AbstractPage page(Overview overview) {
+    protected AbstractLegacyPage page(Overview overview) {
         return page().addComponent(new Grid().setTextContainer().setAlignment(Alignment.CENTER).setVerticallyPadded().addItem(new Col().addComponent(overview)));
     }
 

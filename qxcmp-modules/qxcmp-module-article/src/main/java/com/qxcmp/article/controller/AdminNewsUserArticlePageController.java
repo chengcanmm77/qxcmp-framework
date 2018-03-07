@@ -11,8 +11,7 @@ import com.qxcmp.audit.ActionException;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;
-import com.qxcmp.web.page.AbstractPage;
-import com.qxcmp.web.page.BackendPage;
+import com.qxcmp.web.page.AbstractLegacyPage;
 import com.qxcmp.web.view.Component;
 import com.qxcmp.web.view.elements.grid.AbstractGrid;
 import com.qxcmp.web.view.elements.grid.Col;
@@ -142,7 +141,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
 
         form.setAuthor(user.getDisplayName());
 
-        return calculateBadge((BackendPage) page().addComponent(new Segment().addComponent(convertToForm(form)))
+        return calculateBadge((AbstractLegacyPage) page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "新闻管理", "news", "我的文章", "news/user/article", "新建文章")
                 .setVerticalNavigation(NAVIGATION_ADMIN_NEWS_USER_ARTICLE_MANAGEMENT, NAVIGATION_ADMIN_NEWS_USER_ARTICLE_MANAGEMENT_DRAFT)
                 .addObject("selection_items_channels", channelService.findByUserId(user)), user)
@@ -161,7 +160,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
         }
 
         if (bindingResult.hasErrors()) {
-            return calculateBadge((BackendPage) page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
+            return calculateBadge((AbstractLegacyPage) page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "新闻管理", "news", "我的文章", "news/user/article", "新建文章")
                     .setVerticalNavigation(NAVIGATION_ADMIN_NEWS_USER_ARTICLE_MANAGEMENT, NAVIGATION_ADMIN_NEWS_USER_ARTICLE_MANAGEMENT_DRAFT)
                     .addObject("selection_items_channels", channels), user)
@@ -213,7 +212,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                     form.setContent(article.getContent());
                     form.setContentQuill(article.getContentQuill());
 
-                    return calculateBadge((BackendPage) page().addComponent(new Segment().addComponent(convertToForm(form)))
+                    return calculateBadge((AbstractLegacyPage) page().addComponent(new Segment().addComponent(convertToForm(form)))
                             .setBreadcrumb("控制台", "", "新闻管理", "news", "我的文章", "news/user/article", "编辑文章")
                             .setVerticalNavigation(NAVIGATION_ADMIN_NEWS_USER_ARTICLE_MANAGEMENT, NAVIGATION_ADMIN_NEWS_USER_ARTICLE_MANAGEMENT_DRAFT)
                             .addObject("selection_items_channels", channelService.findByUserId(user)), user)
@@ -524,7 +523,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
     }
 
 
-    private AbstractPage calculateBadge(AbstractPage backendPage, User user) {
+    private AbstractLegacyPage calculateBadge(AbstractLegacyPage backendPage, User user) {
 
         final int MAX_COUNT = 100;
 

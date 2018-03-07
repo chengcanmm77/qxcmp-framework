@@ -7,7 +7,7 @@ import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
 import com.qxcmp.web.view.elements.header.ContentHeader;
 import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.modules.pagination.Pagination;
-import com.qxcmp.web.view.page.QxcmpAdminPage;
+import com.qxcmp.web.view.page.AbstractQxcmpAdminPage;
 import com.qxcmp.web.view.support.Size;
 import com.qxcmp.web.view.support.Wide;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @Scope(SCOPE_PROTOTYPE)
 @Component
 @RequiredArgsConstructor
-public class AdminHomePage extends QxcmpAdminPage {
+public class AdminHomePage extends AbstractQxcmpAdminPage {
 
     private final Page<Feed> feeds;
 

@@ -52,7 +52,7 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @Scope(SCOPE_PROTOTYPE)
 @org.springframework.stereotype.Component
 @RequiredArgsConstructor
-public abstract class QxcmpAdminPage extends GenericQxcmpPage {
+public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
 
     private AbstractSidebar sidebar = new AccordionMenuSidebar().setAttachEventsSelector(".ui.bottom.fixed.menu .sidebar.item");
     private AbstractBreadcrumb breadcrumb;
@@ -63,7 +63,7 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
     private SiteNotificationService siteNotificationService;
 
     @Override
-    public QxcmpAdminPage addComponent(Component component) {
+    public AbstractPage addComponent(Component component) {
 
         if (Objects.nonNull(component)) {
             content.addComponent(component);
@@ -73,17 +73,17 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
     }
 
     @Override
-    public QxcmpAdminPage addComponent(Supplier<Component> supplier) {
+    public AbstractPage addComponent(Supplier<Component> supplier) {
         return addComponent(supplier.get());
     }
 
     @Override
-    public QxcmpAdminPage addComponents(Collection<Component> components) {
+    public AbstractPage addComponents(Collection<Component> components) {
         content.addComponents(components);
         return this;
     }
 
-    public QxcmpAdminPage setBreadcrumb(String... breadcrumb) {
+    public AbstractPage setBreadcrumb(String... breadcrumb) {
         checkArgument(breadcrumb.length % 2 == 1);
 
         Breadcrumb bc = new Breadcrumb();
@@ -108,7 +108,7 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
         return this;
     }
 
-    public QxcmpAdminPage setVerticalNavigation(String id, String activeId) {
+    public AbstractPage setVerticalNavigation(String id, String activeId) {
 
         VerticalMenu verticalMenu = new VerticalMenu().setFluid();
         verticalMenu.setTabular();
@@ -136,15 +136,15 @@ public abstract class QxcmpAdminPage extends GenericQxcmpPage {
         return this;
     }
 
-    public QxcmpAdminPage setVerticalNavigationBadge(String id, String text) {
+    public AbstractPage setVerticalNavigationBadge(String id, String text) {
         return setVerticalNavigationBadge(id, text, Color.NONE);
     }
 
-    public QxcmpAdminPage setVerticalNavigationBadge(String id, String text, Color color) {
+    public AbstractPage setVerticalNavigationBadge(String id, String text, Color color) {
         return setVerticalNavigationBadge(id, new Label(text).setColor(color));
     }
 
-    public QxcmpAdminPage setVerticalNavigationBadge(String id, AbstractLabel label) {
+    public AbstractPage setVerticalNavigationBadge(String id, AbstractLabel label) {
 
         if (Objects.nonNull(verticalMenu)) {
             verticalMenu.getItems().forEach(menuItem -> {

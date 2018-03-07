@@ -3,7 +3,7 @@
 */-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
-<!--/*@thymesVar id="page" type="com.qxcmp.web.page.AbstractPage"*/-->
+<!--/*@thymesVar id="page" type="com.qxcmp.web.page.AbstractLegacyPage"*/-->
 <body th:fragment="body(page)">
 <th:block th:each="component : ${page.components}">
     <div th:replace="~{:: component(${component})}"></div>

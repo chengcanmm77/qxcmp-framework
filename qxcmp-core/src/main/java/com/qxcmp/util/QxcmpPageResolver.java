@@ -1,6 +1,9 @@
 package com.qxcmp.util;
 
-import com.qxcmp.web.page.*;
+import com.qxcmp.web.page.AbstractLegacyPage;
+import com.qxcmp.web.page.MobilePage;
+import com.qxcmp.web.page.NormalPage;
+import com.qxcmp.web.page.TabletPage;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
@@ -36,13 +39,13 @@ public class QxcmpPageResolver {
      *
      * @return 解析后的页面
      */
-    public AbstractPage resolve(HttpServletRequest request, HttpServletResponse response) {
+    public AbstractLegacyPage resolve(HttpServletRequest request, HttpServletResponse response) {
         return resolveByPath(request.getRequestURI(), request, response);
     }
 
-    public AbstractPage resolveByPath(String path, HttpServletRequest request, HttpServletResponse response) {
+    public AbstractLegacyPage resolveByPath(String path, HttpServletRequest request, HttpServletResponse response) {
         if (StringUtils.startsWith(path, QXCMP_ADMIN_URL)) {
-            return applicationContext.getBean(BackendPage.class, request, response);
+            return applicationContext.getBean(AbstractLegacyPage.class, request, response);
         } else if (StringUtils.startsWith(path, QXCMP_ACCOUNT_URL) || StringUtils.startsWith(path, QXCMP_LOGIN_URL) || StringUtils.startsWith(path, QXCMP_LOGOUT_URL)) {
             return applicationContext.getBean(NormalPage.class, request, response);
         } else {

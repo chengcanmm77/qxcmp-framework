@@ -19,7 +19,7 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @Scope(SCOPE_PROTOTYPE)
 @Component
 @RequiredArgsConstructor
-public class QxcmpOverviewPage extends GenericQxcmpPage {
+public class QxcmpOverviewPage extends AbstractQxcmpPage {
 
     private final Overview overview;
 

@@ -51,7 +51,7 @@ import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_SIDEB
 
 @org.springframework.stereotype.Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class BackendPage extends AbstractPage {
+public class BackendPage extends AbstractLegacyPage {
 
     private AbstractSidebar sidebar = new AccordionMenuSidebar().setAttachEventsSelector(".ui.bottom.fixed.menu .sidebar.item");
     private Col mainContent = new Col();
@@ -69,26 +69,26 @@ public class BackendPage extends AbstractPage {
     }
 
     @Override
-    public AbstractPage addComponent(Supplier<Component> supplier) {
+    public AbstractLegacyPage addComponent(Supplier<Component> supplier) {
         Component component = checkNotNull(supplier.get(), "Component is null");
         mainContent.addComponent(component);
         return this;
     }
 
     @Override
-    public AbstractPage addComponent(Component component) {
+    public AbstractLegacyPage addComponent(Component component) {
         mainContent.addComponent(component);
         return this;
     }
 
     @Override
-    public AbstractPage addComponents(Collection<? extends Component> components) {
+    public AbstractLegacyPage addComponents(Collection<? extends Component> components) {
         mainContent.addComponents(components);
         return this;
     }
 
     @Override
-    public AbstractPage setBreadcrumb(String... breadcrumb) {
+    public AbstractLegacyPage setBreadcrumb(String... breadcrumb) {
         checkArgument(breadcrumb.length % 2 == 1);
 
         Breadcrumb bc = new Breadcrumb();
@@ -114,7 +114,7 @@ public class BackendPage extends AbstractPage {
     }
 
     @Override
-    public AbstractPage setVerticalNavigation(String id, String activeId) {
+    public AbstractLegacyPage setVerticalNavigation(String id, String activeId) {
 
         VerticalMenu verticalMenu = new VerticalMenu().setFluid();
         verticalMenu.setTabular();
@@ -143,17 +143,17 @@ public class BackendPage extends AbstractPage {
     }
 
     @Override
-    public AbstractPage setVerticalNavigationBadge(String id, String text) {
+    public AbstractLegacyPage setVerticalNavigationBadge(String id, String text) {
         return setVerticalNavigationBadge(id, text, Color.NONE);
     }
 
     @Override
-    public AbstractPage setVerticalNavigationBadge(String id, String text, Color color) {
+    public AbstractLegacyPage setVerticalNavigationBadge(String id, String text, Color color) {
         return setVerticalNavigationBadge(id, new Label(text).setColor(color));
     }
 
     @Override
-    public AbstractPage setVerticalNavigationBadge(String id, AbstractLabel label) {
+    public AbstractLegacyPage setVerticalNavigationBadge(String id, AbstractLabel label) {
 
         if (Objects.nonNull(verticalMenu)) {
             verticalMenu.getItems().forEach(menuItem -> {

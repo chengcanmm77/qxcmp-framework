@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public abstract class AbstractPage {
+public abstract class AbstractLegacyPage {
 
     private static final String DEFAULT_PAGE_VIEW = "qxcmp";
     private static final String HTML_PAGE = "page";
@@ -40,32 +40,32 @@ public abstract class AbstractPage {
     @Getter
     private List<String> bodyJavaScripts = Lists.newArrayList();
 
-    public AbstractPage(HttpServletRequest request, HttpServletResponse response) {
+    public AbstractLegacyPage(HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
         this.response = response;
     }
 
-    public AbstractPage setTitle(String title) {
+    public AbstractLegacyPage setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public AbstractPage setViewName(String viewName) {
+    public AbstractLegacyPage setViewName(String viewName) {
         modelAndView.setViewName(viewName);
         return this;
     }
 
-    public AbstractPage addObject(Object object) {
+    public AbstractLegacyPage addObject(Object object) {
         modelAndView.addObject(object);
         return this;
     }
 
-    public AbstractPage addObject(String key, Object object) {
+    public AbstractLegacyPage addObject(String key, Object object) {
         modelAndView.addObject(key, object);
         return this;
     }
 
-    public AbstractPage addComponent(Supplier<Component> supplier) {
+    public AbstractLegacyPage addComponent(Supplier<Component> supplier) {
         Component component = supplier.get();
         if (Objects.nonNull(component)) {
             components.add(component);
@@ -73,26 +73,26 @@ public abstract class AbstractPage {
         return this;
     }
 
-    public AbstractPage addComponent(Component component) {
+    public AbstractLegacyPage addComponent(Component component) {
         components.add(component);
         return this;
     }
 
-    public AbstractPage addComponents(Collection<? extends Component> components) {
+    public AbstractLegacyPage addComponents(Collection<? extends Component> components) {
         this.components.addAll(components);
         return this;
     }
 
-    public AbstractPage addStylesheet(String stylesheet) {
+    public AbstractLegacyPage addStylesheet(String stylesheet) {
         stylesheets.add(stylesheet);
         return this;
     }
 
-    public AbstractPage addJavascript(String javaScript) {
+    public AbstractLegacyPage addJavascript(String javaScript) {
         return addJavascript(javaScript, false);
     }
 
-    public AbstractPage addJavascript(String javaScript, boolean addToBody) {
+    public AbstractLegacyPage addJavascript(String javaScript, boolean addToBody) {
         if (addToBody) {
             bodyJavaScripts.add(javaScript);
         } else {
@@ -112,7 +112,7 @@ public abstract class AbstractPage {
      *
      * @return 页面
      */
-    public AbstractPage setBreadcrumb(String... breadcrumb) {
+    public AbstractLegacyPage setBreadcrumb(String... breadcrumb) {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
@@ -126,7 +126,7 @@ public abstract class AbstractPage {
      *
      * @return 页面
      */
-    public AbstractPage setVerticalNavigation(String id, String activeId) {
+    public AbstractLegacyPage setVerticalNavigation(String id, String activeId) {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
@@ -138,7 +138,7 @@ public abstract class AbstractPage {
      *
      * @see #setVerticalNavigationBadge(String, AbstractLabel)
      */
-    public AbstractPage setVerticalNavigationBadge(String id, String text) {
+    public AbstractLegacyPage setVerticalNavigationBadge(String id, String text) {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
@@ -151,7 +151,7 @@ public abstract class AbstractPage {
      *
      * @see #setVerticalNavigationBadge(String, AbstractLabel)
      */
-    public AbstractPage setVerticalNavigationBadge(String id, String text, Color color) {
+    public AbstractLegacyPage setVerticalNavigationBadge(String id, String text, Color color) {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
@@ -165,7 +165,7 @@ public abstract class AbstractPage {
      *
      * @return 页面
      */
-    public AbstractPage setVerticalNavigationBadge(String id, AbstractLabel label) {
+    public AbstractLegacyPage setVerticalNavigationBadge(String id, AbstractLabel label) {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
@@ -178,7 +178,7 @@ public abstract class AbstractPage {
      *
      * @return 页面
      */
-    public AbstractPage setMobileTopMenuTitle(String title) {
+    public AbstractLegacyPage setMobileTopMenuTitle(String title) {
         return this;
     }
 
@@ -192,7 +192,7 @@ public abstract class AbstractPage {
      *
      * @return 页面
      */
-    public AbstractPage setMobileTopMenuTitle(String title, String url) {
+    public AbstractLegacyPage setMobileTopMenuTitle(String title, String url) {
         return this;
     }
 
@@ -207,7 +207,7 @@ public abstract class AbstractPage {
      *
      * @see MobilePage
      */
-    public AbstractPage setMobileBottomMenuActiveItem(String id) {
+    public AbstractLegacyPage setMobileBottomMenuActiveItem(String id) {
         return this;
     }
 
@@ -218,7 +218,7 @@ public abstract class AbstractPage {
      *
      * @return 页面
      */
-    public AbstractPage hideMobileBottomMenu() {
+    public AbstractLegacyPage hideMobileBottomMenu() {
         return this;
     }
 
@@ -231,7 +231,7 @@ public abstract class AbstractPage {
      *
      * @return 页面
      */
-    public AbstractPage setProfileHeader(ProfileHeader profileHeader) {
+    public AbstractLegacyPage setProfileHeader(ProfileHeader profileHeader) {
         return this;
     }
 

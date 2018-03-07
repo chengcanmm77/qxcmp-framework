@@ -6,7 +6,7 @@ import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.PageHeader;
 import com.qxcmp.web.view.elements.image.Image;
-import com.qxcmp.web.view.page.GenericQxcmpPage;
+import com.qxcmp.web.view.page.AbstractQxcmpPage;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.support.Wide;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Aaric
  */
-public abstract class BaseAccountPage extends GenericQxcmpPage {
+public abstract class BaseAccountPage extends AbstractQxcmpPage {
 
     /**
      * 通用页面头部组件

@@ -6,7 +6,7 @@ import com.qxcmp.web.view.elements.container.TextContainer;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.PageHeader;
 import com.qxcmp.web.view.modules.table.AbstractTable;
-import com.qxcmp.web.view.page.QxcmpAdminPage;
+import com.qxcmp.web.view.page.AbstractQxcmpAdminPage;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,7 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @Scope(SCOPE_PROTOTYPE)
 @Component
 @RequiredArgsConstructor
-public class AdminAboutPage extends QxcmpAdminPage {
+public class AdminAboutPage extends AbstractQxcmpAdminPage {
 
     @Override
     public void render() {

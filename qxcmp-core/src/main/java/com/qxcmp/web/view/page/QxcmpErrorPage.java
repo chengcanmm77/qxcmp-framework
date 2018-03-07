@@ -24,7 +24,7 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @Scope(SCOPE_PROTOTYPE)
 @Component
 @RequiredArgsConstructor
-public class QxcmpErrorPage extends GenericQxcmpPage {
+public class QxcmpErrorPage extends AbstractQxcmpPage {
 
     private final Map<String, Object> errors;
 

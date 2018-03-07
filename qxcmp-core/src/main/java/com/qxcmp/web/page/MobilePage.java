@@ -53,51 +53,51 @@ public class MobilePage extends BaseFrontendPage {
     }
 
     @Override
-    public AbstractPage addComponent(Supplier<Component> supplier) {
+    public AbstractLegacyPage addComponent(Supplier<Component> supplier) {
         Component component = checkNotNull(supplier.get(), "Component is null");
         sidebar.addContent(component);
         return this;
     }
 
     @Override
-    public AbstractPage addComponent(Component component) {
+    public AbstractLegacyPage addComponent(Component component) {
         sidebar.addContent(component);
         return this;
     }
 
     @Override
-    public AbstractPage addComponents(Collection<? extends Component> components) {
+    public AbstractLegacyPage addComponents(Collection<? extends Component> components) {
         sidebar.addContents(components);
         return this;
     }
 
     @Override
-    public AbstractPage setMobileBottomMenuActiveItem(String id) {
+    public AbstractLegacyPage setMobileBottomMenuActiveItem(String id) {
         this.activeBottomItem = id;
         return this;
     }
 
     @Override
-    public AbstractPage setMobileTopMenuTitle(String title) {
+    public AbstractLegacyPage setMobileTopMenuTitle(String title) {
         this.topMenuTitle = title;
         return this;
     }
 
     @Override
-    public AbstractPage setMobileTopMenuTitle(String title, String url) {
+    public AbstractLegacyPage setMobileTopMenuTitle(String title, String url) {
         this.topMenuTitle = title;
         this.topMenuTitleUrl = url;
         return this;
     }
 
     @Override
-    public AbstractPage hideMobileBottomMenu() {
+    public AbstractLegacyPage hideMobileBottomMenu() {
         hideBottomMenu = true;
         return this;
     }
 
     @Override
-    public AbstractPage setProfileHeader(ProfileHeader profileHeader) {
+    public AbstractLegacyPage setProfileHeader(ProfileHeader profileHeader) {
         this.profileHeader = profileHeader;
         return this;
     }
