@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PlatformNavigationLoader implements QxcmpInitializer {
+public class QxcmpNavigationLoader implements QxcmpInitializer {
 
     private final ApplicationContext applicationContext;
     private final NavigationService navigationService;

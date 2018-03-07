@@ -40,12 +40,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PlatformSystemConfigLoader implements QxcmpInitializer {
+public class QxcmpSystemConfigLoader implements QxcmpInitializer {
 
     private static final String DEFAULT_VALUE_SUFFIX = "_DEFAULT";
     private final ApplicationContext applicationContext;
     private final SystemConfigService systemConfigService;
-    private final AtomicInteger counter = new AtomicInteger();
+
+    private AtomicInteger counter = new AtomicInteger();
 
     @Override
     public void init() {
@@ -61,7 +62,7 @@ public class PlatformSystemConfigLoader implements QxcmpInitializer {
         Arrays.stream(bean.getClass().getFields())
                 .filter(field -> !StringUtils.contains(field.getName(), "$"))
                 .filter(field -> !StringUtils.endsWith(field.getName(), DEFAULT_VALUE_SUFFIX))
-                .filter(field -> Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()))
+                .filter(field -> Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && !Modifier.isFinal(field.getModifiers()))
                 .forEach(field -> {
                     try {
                         field.setAccessible(true);

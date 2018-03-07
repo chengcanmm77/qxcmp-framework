@@ -1,6 +1,6 @@
 package com.qxcmp.core;
 
-import com.qxcmp.security.PrivilegeAutowired;
+import com.qxcmp.security.SecurityLoader;
 import org.springframework.context.annotation.Configuration;
 
 
@@ -10,8 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Aaric
  */
 @Configuration
-@PrivilegeAutowired
-public class QxcmpSecurityConfiguration {
+public class QxcmpSecurityConfiguration implements SecurityLoader {
 
     /*
      * 平台内置角色
