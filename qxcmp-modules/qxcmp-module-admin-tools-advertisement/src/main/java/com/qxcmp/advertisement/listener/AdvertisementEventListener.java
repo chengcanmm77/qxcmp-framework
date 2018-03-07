@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.qxcmp.core.QxcmpSecurityConfiguration.PRIVILEGE_ADMIN_ADVERTISEMENT;
+import static com.qxcmp.advertisement.AdvertisementModule.PRIVILEGE_ADMIN_ADVERTISEMENT;
 
 /**
  * @author Aaric
