@@ -3,9 +3,9 @@ package com.qxcmp.advertisement.controller;
 import com.google.common.collect.ImmutableList;
 import com.qxcmp.advertisement.Advertisement;
 import com.qxcmp.advertisement.AdvertisementService;
+import com.qxcmp.advertisement.event.AdvertisementEditEvent;
+import com.qxcmp.advertisement.event.AdvertisementNewEvent;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.core.event.AdminAdvertisementEditEvent;
-import com.qxcmp.core.event.AdminAdvertisementNewEvent;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.form.AdminAdvertisementEditForm;
@@ -73,7 +73,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                applicationContext.publishEvent(new AdminAdvertisementNewEvent(user, advertisementService.create(() -> {
+                applicationContext.publishEvent(new AdvertisementNewEvent(user, advertisementService.create(() -> {
                     Advertisement next = advertisementService.next();
                     next.setImage(form.getImage());
                     next.setType(form.getType());
@@ -120,7 +120,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
 
         return submitForm(form, context -> {
             try {
-                applicationContext.publishEvent(new AdminAdvertisementEditEvent(user, advertisementService.update(Long.parseLong(id), advertisement -> {
+                applicationContext.publishEvent(new AdvertisementEditEvent(user, advertisementService.update(Long.parseLong(id), advertisement -> {
                     advertisement.setImage(form.getImage());
                     advertisement.setType(form.getType());
                     advertisement.setTitle(form.getTitle());

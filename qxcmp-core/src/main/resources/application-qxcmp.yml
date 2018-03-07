@@ -17,6 +17,8 @@ spring:
       strategy:
         content:
           enabled: true
+    cache:
+      period: 365d
   messages:
     basename: i18n/qxcmp, i18n/ValidationMessages
   data:

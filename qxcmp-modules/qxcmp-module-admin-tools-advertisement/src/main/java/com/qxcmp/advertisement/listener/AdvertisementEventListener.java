@@ -1,9 +1,9 @@
-package com.qxcmp.core.listener;
+package com.qxcmp.advertisement.listener;
 
 import com.qxcmp.advertisement.Advertisement;
+import com.qxcmp.advertisement.event.AdvertisementEditEvent;
+import com.qxcmp.advertisement.event.AdvertisementNewEvent;
 import com.qxcmp.config.SiteService;
-import com.qxcmp.core.event.AdminAdvertisementEditEvent;
-import com.qxcmp.core.event.AdminAdvertisementNewEvent;
 import com.qxcmp.message.MessageService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
@@ -22,14 +22,14 @@ import static com.qxcmp.core.QxcmpSecurityConfiguration.PRIVILEGE_ADMIN_ADVERTIS
  */
 @Component
 @RequiredArgsConstructor
-public class AdminAdvertisementEventListener {
+public class AdvertisementEventListener {
 
     private final MessageService messageService;
     private final UserService userService;
     private final SiteService siteService;
 
     @EventListener
-    public void onNewEvent(AdminAdvertisementNewEvent event) {
+    public void onNewEvent(AdvertisementNewEvent event) {
         Advertisement advertisement = event.getAdvertisement();
         List<User> feedUsers = userService.findByAuthority(PRIVILEGE_ADMIN_ADVERTISEMENT);
         feedUsers.add(event.getUser());
@@ -41,7 +41,7 @@ public class AdminAdvertisementEventListener {
     }
 
     @EventListener
-    public void onEditEvent(AdminAdvertisementEditEvent event) {
+    public void onEditEvent(AdvertisementEditEvent event) {
         Advertisement advertisement = event.getAdvertisement();
         List<User> feedUsers = userService.findByAuthority(PRIVILEGE_ADMIN_ADVERTISEMENT);
         feedUsers.add(event.getUser());

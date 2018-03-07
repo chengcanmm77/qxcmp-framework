@@ -1,5 +1,6 @@
-package com.qxcmp.core.extension;
+package com.qxcmp.advertisement.extension;
 
+import com.qxcmp.core.extension.AdminToolPageExtension;
 import org.springframework.stereotype.Component;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
@@ -8,7 +9,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
  * @author Aaric
  */
 @Component
-public class AdminAdvertisementToolPageExtension implements AdminToolPageExtension {
+public class AdvertisementAdminToolPageExtension implements AdminToolPageExtension {
     @Override
     public String getIcon() {
         return "";
