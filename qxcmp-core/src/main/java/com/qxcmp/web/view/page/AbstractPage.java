@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +31,9 @@ import java.util.function.Supplier;
  * @author Aaric
  */
 public abstract class AbstractPage implements QxcmpPage {
+
+    protected HttpServletRequest request;
+    protected HttpServletResponse response;
 
     protected ApplicationContext applicationContext;
     protected UserService userService;
@@ -117,6 +122,16 @@ public abstract class AbstractPage implements QxcmpPage {
     @Override
     public void renderToMobile() {
         render();
+    }
+
+    @Autowired
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    @Autowired
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
     }
 
     @Autowired

@@ -5,7 +5,6 @@ import com.qxcmp.message.SiteNotification;
 import com.qxcmp.message.SiteNotificationService;
 import com.qxcmp.user.User;
 import com.qxcmp.web.view.Component;
-import com.qxcmp.web.view.elements.breadcrumb.AbstractBreadcrumb;
 import com.qxcmp.web.view.elements.breadcrumb.Breadcrumb;
 import com.qxcmp.web.view.elements.breadcrumb.BreadcrumbItem;
 import com.qxcmp.web.view.elements.container.Container;
@@ -35,14 +34,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_PROFILE;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_SIDEBAR;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
@@ -58,7 +53,6 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
 
     private AbstractSidebar sidebar = new AccordionMenuSidebar().setAttachEventsSelector(".ui.bottom.fixed.menu .sidebar.item");
-    private AbstractBreadcrumb breadcrumb;
     private VerticalMenu verticalMenu;
     private Col content = new Col(Wide.SIXTEEN);
 
@@ -86,32 +80,24 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         return this;
     }
 
-    public AbstractPage setBreadcrumb(String... breadcrumb) {
-        checkArgument(breadcrumb.length % 2 == 1);
-
-        Breadcrumb bc = new Breadcrumb();
-
-        for (int i = 0; i < breadcrumb.length; i += 2) {
-
-            String text = breadcrumb[i];
-
-            if (i + 1 == breadcrumb.length) {
-                bc.addItem(new BreadcrumbItem(text));
-            } else {
-                String url = breadcrumb[i + 1];
-                if (Objects.nonNull(url)) {
-                    bc.addItem(new BreadcrumbItem(text, QXCMP_ADMIN_URL + "/" + url));
-                } else {
-                    bc.addItem(new BreadcrumbItem(text));
-                }
-            }
-        }
-
-        this.breadcrumb = bc;
-        return this;
+    /**
+     * 设置后台页面面包屑导航
+     *
+     * @return 如果返回空则不生成面包屑导航
+     */
+    protected List<String> getBreadcrumb() {
+        return Collections.emptyList();
     }
 
-    public AbstractPage setVerticalNavigation(String id, String activeId) {
+    /**
+     * 设置页面菜单
+     *
+     * @param id       导航ID
+     * @param activeId 当前激活的导航ID
+     *
+     * @return 后台页面
+     */
+    public AbstractQxcmpAdminPage setVerticalMenu(String id, String activeId) {
 
         VerticalMenu verticalMenu = new VerticalMenu().setFluid();
         verticalMenu.setTabular();
@@ -139,15 +125,23 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         return this;
     }
 
-    public AbstractPage setVerticalNavigationBadge(String id, String text) {
-        return setVerticalNavigationBadge(id, text, Color.NONE);
+    public AbstractQxcmpAdminPage setVerticalMenuBadge(String id, String text) {
+        return setVerticalMenuBadge(id, text, Color.NONE);
     }
 
-    public AbstractPage setVerticalNavigationBadge(String id, String text, Color color) {
-        return setVerticalNavigationBadge(id, new Label(text).setColor(color));
+    public AbstractQxcmpAdminPage setVerticalMenuBadge(String id, String text, Color color) {
+        return setVerticalMenuBadge(id, new Label(text).setColor(color));
     }
 
-    public AbstractPage setVerticalNavigationBadge(String id, AbstractLabel label) {
+    /**
+     * 设置页面菜单项徽章
+     *
+     * @param id    导航ID
+     * @param label 徽章
+     *
+     * @return 后台页面
+     */
+    public AbstractQxcmpAdminPage setVerticalMenuBadge(String id, AbstractLabel label) {
 
         if (Objects.nonNull(verticalMenu)) {
             verticalMenu.getItems().forEach(menuItem -> {
@@ -241,9 +235,7 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
             container.addComponent(message);
         }
 
-        if (Objects.nonNull(breadcrumb)) {
-            grid.addItem(new Row().addCol(new Col(Wide.SIXTEEN).addComponent(breadcrumb)));
-        }
+        buildPageBreadcrumb(grid);
 
         if (Objects.nonNull(verticalMenu)) {
             contentRow.addCol(new Col().setComputerWide(Wide.THREE).setMobileWide(Wide.SIXTEEN).addComponent(verticalMenu));
@@ -255,6 +247,27 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         grid.addItem(contentRow);
         container.addComponent(grid);
         sidebar.addContent(container);
+    }
+
+    private void buildPageBreadcrumb(AbstractGrid grid) {
+        List<String> contents = getBreadcrumb();
+        if (Objects.nonNull(contents) && !contents.isEmpty()) {
+            Breadcrumb breadcrumb = new Breadcrumb();
+            for (int i = 0; i < contents.size(); i += 2) {
+                String text = contents.get(i);
+                if (i + 1 == contents.size()) {
+                    breadcrumb.addItem(new BreadcrumbItem(text));
+                } else {
+                    String url = contents.get(i + 1);
+                    if (Objects.nonNull(url)) {
+                        breadcrumb.addItem(new BreadcrumbItem(text, ADMIN_URL + "/" + url));
+                    } else {
+                        breadcrumb.addItem(new BreadcrumbItem(text));
+                    }
+                }
+            }
+            grid.addItem(new Row().addCol(new Col(Wide.SIXTEEN).addComponent(breadcrumb)));
+        }
     }
 
     private AbstractMessage buildSiteNotification() {

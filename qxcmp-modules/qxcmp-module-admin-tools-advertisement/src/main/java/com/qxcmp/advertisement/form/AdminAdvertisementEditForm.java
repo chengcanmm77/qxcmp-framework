@@ -1,4 +1,4 @@
-package com.qxcmp.web.form;
+package com.qxcmp.advertisement.form;
 
 import com.qxcmp.web.view.annotation.form.*;
 import lombok.Data;

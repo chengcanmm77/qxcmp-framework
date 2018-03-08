@@ -1,5 +1,6 @@
-package com.qxcmp.core.extension;
+package com.qxcmp.spider.extension;
 
+import com.qxcmp.core.extension.AdminToolPageExtension;
 import org.springframework.stereotype.Component;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;

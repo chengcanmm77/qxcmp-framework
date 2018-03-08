@@ -1,5 +1,6 @@
 package com.qxcmp.admin.page;
 
+import com.google.common.collect.ImmutableList;
 import com.jcabi.manifests.Manifests;
 import com.qxcmp.core.QxcmpConfiguration;
 import com.qxcmp.web.view.elements.container.TextContainer;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
@@ -31,8 +33,12 @@ public class AdminAboutPage extends AbstractQxcmpAdminPage {
 
     @Override
     public void render() {
-        setBreadcrumb("控制台", "", "关于");
         addComponent(new TextContainer().addComponent(new Overview(new PageHeader(HeaderType.H1, QXCMP)).addComponent(getTableView()).addLink("返回", QXCMP_ADMIN_URL)));
+    }
+
+    @Override
+    protected List<String> getBreadcrumb() {
+        return ImmutableList.of("控制台", "", "关于");
     }
 
     private AbstractTable getTableView() {
@@ -57,5 +63,4 @@ public class AdminAboutPage extends AbstractQxcmpAdminPage {
             stringObjectMap.put("软件版本", System.getProperty("java.version"));
         });
     }
-
 }

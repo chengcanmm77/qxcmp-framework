@@ -1,17 +1,21 @@
 package com.qxcmp.web.view.support.utils;
 
+import com.qxcmp.core.entity.EntityService;
 import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.message.ErrorMessage;
 import com.qxcmp.web.view.modules.form.AbstractForm;
 import com.qxcmp.web.view.modules.pagination.Pagination;
 import com.qxcmp.web.view.modules.table.AbstractTable;
+import com.qxcmp.web.view.modules.table.EntityTable;
 import com.qxcmp.web.view.support.Color;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -29,30 +33,50 @@ public class ViewHelper {
     private final TableHelper tableHelper;
     private final OverviewHelper overviewHelper;
 
-    /**
-     * 创建一个表单组件
-     *
-     * @param form          表单对象
-     * @param bindingResult 错误信息
-     *
-     * @return 表单组件
-     */
     public AbstractForm nextForm(Object form, BindingResult bindingResult) {
         AbstractForm abstractForm = formHelper.convert(form);
-
         if (Objects.nonNull(bindingResult)) {
             abstractForm.setErrorMessage(formHelper.convertToErrorMessage(bindingResult, form));
         }
-
         return abstractForm;
     }
 
     public AbstractForm nextForm(Object form) {
-        return formHelper.convert(form);
+        return nextForm(form, null);
     }
 
     public AbstractTable nextTable(Consumer<Map<Object, Object>> consumer) {
         return tableHelper.convert(consumer);
+    }
+
+    public AbstractTable nextTable(Map<Object, Object> objectObjectMap) {
+        return tableHelper.convert(objectObjectMap);
+    }
+
+    public EntityTable nextEntityTable(Pageable pageable, EntityService entityService, HttpServletRequest request) {
+        return nextEntityTable("", pageable, entityService, request);
+    }
+
+    public EntityTable nextEntityTable(String tableName, Pageable pageable, EntityService entityService, HttpServletRequest request) {
+        return nextEntityTable(tableName, "", pageable, entityService, request);
+    }
+
+    @SuppressWarnings("unchecked")
+    public EntityTable nextEntityTable(String tableName, String action, Pageable pageable, EntityService entityService, HttpServletRequest request) {
+        Page page = entityService.findAll(pageable);
+        return nextEntityTable(tableName, action, entityService.type(), page, request);
+    }
+
+    public <T> EntityTable nextEntityTable(Class<T> tClass, Page<T> tPage, HttpServletRequest request) {
+        return nextEntityTable("", tClass, tPage, request);
+    }
+
+    public <T> EntityTable nextEntityTable(String tableName, Class<T> tClass, Page<T> tPage, HttpServletRequest request) {
+        return nextEntityTable(tableName, "", tClass, tPage, request);
+    }
+
+    public <T> EntityTable nextEntityTable(String tableName, String action, Class<T> tClass, Page<T> tPage, HttpServletRequest request) {
+        return tableHelper.convert(tableName, action, tClass, tPage, request);
     }
 
     public ErrorMessage nextFormErrorMessage(BindingResult bindingResult, Object form) {
