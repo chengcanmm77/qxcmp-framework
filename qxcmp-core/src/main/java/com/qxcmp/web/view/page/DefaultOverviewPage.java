@@ -5,23 +5,23 @@ import com.qxcmp.web.view.elements.grid.Row;
 import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
 import com.qxcmp.web.view.support.Wide;
 import com.qxcmp.web.view.views.Overview;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
- * 平台概览页面
+ * 平台默认概览页面
  *
  * @author Aaric
  */
 @Scope(SCOPE_PROTOTYPE)
 @Component
-@RequiredArgsConstructor
-public class QxcmpOverviewPage extends AbstractQxcmpPage {
+public class DefaultOverviewPage extends AbstractOverviewPage {
 
-    private final Overview overview;
+    public DefaultOverviewPage(Overview overview) {
+        super(overview);
+    }
 
     @Override
     public void render() {

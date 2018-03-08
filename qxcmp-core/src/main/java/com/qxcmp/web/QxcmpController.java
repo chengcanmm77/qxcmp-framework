@@ -31,6 +31,7 @@ import com.qxcmp.web.view.elements.message.ErrorMessage;
 import com.qxcmp.web.view.modules.form.AbstractForm;
 import com.qxcmp.web.view.modules.table.EntityTable;
 import com.qxcmp.web.view.modules.table.Table;
+import com.qxcmp.web.view.page.PageRevolveService;
 import com.qxcmp.web.view.page.QxcmpPage;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.support.Color;
@@ -85,6 +86,7 @@ public abstract class QxcmpController {
     protected MessageService messageService;
     protected ViewHelper viewHelper;
     protected QxcmpPageResolver pageResolver;
+    protected PageRevolveService pageRevolveService;
 
     private TableHelper tableHelper;
     private CaptchaService captchaService;
@@ -102,11 +104,8 @@ public abstract class QxcmpController {
      * @return 渲染后的页面
      */
     protected <T extends QxcmpPage> ModelAndView page(Class<T> tClass, Object... models) {
-
         T t = applicationContext.getBean(tClass, models);
-
         Device device = deviceResolver.resolveDevice(request);
-
         if (device.isMobile()) {
             t.renderToMobile();
         } else if (device.isTablet()) {
@@ -116,8 +115,54 @@ public abstract class QxcmpController {
         } else {
             t.render();
         }
-
         return t.build();
+    }
+
+    /**
+     * 执行一个操作并审计
+     *
+     * @param title   操作名称
+     * @param action  要执行的操作
+     * @param context 执行上下文
+     *
+     * @return 操作结果页面
+     */
+    protected ModelAndView execute(String title, Action action, BiConsumer<Map<String, Object>, Overview> context) {
+        Overview overview = getExecuteOverview(title, action, context);
+        return page(pageRevolveService.getOverviewPage(), overview);
+    }
+
+    /**
+     * 执行一个操作并返回操作结果概览组件
+     *
+     * @param title   操作名称
+     * @param action  要执行的操作
+     * @param context 执行上下文
+     *
+     * @return 操作结果概览组件
+     */
+    protected Overview getExecuteOverview(String title, Action action, BiConsumer<Map<String, Object>, Overview> context) {
+        String url = request.getRequestURL().toString();
+        AuditLog auditLog = actionExecutor.execute(title, url, getRequestContent(request), currentUser().orElse(null), action);
+        Overview overview;
+        switch (auditLog.getStatus()) {
+            case SUCCESS:
+                overview = viewHelper.nextSuccessOverview(title, "操作成功");
+                break;
+            case FAILURE:
+                overview = viewHelper.nextWarningOverview(title, "操作失败").addComponent(new P(auditLog.getComments()));
+                break;
+            default:
+                overview = viewHelper.nextWarningOverview(title, "系统错误");
+                break;
+        }
+
+        context.accept(auditLog.getActionContext(), overview);
+
+        if (overview.getLinks().isEmpty()) {
+            overview.addLink("返回", url);
+        }
+        return overview;
     }
 
 
@@ -454,5 +499,10 @@ public abstract class QxcmpController {
     @Autowired
     public void setDeviceResolver(DeviceResolver deviceResolver) {
         this.deviceResolver = deviceResolver;
+    }
+
+    @Autowired
+    public void setPageRevolveService(PageRevolveService pageRevolveService) {
+        this.pageRevolveService = pageRevolveService;
     }
 }

@@ -6,7 +6,6 @@ import com.qxcmp.web.view.elements.grid.Row;
 import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
 import com.qxcmp.web.view.elements.html.P;
 import com.qxcmp.web.view.support.Wide;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -17,16 +16,17 @@ import java.util.Map;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
- * 平台错误页面
+ * 平台默认错误页面
  *
  * @author Aaric
  */
 @Scope(SCOPE_PROTOTYPE)
 @Component
-@RequiredArgsConstructor
-public class QxcmpErrorPage extends AbstractQxcmpPage {
+public class DefaultErrorPage extends AbstractErrorPage {
 
-    private final Map<String, Object> errors;
+    public DefaultErrorPage(Map<String, Object> errors) {
+        super(errors);
+    }
 
     @Override
     public void render() {

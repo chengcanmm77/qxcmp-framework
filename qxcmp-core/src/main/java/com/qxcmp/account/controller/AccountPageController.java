@@ -4,7 +4,6 @@ import com.qxcmp.account.*;
 import com.qxcmp.account.form.*;
 import com.qxcmp.account.page.*;
 import com.qxcmp.web.QxcmpController;
-import com.qxcmp.web.view.page.QxcmpOverviewPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -112,20 +111,20 @@ public class AccountPageController extends QxcmpController {
     @GetMapping("/reset/{id}")
     public ModelAndView reset(@PathVariable String id, final AccountResetForm form) {
         return codeService.isInvalidCode(id) ?
-                page(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("无效的重置链接", "请确认重置链接是否正确").addLink("重新找回密码", "/account/reset").addLink("返回登录", "/login")) :
+                page(pageRevolveService.getOverviewPage(), viewHelper.nextWarningOverview("无效的重置链接", "请确认重置链接是否正确").addLink("重新找回密码", "/account/reset").addLink("返回登录", "/login")) :
                 page(ResetPage.class, form, null);
     }
 
     @PostMapping("/reset/{id}")
     public ModelAndView reset(@PathVariable String id, @Valid final AccountResetForm form, BindingResult bindingResult) {
         if (codeService.isInvalidCode(id)) {
-            return page(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("无效的重置链接", "请确认重置链接是否正确").addLink("重新找回密码", "/account/reset").addLink("返回登录", "/login"));
+            return page(pageRevolveService.getOverviewPage(), viewHelper.nextWarningOverview("无效的重置链接", "请确认重置链接是否正确").addLink("重新找回密码", "/account/reset").addLink("返回登录", "/login"));
         }
         accountService.reset(id, form, bindingResult);
         if (bindingResult.hasErrors()) {
             return page(ResetPage.class, form, bindingResult);
         }
-        return page(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("密码重置成功", "请使用新的密码登录").addLink("现在去登录", "/login"));
+        return page(pageRevolveService.getOverviewPage(), viewHelper.nextSuccessOverview("密码重置成功", "请使用新的密码登录").addLink("现在去登录", "/login"));
     }
 
     @GetMapping("/reset/username")
@@ -155,9 +154,9 @@ public class AccountPageController extends QxcmpController {
         return systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).filter(aBoolean -> aBoolean).map(aBoolean -> {
             AccountCode accountCode = accountService.validateSecurityQuestion(form);
             if (Objects.isNull(accountCode)) {
-                return page(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("密保问题回答不正确").addLink("返回", "/account/reset"));
+                return page(pageRevolveService.getOverviewPage(), viewHelper.nextWarningOverview("密保问题回答不正确").addLink("返回", "/account/reset"));
             }
-            return page(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("密保问题验证成功").addLink("重置密码", "/account/reset/" + accountCode.getId()));
+            return page(pageRevolveService.getOverviewPage(), viewHelper.nextSuccessOverview("密保问题验证成功").addLink("重置密码", "/account/reset/" + accountCode.getId()));
         }).orElse(page(ResetClosePage.class));
     }
 
@@ -174,7 +173,7 @@ public class AccountPageController extends QxcmpController {
             if (bindingResult.hasErrors()) {
                 return page(ResetPage.class, form, bindingResult);
             }
-            return page(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("密码重置邮件发送成功", "请前往您的邮箱点击重置链接重置密码").addLink("返回登录", "/login"));
+            return page(pageRevolveService.getOverviewPage(), viewHelper.nextSuccessOverview("密码重置邮件发送成功", "请前往您的邮箱点击重置链接重置密码").addLink("返回登录", "/login"));
         }).orElse(page(ResetClosePage.class));
     }
 
@@ -191,7 +190,7 @@ public class AccountPageController extends QxcmpController {
             if (bindingResult.hasErrors()) {
                 return page(ResetPage.class, form, bindingResult);
             }
-            return page(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("短信验证成功").addLink("重置密码", "/account/reset/" + accountCode.getId()));
+            return page(pageRevolveService.getOverviewPage(), viewHelper.nextSuccessOverview("短信验证成功").addLink("重置密码", "/account/reset/" + accountCode.getId()));
         }).orElse(page(ResetClosePage.class));
     }
 
@@ -207,16 +206,16 @@ public class AccountPageController extends QxcmpController {
         if (bindingResult.hasErrors()) {
             return page(ActivatePage.class, form, bindingResult);
         }
-        return page(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("激活邮件发送成功", "请前往您的邮箱点击激活链接以激活您的账户").addLink("返回登录", "/login"));
+        return page(pageRevolveService.getOverviewPage(), viewHelper.nextSuccessOverview("激活邮件发送成功", "请前往您的邮箱点击激活链接以激活您的账户").addLink("返回登录", "/login"));
     }
 
     @GetMapping("/activate/{id}")
     public ModelAndView activate(@PathVariable String id) {
         try {
             accountService.activate(id);
-            return page(QxcmpOverviewPage.class, viewHelper.nextSuccessOverview("账户激活成功", "现在可以登录您的账户了").addLink("立即登录", "/login"));
+            return page(pageRevolveService.getOverviewPage(), viewHelper.nextSuccessOverview("账户激活成功", "现在可以登录您的账户了").addLink("立即登录", "/login"));
         } catch (Exception e) {
-            return page(QxcmpOverviewPage.class, viewHelper.nextWarningOverview("无效的激活链接", "请确认激活链接是否正确").addLink("重新激活账户", "/account/activate").addLink("返回登录", "/login"));
+            return page(pageRevolveService.getOverviewPage(), viewHelper.nextWarningOverview("无效的激活链接", "请确认激活链接是否正确").addLink("重新激活账户", "/account/activate").addLink("返回登录", "/login"));
         }
     }
 }
