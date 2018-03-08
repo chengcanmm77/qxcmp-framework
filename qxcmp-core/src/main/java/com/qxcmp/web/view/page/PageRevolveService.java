@@ -1,12 +1,5 @@
 package com.qxcmp.web.view.page;
 
-import com.qxcmp.core.init.QxcmpInitializer;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 /**
  * 平台页面解析服务
  * <p>
@@ -14,29 +7,20 @@ import org.springframework.stereotype.Component;
  *
  * @author Aaric
  */
-@Slf4j
-@Component
-@RequiredArgsConstructor
-public class PageRevolveService implements QxcmpInitializer {
+public interface PageRevolveService {
 
-    private final ApplicationContext applicationContext;
+    /**
+     * 解析平台错误页面
+     *
+     * @return 错误页面类型
+     */
+    Class<? extends AbstractErrorPage> getErrorPage();
 
-    @Getter
-    private Class<? extends AbstractErrorPage> errorPage = DefaultErrorPage.class;
+    /**
+     * 解析平台概览页面
+     *
+     * @return 概览页面类型
+     */
+    Class<? extends AbstractOverviewPage> getOverviewPage();
 
-    @Getter
-    private Class<? extends AbstractOverviewPage> overviewPage = DefaultOverviewPage.class;
-
-    @Override
-    public void init() {
-        applicationContext.getBeansOfType(AbstractErrorPage.class).values().stream()
-                .filter(abstractErrorPage -> !DefaultErrorPage.class.equals(abstractErrorPage.getClass()))
-                .findAny().ifPresent(abstractErrorPage -> errorPage = abstractErrorPage.getClass());
-        applicationContext.getBeansOfType(AbstractErrorPage.class).values().stream()
-                .filter(abstractErrorPage -> !DefaultErrorPage.class.equals(abstractErrorPage.getClass()))
-                .findAny().ifPresent(abstractErrorPage -> errorPage = abstractErrorPage.getClass());
-
-        log.info("Resolve error page: {}", errorPage.getSimpleName());
-        log.info("Resolve overview page: {}", overviewPage.getSimpleName());
-    }
 }

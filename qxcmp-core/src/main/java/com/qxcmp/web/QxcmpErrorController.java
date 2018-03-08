@@ -28,7 +28,7 @@ public class QxcmpErrorController extends QxcmpController implements ErrorContro
     @RequestMapping("")
     public ModelAndView handleError(HttpServletRequest request) {
         Map<String, Object> errors = errorAttributes.getErrorAttributes(new ServletWebRequest(request), true);
-        return page(pageRevolveService.getErrorPage(), errors);
+        return errorPage(errors);
     }
 
     @Override

@@ -119,6 +119,28 @@ public abstract class QxcmpController {
     }
 
     /**
+     * 获取错误页面
+     *
+     * @param errors 错误信息
+     *
+     * @return 错误页面
+     */
+    protected ModelAndView errorPage(Map<String, Object> errors) {
+        return page(pageRevolveService.getErrorPage(), errors);
+    }
+
+    /**
+     * 获取一个概览页面
+     *
+     * @param overview 概览页面
+     *
+     * @return 概览页面
+     */
+    protected ModelAndView overviewPage(Overview overview) {
+        return page(pageRevolveService.getOverviewPage(), overview);
+    }
+
+    /**
      * 执行一个操作并审计
      *
      * @param title   操作名称
@@ -128,8 +150,7 @@ public abstract class QxcmpController {
      * @return 操作结果页面
      */
     protected ModelAndView execute(String title, Action action, BiConsumer<Map<String, Object>, Overview> context) {
-        Overview overview = getExecuteOverview(title, action, context);
-        return page(pageRevolveService.getOverviewPage(), overview);
+        return overviewPage(getExecuteOverview(title, action, context));
     }
 
     /**

@@ -3,7 +3,6 @@ package com.qxcmp.admin.controller;
 import com.qxcmp.admin.page.AdminHomePage;
 import com.qxcmp.message.FeedService;
 import com.qxcmp.user.User;
-import com.qxcmp.web.QxcmpController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +19,7 @@ import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
 @Controller
 @RequestMapping(ADMIN_URL)
 @RequiredArgsConstructor
-public class AdminPageController extends QxcmpController {
+public class AdminPageController extends QxcmpAdminController {
 
     private final FeedService feedService;
 

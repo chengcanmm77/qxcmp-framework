@@ -3,7 +3,6 @@ package com.qxcmp.advertisement.controller;
 import com.google.common.collect.ImmutableList;
 import com.qxcmp.admin.controller.QxcmpAdminController;
 import com.qxcmp.admin.page.GenericAdminFormPage;
-import com.qxcmp.advertisement.Advertisement;
 import com.qxcmp.advertisement.AdvertisementModule;
 import com.qxcmp.advertisement.AdvertisementService;
 import com.qxcmp.advertisement.event.AdvertisementEditEvent;
@@ -57,22 +56,10 @@ public class AdminAdvertisementPageController extends QxcmpAdminController {
 
     @PostMapping("/new")
     public ModelAndView newPost(@Valid final AdminAdvertisementNewForm form, BindingResult bindingResult) {
-
         if (bindingResult.hasErrors()) {
             return newGet(form, bindingResult);
         }
-
-        return submitForm(form, context -> {
-            try {
-                advertisementService.create(() -> {
-                    Advertisement next = advertisementService.next();
-                    advertisementService.mergeToEntity(form, next);
-                    return next;
-                });
-            } catch (Exception e) {
-                throw new ActionException(e.getMessage(), e);
-            }
-        }, (stringObjectMap, overview) -> overview.addLink("返回广告列表", QXCMP_ADMIN_URL + "/advertisement").addLink("继续新建广告", QXCMP_ADMIN_URL + "/advertisement/new"));
+        return createEntity(advertisementService, form);
     }
 
     @GetMapping("/{id}/edit")

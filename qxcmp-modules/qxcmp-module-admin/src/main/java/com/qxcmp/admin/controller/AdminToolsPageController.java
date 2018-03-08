@@ -2,7 +2,6 @@ package com.qxcmp.admin.controller;
 
 import com.qxcmp.admin.page.AdminToolsPage;
 import com.qxcmp.core.extension.AdminToolPageExtensionPoint;
-import com.qxcmp.web.QxcmpController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,7 @@ import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
 @Controller
 @RequestMapping(ADMIN_URL + "/tools")
 @RequiredArgsConstructor
-public class AdminToolsPageController extends QxcmpController {
+public class AdminToolsPageController extends QxcmpAdminController {
 
     private final AdminToolPageExtensionPoint adminToolPageExtensionPoint;
 
