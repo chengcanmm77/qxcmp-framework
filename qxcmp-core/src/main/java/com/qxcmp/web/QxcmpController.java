@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.qxcmp.audit.Action;
+import com.qxcmp.audit.ActionException;
 import com.qxcmp.audit.ActionExecutor;
 import com.qxcmp.audit.AuditLog;
 import com.qxcmp.config.SiteService;
@@ -56,6 +57,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -150,6 +152,67 @@ public abstract class QxcmpController {
      */
     protected ModelAndView execute(String title, Action action, BiConsumer<Map<String, Object>, Overview> context) {
         return overviewPage(getExecuteOverview(title, action, context));
+    }
+
+    /**
+     * 使用表单创建一个实体对象
+     * <p>
+     * 注意：
+     * <ol>
+     * <li>新建实体的url必须以 {@code /new}结尾</li>
+     * </ol>
+     *
+     * @param entityService 实体服务
+     * @param form          表单
+     * @param <T>           实体类型
+     * @param <ID>          实体主键类型
+     *
+     * @return 操作结果页面
+     */
+    protected <T, ID extends Serializable> ModelAndView createEntity(EntityService<T, ID> entityService, Object form) {
+        return execute(getFormSubmitActionTitle(form), context -> {
+            try {
+                entityService.create(() -> {
+                    T next = entityService.next();
+                    entityService.mergeToEntity(form, next);
+                    return next;
+                });
+            } catch (Exception e) {
+                throw new ActionException(e.getMessage(), e);
+            }
+        }, (stringObjectMap, overview) -> {
+            overview.addLink("返回", request.getRequestURL().toString().replaceAll("/new", ""));
+            overview.addLink("继续新建", "");
+        });
+    }
+
+    /**
+     * 使用表单更新一个实体对象
+     * <p>
+     * 注意：
+     * <ol>
+     * <li>更新实体的url必须以 {@code /edit}结尾</li>
+     * </ol>
+     *
+     * @param id            实体主键
+     * @param entityService 实体服务
+     * @param form          表单
+     * @param <T>           实体类型
+     * @param <ID>          实体主键类型
+     *
+     * @return 操作结果页面
+     */
+    protected <T, ID extends Serializable> ModelAndView updateEntity(ID id, EntityService<T, ID> entityService, Object form) {
+        return execute(getFormSubmitActionTitle(form), context -> {
+            try {
+                entityService.update(id, t -> entityService.mergeToEntity(form, t));
+            } catch (Exception e) {
+                throw new ActionException(e.getMessage(), e);
+            }
+        }, (stringObjectMap, overview) -> {
+            overview.addLink("重新编辑", "");
+            overview.addLink("返回", request.getRequestURL().toString().replaceAll("/edit", ""));
+        });
     }
 
     /**
@@ -444,6 +507,21 @@ public abstract class QxcmpController {
         } else {
             return "Unknown request method: " + request.toString();
         }
+    }
+
+    /**
+     * 获取表单提交操作标题
+     *
+     * @param form 表单
+     *
+     * @return 表单标题
+     */
+    private String getFormSubmitActionTitle(Object form) {
+        Form annotation = form.getClass().getAnnotation(Form.class);
+        if (Objects.nonNull(annotation) && StringUtils.isNotBlank(annotation.value())) {
+            return annotation.value();
+        }
+        return request.getRequestURL().toString();
     }
 
     @Autowired
