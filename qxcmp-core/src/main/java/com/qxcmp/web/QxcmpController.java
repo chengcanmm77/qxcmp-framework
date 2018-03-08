@@ -18,7 +18,6 @@ import com.qxcmp.user.UserService;
 import com.qxcmp.util.Captcha;
 import com.qxcmp.util.CaptchaService;
 import com.qxcmp.util.IpAddressResolver;
-import com.qxcmp.util.QxcmpPageResolver;
 import com.qxcmp.web.model.RestfulResponse;
 import com.qxcmp.web.page.AbstractLegacyPage;
 import com.qxcmp.web.view.annotation.form.Form;
@@ -31,8 +30,8 @@ import com.qxcmp.web.view.elements.message.ErrorMessage;
 import com.qxcmp.web.view.modules.form.AbstractForm;
 import com.qxcmp.web.view.modules.table.EntityTable;
 import com.qxcmp.web.view.modules.table.Table;
-import com.qxcmp.web.view.page.PageRevolveService;
 import com.qxcmp.web.view.page.QxcmpPage;
+import com.qxcmp.web.view.page.QxcmpPageResolver;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.support.Color;
 import com.qxcmp.web.view.support.utils.TableHelper;
@@ -85,8 +84,8 @@ public abstract class QxcmpController {
     protected SystemConfigService systemConfigService;
     protected MessageService messageService;
     protected ViewHelper viewHelper;
-    protected QxcmpPageResolver pageResolver;
-    protected PageRevolveService pageRevolveService;
+    protected com.qxcmp.util.QxcmpPageResolver pageResolver;
+    protected QxcmpPageResolver pageRevolveService;
 
     private TableHelper tableHelper;
     private CaptchaService captchaService;
@@ -192,7 +191,7 @@ public abstract class QxcmpController {
      *
      * @return 由页面解析器解析出来的页面
      *
-     * @see QxcmpPageResolver
+     * @see com.qxcmp.util.QxcmpPageResolver
      */
     protected AbstractLegacyPage page() {
         return pageResolver.resolve(request, response);
@@ -508,7 +507,7 @@ public abstract class QxcmpController {
     }
 
     @Autowired
-    public void setPageResolver(QxcmpPageResolver pageResolver) {
+    public void setPageResolver(com.qxcmp.util.QxcmpPageResolver pageResolver) {
         this.pageResolver = pageResolver;
     }
 
@@ -523,7 +522,7 @@ public abstract class QxcmpController {
     }
 
     @Autowired
-    public void setPageRevolveService(PageRevolveService pageRevolveService) {
+    public void setPageRevolveService(QxcmpPageResolver pageRevolveService) {
         this.pageRevolveService = pageRevolveService;
     }
 }

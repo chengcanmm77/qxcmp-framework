@@ -1,5 +1,6 @@
 package com.qxcmp.admin.controller;
 
+import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.admin.page.AdminToolsPage;
 import com.qxcmp.core.extension.AdminToolPageExtensionPoint;
 import lombok.RequiredArgsConstructor;

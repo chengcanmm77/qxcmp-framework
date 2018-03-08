@@ -1,5 +1,6 @@
 package com.qxcmp.admin.controller;
 
+import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.admin.page.AdminAboutPage;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,7 +1,7 @@
 package com.qxcmp.advertisement.controller;
 
 import com.google.common.collect.ImmutableList;
-import com.qxcmp.admin.controller.QxcmpAdminController;
+import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.admin.page.GenericAdminFormPage;
 import com.qxcmp.advertisement.AdvertisementModule;
 import com.qxcmp.advertisement.AdvertisementService;

@@ -1,6 +1,7 @@
-package com.qxcmp.admin.controller;
+package com.qxcmp.admin;
 
-import com.qxcmp.admin.page.AdminOverviewPage;
+import com.qxcmp.admin.page.AdminPageRevolver;
+import com.qxcmp.admin.page.DefaultAdminOverviewPage;
 import com.qxcmp.audit.Action;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.core.entity.EntityService;
@@ -8,6 +9,7 @@ import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.view.annotation.form.Form;
 import com.qxcmp.web.view.views.Overview;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.Serializable;
@@ -21,6 +23,20 @@ import java.util.function.BiConsumer;
  * @author Aaric
  */
 public abstract class QxcmpAdminController extends QxcmpController {
+
+    protected AdminPageRevolver adminPageRevolver;
+
+
+    /**
+     * 获取后台错误页面
+     *
+     * @param errors 错误信息
+     *
+     * @return 后台错误页面
+     */
+    protected ModelAndView adminErrorPage(Map<String, Object> errors) {
+        return page(adminPageRevolver.getAdminErrorPage(), errors);
+    }
 
     /**
      * 使用表单创建一个实体对象
@@ -55,7 +71,7 @@ public abstract class QxcmpAdminController extends QxcmpController {
     @Override
     protected ModelAndView execute(String title, Action action, BiConsumer<Map<String, Object>, Overview> context) {
         Overview overview = getExecuteOverview(title, action, context);
-        return page(AdminOverviewPage.class, overview);
+        return page(DefaultAdminOverviewPage.class, overview);
     }
 
     /**
@@ -71,5 +87,10 @@ public abstract class QxcmpAdminController extends QxcmpController {
             return annotation.value();
         }
         return request.getRequestURL().toString();
+    }
+
+    @Autowired
+    public void setAdminPageRevolver(AdminPageRevolver adminPageRevolver) {
+        this.adminPageRevolver = adminPageRevolver;
     }
 }

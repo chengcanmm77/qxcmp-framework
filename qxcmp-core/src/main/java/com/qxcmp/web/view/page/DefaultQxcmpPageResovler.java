@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  * @author Aaric
  */
 @Service
-public class DefaultPageRevolveServiceImpl implements PageRevolveService {
+public class DefaultQxcmpPageResovler implements QxcmpPageResolver {
 
     @Override
     public Class<? extends AbstractErrorPage> getErrorPage() {

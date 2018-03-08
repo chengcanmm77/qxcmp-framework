@@ -1,5 +1,6 @@
 package com.qxcmp.admin.controller;
 
+import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.admin.page.AdminHomePage;
 import com.qxcmp.message.FeedService;
 import com.qxcmp.user.User;

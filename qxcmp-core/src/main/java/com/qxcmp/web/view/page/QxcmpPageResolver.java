@@ -7,7 +7,7 @@ package com.qxcmp.web.view.page;
  *
  * @author Aaric
  */
-public interface PageRevolveService {
+public interface QxcmpPageResolver {
 
     /**
      * 解析平台错误页面

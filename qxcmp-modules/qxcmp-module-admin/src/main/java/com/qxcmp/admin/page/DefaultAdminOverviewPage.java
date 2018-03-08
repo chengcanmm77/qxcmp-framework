@@ -2,7 +2,6 @@ package com.qxcmp.admin.page;
 
 import com.qxcmp.web.view.elements.container.TextContainer;
 import com.qxcmp.web.view.views.Overview;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +14,11 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
  */
 @Scope(SCOPE_PROTOTYPE)
 @Component
-@RequiredArgsConstructor
-public class AdminOverviewPage extends AbstractQxcmpAdminPage {
+public class DefaultAdminOverviewPage extends AbstractAdminOverviewPage {
 
-    private final Overview overview;
+    public DefaultAdminOverviewPage(Overview overview) {
+        super(overview);
+    }
 
     @Override
     public void render() {
