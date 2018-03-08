@@ -100,7 +100,7 @@ public class AdminWeixinPageController extends QxcmpController {
     @PostMapping("/material/sync")
     public ResponseEntity<RestfulResponse> userWeixinSyncPage() {
         weixinService.getSyncService().syncMaterials(currentUser().orElseThrow(RuntimeException::new));
-        return ResponseEntity.ok(new RestfulResponse(HttpStatus.OK.value()));
+        return ResponseEntity.ok(RestfulResponse.builder().status(HttpStatus.OK.value()).build());
     }
 
     @GetMapping("/material/{id}/preview")

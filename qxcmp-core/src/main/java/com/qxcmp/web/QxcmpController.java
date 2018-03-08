@@ -46,6 +46,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceResolver;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -251,12 +252,44 @@ public abstract class QxcmpController {
         });
     }
 
+    protected <T, ID extends Serializable> ResponseEntity<RestfulResponse> deleteEntity(String title, ID id, EntityService<T, ID> entityService) {
+        AuditLog auditLog = actionExecutor.execute(title, request.getRequestURL().toString(), getRequestContent(request), currentUser().orElse(null), context -> {
+            try {
+                entityService.deleteById(id);
+            } catch (Exception e) {
+                throw new ActionException(e.getMessage(), e);
+            }
+        });
+
+        RestfulResponse.RestfulResponseBuilder builder = RestfulResponse.builder();
+
+        switch (auditLog.getStatus()) {
+            case SUCCESS:
+                builder.status(HttpStatus.OK.value());
+                break;
+            case FAILURE:
+                builder.status(HttpStatus.BAD_REQUEST.value());
+                break;
+            default:
+                builder.status(HttpStatus.BAD_GATEWAY.value());
+                break;
+        }
+
+        builder.message(auditLog.getTitle());
+        builder.developerMessage(auditLog.getComments());
+        RestfulResponse restfulResponse = builder.build();
+
+        return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
+
+    }
+
 
     /**
      * 根据请求获取一个页面
      *
      * @return 由页面解析器解析出来的页面
      * @see com.qxcmp.util.QxcmpPageResolver
+     * @deprecated
      */
     protected AbstractLegacyPage page() {
         return pageResolver.resolve(request, response);
@@ -268,6 +301,7 @@ public abstract class QxcmpController {
      * @param overview 概览组件
      * @return 概览视图页面
      * @see Overview
+     * @deprecated
      */
     protected AbstractLegacyPage page(Overview overview) {
         return page().addComponent(new Grid().setTextContainer().setAlignment(Alignment.CENTER).setVerticallyPadded().addItem(new Col().addComponent(overview)));
@@ -283,22 +317,54 @@ public abstract class QxcmpController {
         return new ModelAndView("redirect:" + url);
     }
 
+    /**
+     * @param object
+     * @return
+     * @deprecated
+     */
     protected AbstractForm convertToForm(Object object) {
         return viewHelper.nextForm(object);
     }
 
+    /**
+     * @param bindingResult
+     * @param object
+     * @return
+     * @deprecated
+     */
     protected ErrorMessage convertToErrorMessage(BindingResult bindingResult, Object object) {
         return viewHelper.nextFormErrorMessage(bindingResult, object);
     }
 
+    /**
+     * @param pageable
+     * @param entityService
+     * @return
+     * @deprecated
+     */
     protected EntityTable convertToTable(Pageable pageable, EntityService entityService) {
         return convertToTable("", pageable, entityService);
     }
 
+    /**
+     * @param tableName
+     * @param pageable
+     * @param entityService
+     * @return
+     * @deprecated
+     */
     protected EntityTable convertToTable(String tableName, Pageable pageable, EntityService entityService) {
         return convertToTable(tableName, "", pageable, entityService);
     }
 
+    /**
+     * @param tableName
+     * @param action
+     * @param pageable
+     * @param entityService
+     * @return
+     * @deprecated
+     */
     @SuppressWarnings("unchecked")
     protected EntityTable convertToTable(String tableName, String action, Pageable pageable, EntityService entityService) {
 
@@ -325,22 +391,56 @@ public abstract class QxcmpController {
         return convertToTable(tableName, action, entityService.type(), page);
     }
 
+    /**
+     * @param tClass
+     * @param tPage
+     * @param <T>
+     * @return
+     * @deprecated
+     */
     protected <T> EntityTable convertToTable(Class<T> tClass, Page<T> tPage) {
         return convertToTable("", tClass, tPage);
     }
 
+    /**
+     * @param tableName
+     * @param tClass
+     * @param tPage
+     * @param <T>
+     * @return
+     * @deprecated
+     */
     protected <T> EntityTable convertToTable(String tableName, Class<T> tClass, Page<T> tPage) {
         return convertToTable(tableName, "", tClass, tPage);
     }
 
+    /**
+     * @param tableName
+     * @param action
+     * @param tClass
+     * @param tPage
+     * @param <T>
+     * @return
+     * @deprecated
+     */
     protected <T> EntityTable convertToTable(String tableName, String action, Class<T> tClass, Page<T> tPage) {
         return tableHelper.convert(tableName, action, tClass, tPage, request);
     }
 
+    /**
+     * @param dictionary
+     * @return
+     * @deprecated
+     */
     protected Table convertToTable(Map<Object, Object> dictionary) {
         return tableHelper.convert(dictionary);
     }
 
+    /**
+     * @param consumer
+     * @return
+     * @deprecated
+     */
     protected Table convertToTable(Consumer<Map<Object, Object>> consumer) {
         Map<Object, Object> dictionary = Maps.newLinkedHashMap();
         consumer.accept(dictionary);
@@ -417,6 +517,7 @@ public abstract class QxcmpController {
      * @param action     要执行的操作
      * @param biConsumer 返回的结果页面
      * @return 提交后的页面
+     * @deprecated
      */
     protected ModelAndView submitForm(String title, Object form, Action action, BiConsumer<Map<String, Object>, Overview> biConsumer) {
         Form annotation = form.getClass().getAnnotation(Form.class);
@@ -438,6 +539,7 @@ public abstract class QxcmpController {
             case FAILURE:
                 overview = new Overview(new IconHeader(auditLog.getTitle(), new Icon("warning circle").setColor(Color.RED)).setSubTitle("操作失败")).addComponent(new P(auditLog.getComments()));
                 break;
+            default:
         }
 
 
@@ -456,18 +558,20 @@ public abstract class QxcmpController {
      * @param title  操作名称
      * @param action 要执行的操作
      * @return 操作结果实体
+     * @deprecated
      */
     protected RestfulResponse audit(String title, Action action) {
         AuditLog auditLog = actionExecutor.execute(title, request.getRequestURL().toString(), getRequestContent(request), currentUser().orElse(null), action);
 
         switch (auditLog.getStatus()) {
             case SUCCESS:
-                return new RestfulResponse(HttpStatus.OK.value(), "", auditLog.getTitle(), auditLog.getComments());
+                return RestfulResponse.builder().status(HttpStatus.OK.value()).message(auditLog.getTitle()).developerMessage(auditLog.getComments()).build();
             case FAILURE:
-                return new RestfulResponse(HttpStatus.BAD_GATEWAY.value(), "", auditLog.getTitle(), auditLog.getComments());
+                return RestfulResponse.builder().status(HttpStatus.BAD_GATEWAY.value()).message(auditLog.getTitle()).developerMessage(auditLog.getComments()).build();
+            default:
         }
 
-        return new RestfulResponse(HttpStatus.NOT_ACCEPTABLE.value(), "", auditLog.getTitle(), auditLog.getComments());
+        return RestfulResponse.builder().status(HttpStatus.NOT_ACCEPTABLE.value()).message(auditLog.getTitle()).developerMessage(auditLog.getComments()).build();
     }
 
     /**

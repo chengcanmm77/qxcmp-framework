@@ -1,8 +1,8 @@
 package com.qxcmp.web.controller;
 
-import com.qxcmp.account.AccountService;
 import com.qxcmp.account.AccountSecurityQuestion;
 import com.qxcmp.account.AccountSecurityQuestionService;
+import com.qxcmp.account.AccountService;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.message.InnerMessage;
 import com.qxcmp.message.InnerMessageService;
@@ -102,7 +102,7 @@ public class AdminProfilePageController extends QxcmpController {
                         }
                     });
                     return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
-                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RestfulResponse(HttpStatus.NOT_FOUND.value())));
+                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
     }
 
     @PostMapping("/message/{id}/remove")
@@ -117,7 +117,7 @@ public class AdminProfilePageController extends QxcmpController {
                         }
                     });
                     return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
-                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RestfulResponse(HttpStatus.NOT_FOUND.value())));
+                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
     }
 
     @GetMapping("/info")

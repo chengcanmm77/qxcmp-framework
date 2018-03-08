@@ -308,7 +308,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                         }
                     });
                     return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
-                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RestfulResponse(HttpStatus.NOT_FOUND.value())));
+                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
     }
 
     @GetMapping("/{id}/audit")
@@ -376,7 +376,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                         }
                     });
                     return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
-                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RestfulResponse(HttpStatus.NOT_FOUND.value())));
+                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
     }
 
     @PostMapping("/{id}/disable")
@@ -402,7 +402,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                         }
                     });
                     return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
-                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RestfulResponse(HttpStatus.NOT_FOUND.value())));
+                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
     }
 
     @PostMapping("/{id}/enable")
@@ -427,7 +427,7 @@ public class AdminNewsUserArticlePageController extends QxcmpController {
                         }
                     });
                     return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
-                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RestfulResponse(HttpStatus.NOT_FOUND.value())));
+                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
     }
 
     @PostMapping("/remove")

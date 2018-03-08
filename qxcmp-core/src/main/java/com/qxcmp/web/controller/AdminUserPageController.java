@@ -130,7 +130,7 @@ public class AdminUserPageController extends QxcmpController {
     @PostMapping("/weixin/sync")
     public ResponseEntity<RestfulResponse> userWeixinSyncPage() {
         weixinService.getSyncService().syncUsers(currentUser().orElseThrow(RuntimeException::new));
-        return ResponseEntity.ok(new RestfulResponse(HttpStatus.OK.value()));
+        return ResponseEntity.ok(RestfulResponse.builder().status(HttpStatus.OK.value()).build());
     }
 
     @GetMapping("/{id}/details")
@@ -139,9 +139,9 @@ public class AdminUserPageController extends QxcmpController {
 
                     Page<DepositOrder> depositOrders = depositOrderService.findByUserId(user.getId(), pageable);
 
-            Buttons toolbar = new Buttons();
+                    Buttons toolbar = new Buttons();
 
-            userDetailsPageToolbarExtensionPoint.getExtensions().forEach(extension -> toolbar.addButton(new Button(extension.getTitle(), QXCMP_ADMIN_URL + "/user/" + id + "/" + extension.getSuffix(), extension.getTarget()).setBasic().setSecondary()));
+                    userDetailsPageToolbarExtensionPoint.getExtensions().forEach(extension -> toolbar.addButton(new Button(extension.getTitle(), QXCMP_ADMIN_URL + "/user/" + id + "/" + extension.getSuffix(), extension.getTarget()).setBasic().setSecondary()));
 
                     return page()
                             .addComponent(new VerticallyDividedGrid().setVerticallyPadded()

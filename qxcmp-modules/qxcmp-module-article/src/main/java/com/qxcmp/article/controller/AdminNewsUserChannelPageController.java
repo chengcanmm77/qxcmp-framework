@@ -274,8 +274,8 @@ public class AdminNewsUserChannelPageController extends QxcmpController {
                                 }
                             });
                             return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
-                        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RestfulResponse(HttpStatus.NOT_FOUND.value()))))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RestfulResponse(HttpStatus.NOT_FOUND.value())));
+                        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build())))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
     }
 
     @PostMapping("/{id}/article/{articleId}/enable")
@@ -301,8 +301,8 @@ public class AdminNewsUserChannelPageController extends QxcmpController {
                                 }
                             });
                             return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
-                        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RestfulResponse(HttpStatus.NOT_FOUND.value()))))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new RestfulResponse(HttpStatus.NOT_FOUND.value())));
+                        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build())))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
     }
 
     private Component getArticlePreviewContent(Article article) {

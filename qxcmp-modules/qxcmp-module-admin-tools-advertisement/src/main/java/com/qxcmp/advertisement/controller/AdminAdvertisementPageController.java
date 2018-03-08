@@ -8,7 +8,6 @@ import com.qxcmp.advertisement.form.AdminAdvertisementNewForm;
 import com.qxcmp.advertisement.page.AdminAdvertisementEditPage;
 import com.qxcmp.advertisement.page.AdminAdvertisementNewPage;
 import com.qxcmp.advertisement.page.AdminAdvertisementTablePage;
-import com.qxcmp.audit.ActionException;
 import com.qxcmp.web.model.RestfulResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -69,14 +68,7 @@ public class AdminAdvertisementPageController extends QxcmpAdminController {
     }
 
     @PostMapping("/{id}/remove")
-    public ResponseEntity<RestfulResponse> advertisementRemove(@PathVariable String id) {
-        RestfulResponse restfulResponse = audit("删除广告", context -> {
-            try {
-                advertisementService.deleteById(Long.parseLong(id));
-            } catch (Exception e) {
-                throw new ActionException(e.getMessage(), e);
-            }
-        });
-        return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
+    public ResponseEntity<RestfulResponse> advertisementRemove(@PathVariable Long id) {
+        return deleteEntity("删除广告", id, advertisementService);
     }
 }
