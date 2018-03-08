@@ -19,6 +19,7 @@ public class AdvertisementModuleSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(ADMIN_ADVERTISEMENT_URL + "/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers(ADMIN_ADVERTISEMENT_URL + "/**").hasRole(PRIVILEGE_ADMIN_ADVERTISEMENT);
+                .antMatchers(ADMIN_ADVERTISEMENT_URL + "/**").hasRole(PRIVILEGE_ADMIN_ADVERTISEMENT)
+                .and().formLogin().loginPage("/login").permitAll();
     }
 }

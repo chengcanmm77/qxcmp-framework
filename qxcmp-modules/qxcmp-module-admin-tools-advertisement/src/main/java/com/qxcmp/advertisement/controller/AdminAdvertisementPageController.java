@@ -1,12 +1,13 @@
 package com.qxcmp.advertisement.controller;
 
-import com.google.common.collect.ImmutableList;
 import com.qxcmp.advertisement.Advertisement;
+import com.qxcmp.advertisement.AdvertisementModule;
 import com.qxcmp.advertisement.AdvertisementService;
 import com.qxcmp.advertisement.event.AdvertisementEditEvent;
 import com.qxcmp.advertisement.event.AdvertisementNewEvent;
 import com.qxcmp.advertisement.form.AdminAdvertisementEditForm;
 import com.qxcmp.advertisement.form.AdminAdvertisementNewForm;
+import com.qxcmp.advertisement.page.AdminAdvertisementTablePage;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
@@ -40,22 +40,18 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 @RequiredArgsConstructor
 public class AdminAdvertisementPageController extends QxcmpController {
 
-    public static final List<String> SUPPORT_TYPES = ImmutableList.of("横幅", "弹框", "摩天楼");
-
     private final AdvertisementService advertisementService;
 
     @GetMapping("")
     public ModelAndView advertisementPage(Pageable pageable) {
-        return page().addComponent(convertToTable(pageable, advertisementService))
-                .setBreadcrumb("控制台", "", "系统工具", "tools", "广告管理")
-                .build();
+        return qxcmpPage(AdminAdvertisementTablePage.class, advertisementService, pageable);
     }
 
     @GetMapping("/new")
     public ModelAndView advertisementNewPage(final AdminAdvertisementNewForm form) {
         return page().addComponent(convertToForm(form))
                 .setBreadcrumb("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告")
-                .addObject("selection_items_type", SUPPORT_TYPES)
+                .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES)
                 .build();
     }
 
@@ -67,7 +63,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
         if (bindingResult.hasErrors()) {
             return page().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form)))
                     .setBreadcrumb("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告")
-                    .addObject("selection_items_type", SUPPORT_TYPES)
+                    .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES)
                     .build();
         }
 
@@ -101,7 +97,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
             form.setBlack(advertisement.isBlank());
             return page().addComponent(convertToForm(form))
                     .setBreadcrumb("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告")
-                    .addObject("selection_items_type", SUPPORT_TYPES)
+                    .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES)
                     .build();
         }).orElse(page(new Overview(new IconHeader("广告不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/advertisement")).build());
     }
@@ -114,7 +110,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
         if (bindingResult.hasErrors()) {
             return page().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form)))
                     .setBreadcrumb("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告")
-                    .addObject("selection_items_type", SUPPORT_TYPES)
+                    .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES)
                     .build();
         }
 

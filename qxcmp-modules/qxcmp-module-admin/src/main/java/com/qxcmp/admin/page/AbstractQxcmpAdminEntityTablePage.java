@@ -1,5 +1,6 @@
 package com.qxcmp.admin.page;
 
+import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.modules.table.EntityTable;
 
 /**
@@ -7,12 +8,11 @@ import com.qxcmp.web.view.modules.table.EntityTable;
  *
  * @author Aaric
  */
-
 public abstract class AbstractQxcmpAdminEntityTablePage extends AbstractQxcmpAdminPage {
 
     @Override
     public void render() {
-        addComponent(renderEntityTable());
+        addComponent(new Segment().addComponent(renderEntityTable()));
     }
 
     /**
