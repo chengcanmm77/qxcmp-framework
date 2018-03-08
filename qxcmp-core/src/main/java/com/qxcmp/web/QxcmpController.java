@@ -101,7 +101,6 @@ public abstract class QxcmpController {
      * @param tClass 页面类型
      * @param models 页面数据
      * @param <T>    页面类型
-     *
      * @return 渲染后的页面
      */
     protected <T extends QxcmpPage> ModelAndView page(Class<T> tClass, Object... models) {
@@ -123,7 +122,6 @@ public abstract class QxcmpController {
      * 获取错误页面
      *
      * @param errors 错误信息
-     *
      * @return 错误页面
      */
     protected ModelAndView errorPage(Map<String, Object> errors) {
@@ -134,7 +132,6 @@ public abstract class QxcmpController {
      * 获取一个概览页面
      *
      * @param overview 概览页面
-     *
      * @return 概览页面
      */
     protected ModelAndView overviewPage(Overview overview) {
@@ -147,84 +144,9 @@ public abstract class QxcmpController {
      * @param title   操作名称
      * @param action  要执行的操作
      * @param context 执行上下文
-     *
      * @return 操作结果页面
      */
     protected ModelAndView execute(String title, Action action, BiConsumer<Map<String, Object>, Overview> context) {
-        return overviewPage(getExecuteOverview(title, action, context));
-    }
-
-    /**
-     * 使用表单创建一个实体对象
-     * <p>
-     * 注意：
-     * <ol>
-     * <li>新建实体的url必须以 {@code /new}结尾</li>
-     * </ol>
-     *
-     * @param entityService 实体服务
-     * @param form          表单
-     * @param <T>           实体类型
-     * @param <ID>          实体主键类型
-     *
-     * @return 操作结果页面
-     */
-    protected <T, ID extends Serializable> ModelAndView createEntity(EntityService<T, ID> entityService, Object form) {
-        return execute(getFormSubmitActionTitle(form), context -> {
-            try {
-                entityService.create(() -> {
-                    T next = entityService.next();
-                    entityService.mergeToEntity(form, next);
-                    return next;
-                });
-            } catch (Exception e) {
-                throw new ActionException(e.getMessage(), e);
-            }
-        }, (stringObjectMap, overview) -> {
-            overview.addLink("返回", request.getRequestURL().toString().replaceAll("/new", ""));
-            overview.addLink("继续新建", "");
-        });
-    }
-
-    /**
-     * 使用表单更新一个实体对象
-     * <p>
-     * 注意：
-     * <ol>
-     * <li>更新实体的url必须以 {@code /edit}结尾</li>
-     * </ol>
-     *
-     * @param id            实体主键
-     * @param entityService 实体服务
-     * @param form          表单
-     * @param <T>           实体类型
-     * @param <ID>          实体主键类型
-     *
-     * @return 操作结果页面
-     */
-    protected <T, ID extends Serializable> ModelAndView updateEntity(ID id, EntityService<T, ID> entityService, Object form) {
-        return execute(getFormSubmitActionTitle(form), context -> {
-            try {
-                entityService.update(id, t -> entityService.mergeToEntity(form, t));
-            } catch (Exception e) {
-                throw new ActionException(e.getMessage(), e);
-            }
-        }, (stringObjectMap, overview) -> {
-            overview.addLink("重新编辑", "");
-            overview.addLink("返回", request.getRequestURL().toString().replaceAll("/edit", ""));
-        });
-    }
-
-    /**
-     * 执行一个操作并返回操作结果概览组件
-     *
-     * @param title   操作名称
-     * @param action  要执行的操作
-     * @param context 执行上下文
-     *
-     * @return 操作结果概览组件
-     */
-    protected Overview getExecuteOverview(String title, Action action, BiConsumer<Map<String, Object>, Overview> context) {
         String url = request.getRequestURL().toString();
         AuditLog auditLog = actionExecutor.execute(title, url, getRequestContent(request), currentUser().orElse(null), action);
         Overview overview;
@@ -245,7 +167,88 @@ public abstract class QxcmpController {
         if (overview.getLinks().isEmpty()) {
             overview.addLink("返回", url);
         }
-        return overview;
+        return overviewPage(overview);
+    }
+
+    /**
+     * 使用表单创建一个实体对象
+     * <p>
+     * 注意：
+     * <ol>
+     * <li>新建实体的url必须以 {@code /new}结尾</li>
+     * </ol>
+     *
+     * @param entityService 实体服务
+     * @param form          表单
+     * @param <T>           实体类型
+     * @param <ID>          实体主键类型
+     * @return 操作结果页面
+     */
+    protected <T, ID extends Serializable> ModelAndView createEntity(EntityService<T, ID> entityService, Object form) {
+        return execute(getFormSubmitActionTitle(form), context -> {
+            try {
+                entityService.create(() -> {
+                    T next = entityService.next();
+                    entityService.mergeToEntity(form, next);
+                    return next;
+                });
+            } catch (Exception e) {
+                throw new ActionException(e.getMessage(), e);
+            }
+        }, (stringObjectMap, overview) -> {
+            overview.addLink("返回", request.getRequestURL().toString().replaceAll("/new", ""));
+            overview.addLink("继续新建", "");
+        });
+    }
+
+    /**
+     * 获取一个实体编辑页面
+     * <p>
+     * 如果实体不在返回一个实体未找到概览页面
+     *
+     * @param pClass        最终的编辑页面
+     * @param id            实体主键
+     * @param entityService 实体服务
+     * @param form          实体编辑表单
+     * @param bindingResult 错误对象
+     * @param <P>           编辑页面类型
+     * @param <T>           实体类型
+     * @param <ID>          主键类型
+     * @return 实体编辑页面
+     */
+    protected <P extends QxcmpPage, T, ID extends Serializable> ModelAndView entityUpdatePage(Class<P> pClass, ID id, EntityService<T, ID> entityService, Object form, BindingResult bindingResult) {
+        return entityService.findOne(id).map(t -> {
+            entityService.mergeToObject(t, form);
+            return page(pClass, form, bindingResult);
+        }).orElse(overviewPage(viewHelper.nextWarningOverview("资源不存在")));
+    }
+
+    /**
+     * 使用表单更新一个实体对象
+     * <p>
+     * 注意：
+     * <ol>
+     * <li>更新实体的url必须以 {@code /edit} 结尾</li>
+     * </ol>
+     *
+     * @param id            实体主键
+     * @param entityService 实体服务
+     * @param form          表单
+     * @param <T>           实体类型
+     * @param <ID>          实体主键类型
+     * @return 操作结果页面
+     */
+    protected <T, ID extends Serializable> ModelAndView updateEntity(ID id, EntityService<T, ID> entityService, Object form) {
+        return execute(getFormSubmitActionTitle(form), context -> {
+            try {
+                entityService.update(id, t -> entityService.mergeToEntity(form, t));
+            } catch (Exception e) {
+                throw new ActionException(e.getMessage(), e);
+            }
+        }, (stringObjectMap, overview) -> {
+            overview.addLink("重新编辑", "");
+            overview.addLink("返回", StringUtils.substringBeforeLast(request.getRequestURL().toString().replaceAll("/edit", ""), "/"));
+        });
     }
 
 
@@ -253,7 +256,6 @@ public abstract class QxcmpController {
      * 根据请求获取一个页面
      *
      * @return 由页面解析器解析出来的页面
-     *
      * @see com.qxcmp.util.QxcmpPageResolver
      */
     protected AbstractLegacyPage page() {
@@ -264,9 +266,7 @@ public abstract class QxcmpController {
      * 根据请求获取一个页面并设置概览视图
      *
      * @param overview 概览组件
-     *
      * @return 概览视图页面
-     *
      * @see Overview
      */
     protected AbstractLegacyPage page(Overview overview) {
@@ -277,7 +277,6 @@ public abstract class QxcmpController {
      * 获取一个重定向页面
      *
      * @param url 重定向链接
-     *
      * @return 重定向页面
      */
     protected ModelAndView redirect(String url) {
@@ -417,7 +416,6 @@ public abstract class QxcmpController {
      * @param form       要提交的表单
      * @param action     要执行的操作
      * @param biConsumer 返回的结果页面
-     *
      * @return 提交后的页面
      */
     protected ModelAndView submitForm(String title, Object form, Action action, BiConsumer<Map<String, Object>, Overview> biConsumer) {
@@ -457,7 +455,6 @@ public abstract class QxcmpController {
      *
      * @param title  操作名称
      * @param action 要执行的操作
-     *
      * @return 操作结果实体
      */
     protected RestfulResponse audit(String title, Action action) {
@@ -477,7 +474,6 @@ public abstract class QxcmpController {
      * 获取上传后的文件
      *
      * @param keys 临时文件标识
-     *
      * @return 文件列表
      */
     protected List<File> getUploadFiles(List<String> keys) {
@@ -492,7 +488,6 @@ public abstract class QxcmpController {
      * 获取单个上传后的文件
      *
      * @param key 临时文件标识
-     *
      * @return 单个文件
      */
     protected File getUploadFile(String key) {
@@ -513,7 +508,6 @@ public abstract class QxcmpController {
      * 获取表单提交操作标题
      *
      * @param form 表单
-     *
      * @return 表单标题
      */
     private String getFormSubmitActionTitle(Object form) {

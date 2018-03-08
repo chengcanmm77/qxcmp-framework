@@ -1,21 +1,15 @@
 package com.qxcmp.advertisement.controller;
 
-import com.google.common.collect.ImmutableList;
 import com.qxcmp.admin.QxcmpAdminController;
-import com.qxcmp.admin.page.GenericAdminFormPage;
 import com.qxcmp.advertisement.AdvertisementModule;
 import com.qxcmp.advertisement.AdvertisementService;
-import com.qxcmp.advertisement.event.AdvertisementEditEvent;
 import com.qxcmp.advertisement.form.AdminAdvertisementEditForm;
 import com.qxcmp.advertisement.form.AdminAdvertisementNewForm;
+import com.qxcmp.advertisement.page.AdminAdvertisementEditPage;
 import com.qxcmp.advertisement.page.AdminAdvertisementNewPage;
 import com.qxcmp.advertisement.page.AdminAdvertisementTablePage;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.user.User;
 import com.qxcmp.web.model.RestfulResponse;
-import com.qxcmp.web.view.elements.header.IconHeader;
-import com.qxcmp.web.view.elements.icon.Icon;
-import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 
 import static com.qxcmp.advertisement.AdvertisementModule.ADMIN_ADVERTISEMENT_URL;
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * 广告后台管理页面
@@ -63,42 +56,16 @@ public class AdminAdvertisementPageController extends QxcmpAdminController {
     }
 
     @GetMapping("/{id}/edit")
-    public ModelAndView advertisementEditPage(@PathVariable String id, final AdminAdvertisementEditForm form) {
-        return advertisementService.findOne(id).map(advertisement -> {
-
-            advertisementService.mergeToObject(advertisement, form);
-
-            return page(GenericAdminFormPage.class, form, null, ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "编辑广告"))
-                    .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
-        }).orElse(page(new Overview(new IconHeader("广告不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/advertisement")).build());
+    public ModelAndView editPageGet(@PathVariable Long id, final AdminAdvertisementEditForm form, BindingResult bindingResult) {
+        return entityUpdatePage(AdminAdvertisementEditPage.class, id, advertisementService, form, bindingResult).addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
     }
 
     @PostMapping("/{id}/edit")
-    public ModelAndView advertisementEditPage(@PathVariable String id, @Valid final AdminAdvertisementEditForm form, BindingResult bindingResult) {
-
-        User user = currentUser().orElseThrow(RuntimeException::new);
-
+    public ModelAndView editPagePost(@PathVariable Long id, @Valid final AdminAdvertisementEditForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return page().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form)))
-                    .setBreadcrumb("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告")
-                    .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES)
-                    .build();
+            return editPageGet(id, form, bindingResult);
         }
-
-        return submitForm(form, context -> {
-            try {
-                applicationContext.publishEvent(new AdvertisementEditEvent(user, advertisementService.update(Long.parseLong(id), advertisement -> {
-                    advertisement.setImage(form.getImage());
-                    advertisement.setType(form.getType());
-                    advertisement.setTitle(form.getTitle());
-                    advertisement.setLink(form.getLink());
-                    advertisement.setAdOrder(form.getAdOrder());
-                    advertisement.setBlank(form.isBlank());
-                })));
-            } catch (Exception e) {
-                throw new ActionException(e.getMessage(), e);
-            }
-        }, (stringObjectMap, overview) -> overview.addLink("返回广告列表", QXCMP_ADMIN_URL + "/advertisement"));
+        return updateEntity(id, advertisementService, form);
     }
 
     @PostMapping("/{id}/remove")
