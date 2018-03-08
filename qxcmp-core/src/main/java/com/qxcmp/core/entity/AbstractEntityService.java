@@ -2,6 +2,9 @@ package com.qxcmp.core.entity;
 
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
+import com.qxcmp.core.support.ReflectionUtils;
+import com.qxcmp.web.view.annotation.form.Form;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -14,6 +17,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,8 +26,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * 实体服务抽象实现
@@ -251,6 +254,40 @@ public abstract class AbstractEntityService<T, ID extends Serializable, R extend
     @Override
     public void deleteInBatch(Iterable<T> iterable) {
         repository.deleteInBatch(iterable);
+    }
+
+    @Override
+    public void mergeToEntity(Object object, T entity) {
+        checkArgument(Objects.nonNull(object.getClass().getAnnotation(Form.class)), "No Form annotation for merge object");
+        BeanWrapperImpl formBean = new BeanWrapperImpl(object);
+        BeanWrapperImpl entityBean = new BeanWrapperImpl(entity);
+        ReflectionUtils.getAllFields(object.getClass()).stream()
+                .filter(field -> !Modifier.isStatic(field.getModifiers()) && !Modifier.isFinal(field.getModifiers()))
+                .forEach(field -> {
+                    try {
+                        String fieldName = field.getName();
+                        entityBean.setPropertyValue(fieldName, formBean.getPropertyValue(fieldName));
+                    } catch (Exception ignored) {
+
+                    }
+                });
+    }
+
+    @Override
+    public void mergeToObject(T entity, Object object) {
+        checkArgument(Objects.nonNull(object.getClass().getAnnotation(Form.class)), "No Form annotation for merge object");
+        BeanWrapperImpl entityBean = new BeanWrapperImpl(entity);
+        BeanWrapperImpl formBean = new BeanWrapperImpl(object);
+        ReflectionUtils.getAllFields(object.getClass()).stream()
+                .filter(field -> !Modifier.isStatic(field.getModifiers()) && !Modifier.isFinal(field.getModifiers()))
+                .forEach(field -> {
+                    try {
+                        String fieldName = field.getName();
+                        formBean.setPropertyValue(fieldName, entityBean.getPropertyValue(fieldName));
+                    } catch (Exception ignored) {
+
+                    }
+                });
     }
 
     @Autowired

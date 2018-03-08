@@ -370,4 +370,24 @@ public interface EntityService<T, ID extends Serializable> {
      * @param iterable 要删除的实体
      */
     void deleteInBatch(Iterable<T> iterable);
+
+    /**
+     * 将一个表单对象的数据合并到实体对象
+     * <p>
+     * 会按照表单对象所有字段进行匹配
+     *
+     * @param object 表单对象，如果表单对象没有{@link com.qxcmp.web.view.annotation.form.Form}注解会抛出异常
+     * @param entity 实体对象
+     */
+    void mergeToEntity(Object object, T entity);
+
+    /**
+     * 将一个实体对象的数据合并到表单对象
+     * <p>
+     * 会按照表单对象所有字段进行匹配
+     *
+     * @param entity 实体对象
+     * @param object 表单对象，如果表单对象没有{@link com.qxcmp.web.view.annotation.form.Form}注解会抛出异常
+     */
+    void mergeToObject(T entity, Object object);
 }

@@ -38,13 +38,12 @@ public class FormHelper {
 
     private final ApplicationContext applicationContext;
 
-    private final ReflectionUtils reflectionUtils;
-
     /**
      * 将表单错误对象转换为错误消息组件
      *
      * @param bindingResult 错误对象
      * @param object        表单对象
+     *
      * @return 错误消息组件
      */
     public ErrorMessage convertToErrorMessage(BindingResult bindingResult, Object object) {
@@ -55,7 +54,7 @@ public class FormHelper {
 
                 String fieldName = fieldError.getField();
 
-                for (Field field : reflectionUtils.getAllFields(object.getClass())) {
+                for (Field field : ReflectionUtils.getAllFields(object.getClass())) {
                     if (field.getName().equals(fieldName)) {
                         for (Annotation annotation : field.getAnnotations()) {
                             for (Method method : annotation.getClass().getDeclaredMethods()) {
@@ -104,6 +103,7 @@ public class FormHelper {
      * 将一个对象转换为表单
      *
      * @param object 对象
+     *
      * @return 转换后的表单
      */
     public AbstractForm convert(Object object) {
@@ -163,7 +163,7 @@ public class FormHelper {
     }
 
     private void configFormField(AbstractForm form, Object object) {
-        for (Field field : reflectionUtils.getAllFields(object.getClass())) {
+        for (Field field : ReflectionUtils.getAllFields(object.getClass())) {
             for (Annotation annotation : field.getDeclaredAnnotations()) {
                 if (annotation instanceof HiddenField) {
                     addHiddenField(form, field, (HiddenField) annotation);

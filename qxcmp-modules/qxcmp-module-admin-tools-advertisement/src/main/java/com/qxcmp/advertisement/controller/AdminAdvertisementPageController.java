@@ -69,12 +69,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
             try {
                 applicationContext.publishEvent(new AdvertisementNewEvent(user, advertisementService.create(() -> {
                     Advertisement next = advertisementService.next();
-                    next.setImage(form.getImage());
-                    next.setType(form.getType());
-                    next.setTitle(form.getTitle());
-                    next.setLink(form.getLink());
-                    next.setAdOrder(form.getAdOrder());
-                    next.setBlank(form.isBlack());
+                    advertisementService.mergeToEntity(form, next);
                     return next;
                 })));
 
@@ -87,16 +82,11 @@ public class AdminAdvertisementPageController extends QxcmpController {
     @GetMapping("/{id}/edit")
     public ModelAndView advertisementEditPage(@PathVariable String id, final AdminAdvertisementEditForm form) {
         return advertisementService.findOne(id).map(advertisement -> {
-            form.setImage(advertisement.getImage());
-            form.setType(advertisement.getType());
-            form.setTitle(advertisement.getTitle());
-            form.setLink(advertisement.getLink());
-            form.setAdOrder(advertisement.getAdOrder());
-            form.setBlack(advertisement.isBlank());
-            return page().addComponent(convertToForm(form))
-                    .setBreadcrumb("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告")
-                    .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES)
-                    .build();
+
+            advertisementService.mergeToObject(advertisement, form);
+
+            return page(GenericAdminFormPage.class, form, null, ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "编辑广告"))
+                    .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
         }).orElse(page(new Overview(new IconHeader("广告不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/advertisement")).build());
     }
 
@@ -120,7 +110,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
                     advertisement.setTitle(form.getTitle());
                     advertisement.setLink(form.getLink());
                     advertisement.setAdOrder(form.getAdOrder());
-                    advertisement.setBlank(form.isBlack());
+                    advertisement.setBlank(form.isBlank());
                 })));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);

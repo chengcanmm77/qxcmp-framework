@@ -26,5 +26,5 @@ public class AdminAdvertisementNewForm {
     private int adOrder;
 
     @BooleanField("新窗口打开")
-    private boolean black;
+    private boolean blank;
 }
