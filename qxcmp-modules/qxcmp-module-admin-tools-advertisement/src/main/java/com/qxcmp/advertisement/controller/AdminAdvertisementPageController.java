@@ -1,5 +1,7 @@
 package com.qxcmp.advertisement.controller;
 
+import com.google.common.collect.ImmutableList;
+import com.qxcmp.admin.page.GenericAdminFormPage;
 import com.qxcmp.advertisement.Advertisement;
 import com.qxcmp.advertisement.AdvertisementModule;
 import com.qxcmp.advertisement.AdvertisementService;
@@ -49,10 +51,8 @@ public class AdminAdvertisementPageController extends QxcmpController {
 
     @GetMapping("/new")
     public ModelAndView advertisementNewPage(final AdminAdvertisementNewForm form) {
-        return page().addComponent(convertToForm(form))
-                .setBreadcrumb("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告")
-                .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES)
-                .build();
+        return qxcmpPage(GenericAdminFormPage.class, form, null, ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告"))
+                .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
     }
 
     @PostMapping("/new")
@@ -61,10 +61,8 @@ public class AdminAdvertisementPageController extends QxcmpController {
         User user = currentUser().orElseThrow(RuntimeException::new);
 
         if (bindingResult.hasErrors()) {
-            return page().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form)))
-                    .setBreadcrumb("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告")
-                    .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES)
-                    .build();
+            return qxcmpPage(GenericAdminFormPage.class, form, bindingResult, ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告"))
+                    .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
         }
 
         return submitForm(form, context -> {
