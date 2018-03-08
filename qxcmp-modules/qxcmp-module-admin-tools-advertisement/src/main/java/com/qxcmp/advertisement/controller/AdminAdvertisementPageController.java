@@ -1,18 +1,18 @@
 package com.qxcmp.advertisement.controller;
 
 import com.google.common.collect.ImmutableList;
+import com.qxcmp.admin.controller.QxcmpAdminController;
 import com.qxcmp.admin.page.GenericAdminFormPage;
 import com.qxcmp.advertisement.Advertisement;
 import com.qxcmp.advertisement.AdvertisementModule;
 import com.qxcmp.advertisement.AdvertisementService;
 import com.qxcmp.advertisement.event.AdvertisementEditEvent;
-import com.qxcmp.advertisement.event.AdvertisementNewEvent;
 import com.qxcmp.advertisement.form.AdminAdvertisementEditForm;
 import com.qxcmp.advertisement.form.AdminAdvertisementNewForm;
+import com.qxcmp.advertisement.page.AdminAdvertisementNewPage;
 import com.qxcmp.advertisement.page.AdminAdvertisementTablePage;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.user.User;
-import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;
 import com.qxcmp.web.view.elements.header.IconHeader;
 import com.qxcmp.web.view.elements.icon.Icon;
@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
+import static com.qxcmp.advertisement.AdvertisementModule.ADMIN_ADVERTISEMENT_URL;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
@@ -38,41 +39,36 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_ADMIN_URL + "/advertisement")
+@RequestMapping(ADMIN_ADVERTISEMENT_URL)
 @RequiredArgsConstructor
-public class AdminAdvertisementPageController extends QxcmpController {
+public class AdminAdvertisementPageController extends QxcmpAdminController {
 
     private final AdvertisementService advertisementService;
 
     @GetMapping("")
-    public ModelAndView advertisementPage(Pageable pageable) {
+    public ModelAndView table(Pageable pageable) {
         return page(AdminAdvertisementTablePage.class, advertisementService, pageable);
     }
 
     @GetMapping("/new")
-    public ModelAndView advertisementNewPage(final AdminAdvertisementNewForm form) {
-        return page(GenericAdminFormPage.class, form, null, ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告"))
-                .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
+    public ModelAndView newGet(final AdminAdvertisementNewForm form, BindingResult bindingResult) {
+        return page(AdminAdvertisementNewPage.class, form, bindingResult).addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
     }
 
     @PostMapping("/new")
-    public ModelAndView advertisementNewPage(@Valid final AdminAdvertisementNewForm form, BindingResult bindingResult) {
-
-        User user = currentUser().orElseThrow(RuntimeException::new);
+    public ModelAndView newPost(@Valid final AdminAdvertisementNewForm form, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return page(GenericAdminFormPage.class, form, bindingResult, ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告"))
-                    .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
+            return newGet(form, bindingResult);
         }
 
         return submitForm(form, context -> {
             try {
-                applicationContext.publishEvent(new AdvertisementNewEvent(user, advertisementService.create(() -> {
+                advertisementService.create(() -> {
                     Advertisement next = advertisementService.next();
                     advertisementService.mergeToEntity(form, next);
                     return next;
-                })));
-
+                });
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }

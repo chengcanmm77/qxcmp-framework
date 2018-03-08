@@ -253,6 +253,9 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         List<String> contents = getBreadcrumb();
         if (Objects.nonNull(contents) && !contents.isEmpty()) {
             Breadcrumb breadcrumb = new Breadcrumb();
+
+            breadcrumb.addItem(new BreadcrumbItem("控制台", ADMIN_URL));
+
             for (int i = 0; i < contents.size(); i += 2) {
                 String text = contents.get(i);
                 if (i + 1 == contents.size()) {
@@ -260,7 +263,7 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
                 } else {
                     String url = contents.get(i + 1);
                     if (Objects.nonNull(url)) {
-                        breadcrumb.addItem(new BreadcrumbItem(text, ADMIN_URL + "/" + url));
+                        breadcrumb.addItem(new BreadcrumbItem(text, url));
                     } else {
                         breadcrumb.addItem(new BreadcrumbItem(text));
                     }

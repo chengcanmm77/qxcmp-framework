@@ -8,12 +8,14 @@ import org.springframework.validation.BindingResult;
 /**
  * 后台表单页面
  *
+ * @param <T> 表单对象类型
+ *
  * @author Aaric
  */
 @RequiredArgsConstructor
-public abstract class AbstractQxcmpAdminFormPage extends AbstractQxcmpAdminPage {
+public abstract class AbstractQxcmpAdminFormPage<T> extends AbstractQxcmpAdminPage {
 
-    private final Object form;
+    private final T form;
     private final BindingResult bindingResult;
 
     @Override
@@ -26,10 +28,14 @@ public abstract class AbstractQxcmpAdminFormPage extends AbstractQxcmpAdminPage 
     /**
      * 渲染表单前的钩子函数
      */
-    protected abstract void preRender();
+    protected void preRender() {
+
+    }
 
     /**
      * 渲染表单后的钩子函数
      */
-    protected abstract void postRender();
+    protected void postRender() {
+
+    }
 }

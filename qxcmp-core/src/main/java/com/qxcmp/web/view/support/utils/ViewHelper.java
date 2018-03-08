@@ -35,7 +35,7 @@ public class ViewHelper {
 
     public AbstractForm nextForm(Object form, BindingResult bindingResult) {
         AbstractForm abstractForm = formHelper.convert(form);
-        if (Objects.nonNull(bindingResult)) {
+        if (Objects.nonNull(bindingResult) && bindingResult.hasErrors()) {
             abstractForm.setErrorMessage(formHelper.convertToErrorMessage(bindingResult, form));
         }
         return abstractForm;

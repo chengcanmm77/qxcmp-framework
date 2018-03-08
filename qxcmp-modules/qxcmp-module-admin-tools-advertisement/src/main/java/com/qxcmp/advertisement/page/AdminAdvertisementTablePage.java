@@ -31,6 +31,6 @@ public class AdminAdvertisementTablePage extends AbstractQxcmpAdminEntityTablePa
 
     @Override
     protected List<String> getBreadcrumb() {
-        return ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理");
+        return ImmutableList.of("广告管理");
     }
 }

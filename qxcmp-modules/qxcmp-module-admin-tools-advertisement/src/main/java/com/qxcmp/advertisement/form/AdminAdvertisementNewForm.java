@@ -3,6 +3,8 @@ package com.qxcmp.advertisement.form;
 import com.qxcmp.web.view.annotation.form.*;
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * @author Aaric
  */
@@ -16,6 +18,7 @@ public class AdminAdvertisementNewForm {
     @TextSelectionField("广告类型")
     private String type;
 
+    @NotEmpty
     @TextInputField("广告名称")
     private String title;
 
