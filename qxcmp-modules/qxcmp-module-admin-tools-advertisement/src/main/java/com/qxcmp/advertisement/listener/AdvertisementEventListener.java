@@ -6,15 +6,11 @@ import com.qxcmp.core.entity.EntityCreateEvent;
 import com.qxcmp.core.entity.EntityDeleteEvent;
 import com.qxcmp.core.entity.EntityUpdateEvent;
 import com.qxcmp.message.MessageService;
-import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.qxcmp.advertisement.AdvertisementModule.ADMIN_ADVERTISEMENT_URL;
 import static com.qxcmp.advertisement.AdvertisementModule.PRIVILEGE_ADMIN_ADVERTISEMENT;
@@ -33,41 +29,35 @@ public class AdvertisementEventListener {
     @EventListener
     public void onNewEvent(EntityCreateEvent<Advertisement> event) {
         Advertisement advertisement = event.getEntity();
-        List<User> users = userService.findByAuthority(PRIVILEGE_ADMIN_ADVERTISEMENT);
-        users.add(event.getUser());
-        messageService.feed(users.stream().map(User::getId).collect(Collectors.toSet()),
-                event.getUser(),
-                String.format("%s 新建了一条广告 <a href='https://%s'>%s</a>",
-                        event.getUser().getDisplayName(),
-                        siteService.getDomain() + ADMIN_ADVERTISEMENT_URL + "/" + advertisement.getId() + "/edit",
-                        StringUtils.isBlank(advertisement.getTitle()) ? "无广告名称" : advertisement.getTitle()),
-                String.format("<a href='https://%s'>广告管理</a>", siteService.getDomain() + ADMIN_ADVERTISEMENT_URL));
+        messageService.feedForUsers(PRIVILEGE_ADMIN_ADVERTISEMENT, event.getUser(), feed -> {
+            feed.setContent(String.format("%s 新建了一条广告 <a href='https://%s'>%s</a>",
+                    event.getUser().getDisplayName(),
+                    siteService.getDomain() + ADMIN_ADVERTISEMENT_URL + "/" + advertisement.getId() + "/edit",
+                    StringUtils.isBlank(advertisement.getTitle()) ? "无广告名称" : advertisement.getTitle()));
+            feed.setExtraContent(String.format("<a href='https://%s'>广告管理</a>", siteService.getDomain() + ADMIN_ADVERTISEMENT_URL));
+        });
     }
 
     @EventListener
     public void onEditEvent(EntityUpdateEvent<Advertisement> event) {
         Advertisement advertisement = event.getEntity();
-        List<User> users = userService.findByAuthority(PRIVILEGE_ADMIN_ADVERTISEMENT);
-        users.add(event.getUser());
-        messageService.feed(users.stream().map(User::getId).collect(Collectors.toSet()),
-                event.getUser(),
-                String.format("%s 编辑了一条广告 <a href='https://%s'>%s</a>",
-                        event.getUser().getDisplayName(),
-                        siteService.getDomain() + ADMIN_ADVERTISEMENT_URL + "/" + advertisement.getId() + "/edit",
-                        StringUtils.isBlank(advertisement.getTitle()) ? "无广告名称" : advertisement.getTitle()),
-                String.format("<a href='https://%s'>广告管理</a>", siteService.getDomain() + ADMIN_ADVERTISEMENT_URL));
+        messageService.feedForUsers(PRIVILEGE_ADMIN_ADVERTISEMENT, event.getUser(), feed -> {
+            feed.setContent(String.format("%s 编辑了一条广告 <a href='https://%s'>%s</a>",
+                    event.getUser().getDisplayName(),
+                    siteService.getDomain() + ADMIN_ADVERTISEMENT_URL + "/" + advertisement.getId() + "/edit",
+                    StringUtils.isBlank(advertisement.getTitle()) ? "无广告名称" : advertisement.getTitle()));
+            feed.setExtraContent(String.format("<a href='https://%s'>广告管理</a>", siteService.getDomain() + ADMIN_ADVERTISEMENT_URL));
+        });
     }
 
     @EventListener
     public void onDeleteEvent(EntityDeleteEvent<Advertisement> event) {
         Advertisement advertisement = event.getEntity();
-        List<User> users = userService.findByAuthority(PRIVILEGE_ADMIN_ADVERTISEMENT);
-        users.add(event.getUser());
-        messageService.feed(users.stream().map(User::getId).collect(Collectors.toSet()),
-                event.getUser(),
-                String.format("%s 删除了一条广告 %s",
-                        event.getUser().getDisplayName(),
-                        StringUtils.isBlank(advertisement.getTitle()) ? "无广告名称" : advertisement.getTitle()),
-                String.format("<a href='https://%s'>广告管理</a>", siteService.getDomain() + ADMIN_ADVERTISEMENT_URL));
+        messageService.feedForUsers(PRIVILEGE_ADMIN_ADVERTISEMENT, event.getUser(), feed -> {
+            feed.setContent(String.format("%s 删除了一条广告 %s",
+                    event.getUser().getDisplayName(),
+                    StringUtils.isBlank(advertisement.getTitle()) ? "无广告名称" : advertisement.getTitle()));
+            feed.setExtraContent(String.format("<a href='https://%s'>广告管理</a>", siteService.getDomain() + ADMIN_ADVERTISEMENT_URL));
+        });
     }
 }

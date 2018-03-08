@@ -1,11 +1,13 @@
 package com.qxcmp.message;
 
 import com.qxcmp.user.User;
+import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -20,6 +22,25 @@ import java.util.function.Consumer;
 public class MessageService {
 
     private final FeedService feedService;
+    private final UserService userService;
+
+    /**
+     * 为一个权限组的用户生成动态
+     *
+     * @param privilege 权限
+     * @param target    产生动态的用户
+     * @param consumer  动态内容设置
+     */
+    public void feedForUsers(String privilege, User target, Consumer<Feed> consumer) {
+        List<User> users = userService.findByAuthority(privilege);
+        users.add(target);
+        Feed feed = new Feed();
+        consumer.accept(feed);
+        feed.setId(null);
+        feed.setTarget(target);
+        feed.setDateCreated(DateTime.now().toDate());
+        feedService.create(feed);
+    }
 
     /**
      * 为用户组中的每一个用户生成一个Feed
