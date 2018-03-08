@@ -23,6 +23,6 @@ public class AdminToolsPageController extends QxcmpController {
 
     @GetMapping("")
     public ModelAndView toolsPage() {
-        return qxcmpPage(AdminToolsPage.class, adminToolPageExtensionPoint.getExtensions());
+        return page(AdminToolsPage.class, adminToolPageExtensionPoint.getExtensions());
     }
 }

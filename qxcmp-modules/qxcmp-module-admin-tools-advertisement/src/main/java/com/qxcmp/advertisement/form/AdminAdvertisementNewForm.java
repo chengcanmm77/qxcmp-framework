@@ -3,6 +3,9 @@ package com.qxcmp.advertisement.form;
 import com.qxcmp.web.view.annotation.form.*;
 import lombok.Data;
 
+/**
+ * @author Aaric
+ */
 @Form("新建广告")
 @Data
 public class AdminAdvertisementNewForm {

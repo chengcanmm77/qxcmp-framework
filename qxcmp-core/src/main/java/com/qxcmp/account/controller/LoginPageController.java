@@ -35,7 +35,7 @@ public class LoginPageController extends QxcmpController {
 
         boolean showCaptcha = isShowCaptcha();
 
-        return qxcmpPage(LoginPage.class, request, loginForm, loginFormWithCaptcha, showCaptcha);
+        return page(LoginPage.class, request, loginForm, loginFormWithCaptcha, showCaptcha);
     }
 
     /**

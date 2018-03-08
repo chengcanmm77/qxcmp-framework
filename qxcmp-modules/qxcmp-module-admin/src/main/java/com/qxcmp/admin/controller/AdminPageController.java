@@ -28,6 +28,6 @@ public class AdminPageController extends QxcmpController {
     public ModelAndView homePage(Pageable pageable) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         Page<com.qxcmp.message.Feed> feeds = feedService.findByOwner(user.getId(), pageable);
-        return qxcmpPage(AdminHomePage.class, feeds);
+        return page(AdminHomePage.class, feeds);
     }
 }

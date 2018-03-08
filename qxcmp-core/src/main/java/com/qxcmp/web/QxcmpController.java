@@ -101,7 +101,7 @@ public abstract class QxcmpController {
      *
      * @return 渲染后的页面
      */
-    protected <T extends QxcmpPage> ModelAndView qxcmpPage(Class<T> tClass, Object... models) {
+    protected <T extends QxcmpPage> ModelAndView page(Class<T> tClass, Object... models) {
 
         T t = applicationContext.getBean(tClass, models);
 

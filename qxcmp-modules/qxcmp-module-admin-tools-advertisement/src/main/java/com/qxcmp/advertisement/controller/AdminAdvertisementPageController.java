@@ -46,12 +46,12 @@ public class AdminAdvertisementPageController extends QxcmpController {
 
     @GetMapping("")
     public ModelAndView advertisementPage(Pageable pageable) {
-        return qxcmpPage(AdminAdvertisementTablePage.class, advertisementService, pageable);
+        return page(AdminAdvertisementTablePage.class, advertisementService, pageable);
     }
 
     @GetMapping("/new")
     public ModelAndView advertisementNewPage(final AdminAdvertisementNewForm form) {
-        return qxcmpPage(GenericAdminFormPage.class, form, null, ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告"))
+        return page(GenericAdminFormPage.class, form, null, ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告"))
                 .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
     }
 
@@ -61,7 +61,7 @@ public class AdminAdvertisementPageController extends QxcmpController {
         User user = currentUser().orElseThrow(RuntimeException::new);
 
         if (bindingResult.hasErrors()) {
-            return qxcmpPage(GenericAdminFormPage.class, form, bindingResult, ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告"))
+            return page(GenericAdminFormPage.class, form, bindingResult, ImmutableList.of("控制台", "", "系统工具", "tools", "广告管理", "advertisement", "新建广告"))
                     .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
         }
 

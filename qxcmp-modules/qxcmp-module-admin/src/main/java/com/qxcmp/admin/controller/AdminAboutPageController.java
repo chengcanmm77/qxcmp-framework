@@ -18,6 +18,6 @@ public class AdminAboutPageController extends QxcmpController {
 
     @GetMapping("")
     public ModelAndView aboutPage() {
-        return qxcmpPage(AdminAboutPage.class);
+        return page(AdminAboutPage.class);
     }
 }
