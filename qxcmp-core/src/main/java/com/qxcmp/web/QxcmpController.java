@@ -10,7 +10,10 @@ import com.qxcmp.audit.AuditLog;
 import com.qxcmp.config.SiteService;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.config.UserConfigService;
+import com.qxcmp.core.entity.EntityCreateEvent;
+import com.qxcmp.core.entity.EntityDeleteEvent;
 import com.qxcmp.core.entity.EntityService;
+import com.qxcmp.core.entity.EntityUpdateEvent;
 import com.qxcmp.exception.CaptchaExpiredException;
 import com.qxcmp.exception.CaptchaIncorrectException;
 import com.qxcmp.message.MessageService;
@@ -188,11 +191,11 @@ public abstract class QxcmpController {
     protected <T, ID extends Serializable> ModelAndView createEntity(EntityService<T, ID> entityService, Object form) {
         return execute(getFormSubmitActionTitle(form), context -> {
             try {
-                entityService.create(() -> {
+                applicationContext.publishEvent(new EntityCreateEvent<>(userService.currentUser(), entityService.create(() -> {
                     T next = entityService.next();
                     entityService.mergeToEntity(form, next);
                     return next;
-                });
+                })));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -207,20 +210,20 @@ public abstract class QxcmpController {
      * <p>
      * 如果实体不在返回一个实体未找到概览页面
      *
-     * @param pClass        最终的编辑页面
+     * @param pageClass     最终的编辑页面
      * @param id            实体主键
      * @param entityService 实体服务
      * @param form          实体编辑表单
      * @param bindingResult 错误对象
-     * @param <P>           编辑页面类型
+     * @param <Q>           编辑页面类型
      * @param <T>           实体类型
      * @param <ID>          主键类型
      * @return 实体编辑页面
      */
-    protected <P extends QxcmpPage, T, ID extends Serializable> ModelAndView entityUpdatePage(Class<P> pClass, ID id, EntityService<T, ID> entityService, Object form, BindingResult bindingResult) {
+    protected <Q extends QxcmpPage, T, ID extends Serializable> ModelAndView entityUpdatePage(Class<Q> pageClass, ID id, EntityService<T, ID> entityService, Object form, BindingResult bindingResult) {
         return entityService.findOne(id).map(t -> {
             entityService.mergeToObject(t, form);
-            return page(pClass, form, bindingResult);
+            return page(pageClass, form, bindingResult);
         }).orElse(overviewPage(viewHelper.nextWarningOverview("资源不存在")));
     }
 
@@ -242,7 +245,8 @@ public abstract class QxcmpController {
     protected <T, ID extends Serializable> ModelAndView updateEntity(ID id, EntityService<T, ID> entityService, Object form) {
         return execute(getFormSubmitActionTitle(form), context -> {
             try {
-                entityService.update(id, t -> entityService.mergeToEntity(form, t));
+                T origin = entityService.findOne(id).orElse(null);
+                applicationContext.publishEvent(new EntityUpdateEvent<>(userService.currentUser(), entityService.update(id, t -> entityService.mergeToEntity(form, t)), origin));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
@@ -255,7 +259,11 @@ public abstract class QxcmpController {
     protected <T, ID extends Serializable> ResponseEntity<RestfulResponse> deleteEntity(String title, ID id, EntityService<T, ID> entityService) {
         AuditLog auditLog = actionExecutor.execute(title, request.getRequestURL().toString(), getRequestContent(request), currentUser().orElse(null), context -> {
             try {
+                T entity = entityService.findOne(id).orElse(null);
                 entityService.deleteById(id);
+                if (Objects.nonNull(entity)) {
+                    applicationContext.publishEvent(new EntityDeleteEvent<>(userService.currentUser(), entity));
+                }
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
