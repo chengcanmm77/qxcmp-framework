@@ -4,7 +4,6 @@ import com.qxcmp.core.entity.AbstractEntityService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * 角色服务
@@ -24,10 +23,6 @@ public class RoleService extends AbstractEntityService<Role, Long, RoleRepositor
 
     public Optional<Role> findByName(String name) {
         return repository.findByName(name);
-    }
-
-    public Role update(String name, Consumer<Role> consumer) {
-        return update(findByName(name).map(Role::getId).orElse(-1L), consumer);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.qxcmp.security;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.qxcmp.core.init.QxcmpInitializer;
 import com.qxcmp.user.User;
@@ -20,7 +19,6 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.qxcmp.core.QxcmpSecurityConfiguration.*;
 
 /**
  * 平台安全配置
@@ -35,7 +33,8 @@ import static com.qxcmp.core.QxcmpSecurityConfiguration.*;
 @RequiredArgsConstructor
 public class QxcmpSecurityLoader implements QxcmpInitializer {
 
-    private static final String ROOT = "administrator";
+    private static final String ROOT_USERNAME = "administrator";
+    private static final String ROOT_ROLE = "ROOT_USERNAME";
     private static final String DEFAULT_PREFIX = "PRIVILEGE_";
     private static final String DEFAULT_SUFFIX = "_DESCRIPTION";
 
@@ -48,58 +47,8 @@ public class QxcmpSecurityLoader implements QxcmpInitializer {
 
     @Override
     public void init() {
-
         loadPrivilege();
-
-        /*
-         * 创建超级角色
-         * */
-        if (!roleService.findByName("ROOT").isPresent()) {
-            roleService.create(() -> {
-                Role root = roleService.next();
-                root.setName("ROOT");
-                root.setDescription("超级用户角色，拥有该角色的用户会拥有所有权限");
-                return root;
-            });
-        }
-
-        /*
-         * 创建超级用户
-         * */
-        if (!userService.findByUsername("administrator").isPresent()) {
-            userService.create(() -> {
-                User user = userService.next();
-                user.setUsername("administrator");
-                user.setNickname("超级管理员");
-                user.setPassword(new BCryptPasswordEncoder().encode("administrator"));
-                user.setAccountNonExpired(true);
-                user.setAccountNonLocked(true);
-                user.setCredentialsNonExpired(true);
-                user.setEnabled(true);
-                userService.setDefaultPortrait(user);
-                return user;
-            });
-        }
-
-        /*
-         * 在平台每次启动的时候重置超级角色拥有的权限，和超级用户的角色
-         * */
-        roleService.findByName("ROOT").ifPresent(role -> {
-
-            /*
-             * 重置超级角色权限
-             * */
-            roleService.update(role.getId(), r -> r.setPrivileges(Sets.newHashSet(privilegeService.findAll())));
-
-            /*
-             * 重置超级管理员角色
-             * */
-            userService.findByUsername("administrator").ifPresent(user ->
-                    userService.update(user.getId(), u -> u.getRoles().add(role))
-            );
-        });
-
-        initialBuiltInRoles();
+        loadRootUser();
     }
 
     /**
@@ -141,15 +90,36 @@ public class QxcmpSecurityLoader implements QxcmpInitializer {
         log.info("Finish loading privilege, total {}", counter.intValue());
     }
 
-    private void initialBuiltInRoles() {
-        if (!roleService.findByName(ROLE_NEWS).isPresent()) {
-            roleService.create(() -> {
-                Role role = roleService.next();
-                role.setName(ROLE_NEWS);
-                role.setDescription(ROLE_NEWS_DESCRIPTION);
-                role.setPrivileges(ImmutableSet.of(privilegeService.findByName(PRIVILEGE_NEWS).get(), privilegeService.findByName(PRIVILEGE_SYSTEM_ADMIN).get()));
-                return role;
-            });
-        }
+    /**
+     * 创建超级用户并重置所有权限
+     */
+    private void loadRootUser() {
+        userService.update(userService.findByUsername(ROOT_USERNAME).orElse(userService.create(() -> {
+            User next = userService.next();
+            next.setUsername(ROOT_USERNAME);
+            next.setNickname("超级管理员");
+            next.setPassword(new BCryptPasswordEncoder().encode(ROOT_USERNAME));
+            next.setAccountNonExpired(true);
+            next.setAccountNonLocked(true);
+            next.setCredentialsNonExpired(true);
+            next.setEnabled(true);
+            userService.setDefaultPortrait(next);
+            return next;
+        })).getId(), user -> user.getRoles().add(loadRootRole()));
+    }
+
+    /**
+     * 加载并重置平台内置超级用户角色
+     * 超级用户角色包含了所有权限
+     *
+     * @return 超级用户角色
+     */
+    private Role loadRootRole() {
+        return roleService.update(roleService.findByName(ROOT_ROLE).orElse(roleService.create(() -> {
+            Role next = roleService.next();
+            next.setName(ROOT_ROLE);
+            next.setDescription("超级用户角色，拥有该角色的用户会拥有所有权限");
+            return next;
+        })).getId(), role -> role.setPrivileges(Sets.newHashSet(privilegeService.findAll())));
     }
 }

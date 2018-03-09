@@ -41,6 +41,6 @@ spring:
         dialect: org.hibernate.dialect.MySQL5Dialect
     open-in-view: true
 logging:
-  file: logs/${platform.application.title}.log
+  file: log/${platform.application.title}.log
 logging.level.us.codecraft.webmagic: ERROR
 logging.level.org.apache.http.client.protocol: ERROR

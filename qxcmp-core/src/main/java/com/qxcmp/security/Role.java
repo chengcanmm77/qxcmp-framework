@@ -37,6 +37,7 @@ public class Role {
     /**
      * 角色名称
      */
+    @Column(unique = true)
     @TableField("角色名称")
     private String name;
 

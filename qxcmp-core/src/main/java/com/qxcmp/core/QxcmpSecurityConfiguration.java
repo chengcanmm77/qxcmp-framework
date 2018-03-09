@@ -22,8 +22,6 @@ public class QxcmpSecurityConfiguration implements SecurityLoader {
      * 基本权限
      * */
 
-    public static final String PRIVILEGE_SYSTEM_ADMIN = "系统管理员权限";
-    public static final String PRIVILEGE_SYSTEM_ADMIN_DESCRIPTION = "可以进入后台系统";
     public static final String PRIVILEGE_ADMIN_SETTINGS = "系统配置管理权限";
     public static final String PRIVILEGE_ADMIN_SETTINGS_DESCRIPTION = "可以修改系统全局配置";
     public static final String PRIVILEGE_ADMIN_SECURITY = "系统安全管理权限";

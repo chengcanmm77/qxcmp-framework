@@ -210,8 +210,8 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
         );
 
         navigationService.add(new Navigation(NAVIGATION_ADMIN_PROFILE, "个人中心导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_PROFILE_INFO, "基本资料", QXCMP_ADMIN_URL + "/profile/info").setIcon(new Icon("user")).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_SYSTEM_ADMIN)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_PROFILE_SECURITY, "安全设置", QXCMP_ADMIN_URL + "/profile/security").setIcon(new Icon("lock")).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_SYSTEM_ADMIN)))
+                .addItem(new Navigation(NAVIGATION_ADMIN_PROFILE_INFO, "基本资料", QXCMP_ADMIN_URL + "/profile/info").setIcon(new Icon("user")).setOrder(10))
+                .addItem(new Navigation(NAVIGATION_ADMIN_PROFILE_SECURITY, "安全设置", QXCMP_ADMIN_URL + "/profile/security").setIcon(new Icon("lock")).setOrder(20))
         );
 
         navigationService.add(new Navigation(NAVIGATION_ADMIN_NEWS, "新闻管理导航栏")
