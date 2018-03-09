@@ -141,46 +141,5 @@
         <div th:replace="~{qxcmp/globals/components :: component(${item})}"></div>
     </th:block>
 </div>
-
-
-<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.menu.item.BackendAccountAlarmItem"*/-->
-<th:block th:fragment="item-backend-alarm(component)">
-    <a th:href="@{/admin/profile/message}" target="_blank" class="link icon item">
-        <i class="alarm icon"></i>
-        <div th:if="${component.messageCount gt 0}"
-             class="ui red label" th:utext="${component.messageCount}"></div>
-    </a>
-</th:block>
-
-<!--/*@thymesVar id="component" type="com.qxcmp.web.view.elements.menu.item.BackendAccountMenuItem"*/-->
-<th:block th:fragment="item-backend-account(component)">
-    <div th:class="${component.getClassName()}">
-        <div class="ui rounded image">
-            <img th:src="@{${component.user.portrait}}"/>
-        </div>
-    </div>
-    <div class="ui inverted bottom left popup">
-        <div class="ui inverted vertical menu">
-            <a th:each="navigation : ${component.navigationList}" class="item" th:href="@{${navigation.anchor.href}}">
-                <th:block th:if="${navigation.icon ne null}">
-                    <div th:replace="~{qxcmp/globals/components :: component(${navigation.icon})}"></div>
-                </th:block>
-                [[${navigation.title}]]
-            </a>
-            <form class="link item" th:action="@{/logout}" method="post" onclick="$(this).submit()">
-                <i class="sign out icon"></i>
-                退出账户
-            </form>
-        </div>
-    </div>
-    <script th:inline="javascript">
-        $(document).ready(function () {
-            $(".ui.top.fixed.menu .item.backend.account").popup({
-                inline: true,
-                on: "click"
-            });
-        });
-    </script>
-</th:block>
 </body>
 </html>

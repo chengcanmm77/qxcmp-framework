@@ -1,7 +1,10 @@
 package com.qxcmp.admin.page;
 
+import com.google.common.collect.Maps;
+import com.qxcmp.admin.view.AdminTopMenuAlarmItem;
+import com.qxcmp.admin.view.AdminTopMenuMobileItem;
+import com.qxcmp.admin.view.AdminTopMenuProfileItem;
 import com.qxcmp.message.InnerMessageService;
-import com.qxcmp.message.SiteNotification;
 import com.qxcmp.message.SiteNotificationService;
 import com.qxcmp.user.User;
 import com.qxcmp.web.view.Component;
@@ -19,7 +22,10 @@ import com.qxcmp.web.view.elements.menu.RightMenu;
 import com.qxcmp.web.view.elements.menu.VerticalMenu;
 import com.qxcmp.web.view.elements.menu.VerticalSubMenu;
 import com.qxcmp.web.view.elements.menu.item.*;
-import com.qxcmp.web.view.elements.message.*;
+import com.qxcmp.web.view.elements.message.ErrorMessage;
+import com.qxcmp.web.view.elements.message.InfoMessage;
+import com.qxcmp.web.view.elements.message.Message;
+import com.qxcmp.web.view.elements.message.WarningMessage;
 import com.qxcmp.web.view.modules.accordion.AccordionItem;
 import com.qxcmp.web.view.modules.sidebar.AbstractSidebar;
 import com.qxcmp.web.view.modules.sidebar.AccordionMenuSidebar;
@@ -53,11 +59,56 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
 
     private AbstractSidebar sidebar = new AccordionMenuSidebar().setAttachEventsSelector(".ui.bottom.fixed.menu .sidebar.item");
+    private boolean isMobile;
+    private String menuNavigationId;
+    private String menuNavigationActivateId;
+    private Map<String, AbstractLabel> menuBadge = Maps.newLinkedHashMap();
+    private RightMenu topFixedRightMenu = new RightMenu();
     private VerticalMenu verticalMenu;
     private Col content = new Col(Wide.SIXTEEN);
 
     private InnerMessageService innerMessageService;
     private SiteNotificationService siteNotificationService;
+
+    /**
+     * 设置后台页面面包屑导航
+     *
+     * @return 如果返回空则不生成面包屑导航
+     */
+    protected List<String> getBreadcrumb() {
+        return Collections.emptyList();
+    }
+
+    /**
+     * 设置页面菜单
+     * <p>
+     * 页面菜单在移动端会隐藏至页面顶部
+     *
+     * @param id       导航ID
+     * @param activeId 当前激活的导航ID
+     */
+    protected void setMenu(String id, String activeId) {
+        menuNavigationId = id;
+        menuNavigationActivateId = activeId;
+    }
+
+    public void setMenuBadge(String id, String text) {
+        setMenuBadge(id, text, Color.NONE);
+    }
+
+    public void setMenuBadge(String id, String text, Color color) {
+        setMenuBadge(id, new Label(text).setColor(color));
+    }
+
+    /**
+     * 设置页面菜单项徽章
+     *
+     * @param id    导航ID
+     * @param label 徽章
+     */
+    public void setMenuBadge(String id, AbstractLabel label) {
+        menuBadge.put(id, label);
+    }
 
     @Override
     public AbstractPage addComponent(Component component) {
@@ -80,83 +131,6 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         return this;
     }
 
-    /**
-     * 设置后台页面面包屑导航
-     *
-     * @return 如果返回空则不生成面包屑导航
-     */
-    protected List<String> getBreadcrumb() {
-        return Collections.emptyList();
-    }
-
-    /**
-     * 设置页面菜单
-     *
-     * @param id       导航ID
-     * @param activeId 当前激活的导航ID
-     *
-     * @return 后台页面
-     */
-    public AbstractQxcmpAdminPage setVerticalMenu(String id, String activeId) {
-
-        VerticalMenu verticalMenu = new VerticalMenu().setFluid();
-        verticalMenu.setTabular();
-
-        navigationService.get(id).getItems().forEach(navigation -> {
-            if (navigation.isVisible(userService.currentUser())) {
-                if (navigation.getItems().isEmpty()) {
-                    TextItem textItem = new TextItem(navigation.getTitle(), navigation.getAnchor().getHref());
-
-                    if (StringUtils.equals(activeId, navigation.getId())) {
-                        textItem.setActive();
-                    }
-
-                    textItem.addContext("navigation-id", navigation.getId());
-
-                    verticalMenu.addItem(textItem);
-                }
-            }
-        });
-
-        if (!verticalMenu.getItems().isEmpty()) {
-            this.verticalMenu = verticalMenu;
-        }
-
-        return this;
-    }
-
-    public AbstractQxcmpAdminPage setVerticalMenuBadge(String id, String text) {
-        return setVerticalMenuBadge(id, text, Color.NONE);
-    }
-
-    public AbstractQxcmpAdminPage setVerticalMenuBadge(String id, String text, Color color) {
-        return setVerticalMenuBadge(id, new Label(text).setColor(color));
-    }
-
-    /**
-     * 设置页面菜单项徽章
-     *
-     * @param id    导航ID
-     * @param label 徽章
-     *
-     * @return 后台页面
-     */
-    public AbstractQxcmpAdminPage setVerticalMenuBadge(String id, AbstractLabel label) {
-
-        if (Objects.nonNull(verticalMenu)) {
-            verticalMenu.getItems().forEach(menuItem -> {
-                if (Objects.nonNull(menuItem.getContext("navigation-id")) && StringUtils.equals(menuItem.getContext("navigation-id").toString(), id)) {
-                    if (menuItem instanceof TextItem) {
-                        TextItem textItem = (TextItem) menuItem;
-                        textItem.setBadge(label);
-                    }
-                }
-            });
-        }
-
-        return this;
-    }
-
     @Override
     public ModelAndView build() {
         buildSidebar();
@@ -165,25 +139,35 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         return super.build();
     }
 
+    @Override
+    public void renderToMobile() {
+        super.renderToMobile();
+        isMobile = true;
+    }
+
     private void buildSidebar() {
         final User user = userService.currentUser();
         buildSidebarTopFixedMenu(user);
-        buildSidebarMenu();
-        buildSideBottomFixedMenu(user);
+        buildSidebarBottomFixedMenu();
+        buildSidebarMenu(user);
     }
 
     private void buildSidebarTopFixedMenu(User user) {
         final Menu menu = new Menu();
         menu.setInverted().setFixed(Fixed.TOP);
         menu.addItem(new LogoImageItem(siteService.getLogo(), siteService.getTitle()));
-        RightMenu rightMenu = new RightMenu();
-        rightMenu.addItem(new BackendAccountAlarmItem(innerMessageService.countByUserId(user.getId())));
-        rightMenu.addItem(new BackendAccountMenuItem(user, navigationService.get(NAVIGATION_ADMIN_PROFILE).getItems()));
-        menu.setRightMenu(rightMenu);
+
+        if (isMobile) {
+            buildMenuForMobile();
+        }
+
+        topFixedRightMenu.addItem(new AdminTopMenuAlarmItem(innerMessageService.countByUserId(user.getId())));
+        topFixedRightMenu.addItem(new AdminTopMenuProfileItem(user, navigationService.get(NAVIGATION_ADMIN_PROFILE).getItems()));
+        menu.setRightMenu(topFixedRightMenu);
         sidebar.setTopFixedMenu(menu);
     }
 
-    private void buildSidebarMenu() {
+    private void buildSidebarBottomFixedMenu() {
         final Menu menu = new Menu();
         menu.setInverted().setFixed(Fixed.BOTTOM);
         menu.addItem(new SidebarIconItem());
@@ -193,7 +177,7 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         sidebar.setBottomFixedMenu(menu);
     }
 
-    private void buildSideBottomFixedMenu(User user) {
+    private void buildSidebarMenu(User user) {
         navigationService.get(NAVIGATION_ADMIN_SIDEBAR).getItems().stream()
                 .filter(navigation -> navigation.isVisible(user))
                 .forEach(navigation -> {
@@ -229,17 +213,11 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         final AbstractGrid grid = new VerticallyDividedGrid().setVerticallyPadded();
         final Row contentRow = new Row();
 
-        AbstractMessage message = buildSiteNotification();
-
-        if (Objects.nonNull(message)) {
-            container.addComponent(message);
-        }
-
+        buildSiteNotification(container);
         buildPageBreadcrumb(grid);
 
-        if (Objects.nonNull(verticalMenu)) {
-            contentRow.addCol(new Col().setComputerWide(Wide.THREE).setMobileWide(Wide.SIXTEEN).addComponent(verticalMenu));
-            contentRow.addCol(content.setComputerWide(Wide.THIRTEEN).setMobileWide(Wide.SIXTEEN));
+        if (!isMobile) {
+            buildMenuForNormal(contentRow);
         } else {
             contentRow.addCol(content.setGeneralWide(Wide.SIXTEEN));
         }
@@ -247,6 +225,24 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         grid.addItem(contentRow);
         container.addComponent(grid);
         sidebar.addContent(container);
+    }
+
+    private void buildSiteNotification(Container container) {
+        siteNotificationService.findActiveNotifications().ifPresent(siteNotification -> {
+            switch (siteNotification.getType()) {
+                case "网站通知":
+                    container.addComponent(new InfoMessage(siteNotification.getTitle(), siteNotification.getContent()).setCloseable());
+                    break;
+                case "网站警告":
+                    container.addComponent(new WarningMessage(siteNotification.getTitle(), siteNotification.getContent()).setCloseable());
+                    break;
+                case "网站错误":
+                    container.addComponent(new ErrorMessage(siteNotification.getTitle(), siteNotification.getContent()).setCloseable());
+                    break;
+                default:
+                    container.addComponent(new Message(siteNotification.getTitle(), siteNotification.getContent()).setCloseable());
+            }
+        });
     }
 
     private void buildPageBreadcrumb(AbstractGrid grid) {
@@ -273,34 +269,56 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         }
     }
 
-    private AbstractMessage buildSiteNotification() {
+    private void buildMenuForMobile() {
+        VerticalMenu verticalMenu = getVerticalMenu();
+        if (!verticalMenu.getItems().isEmpty()) {
+            topFixedRightMenu.addItem(new AdminTopMenuMobileItem(verticalMenu));
+        }
+    }
 
-        AbstractMessage message = null;
+    private void buildMenuForNormal(Row contentRow) {
 
-        Optional<SiteNotification> activeNotifications = siteNotificationService.findActiveNotifications();
+        VerticalMenu verticalMenu = getVerticalMenu();
 
-        if (activeNotifications.isPresent()) {
+        if (verticalMenu.getItems().isEmpty()) {
+            contentRow.addCol(content.setGeneralWide(Wide.SIXTEEN));
+        } else {
+            contentRow.addCol(new Col().setComputerWide(Wide.THREE).setMobileWide(Wide.SIXTEEN).addComponent(verticalMenu));
+            contentRow.addCol(content.setComputerWide(Wide.THIRTEEN).setMobileWide(Wide.SIXTEEN));
+        }
+    }
 
-            SiteNotification siteNotification = activeNotifications.get();
+    private VerticalMenu getVerticalMenu() {
+        VerticalMenu verticalMenu = new VerticalMenu().setFluid();
+        verticalMenu.setTabular();
 
-            switch (siteNotification.getType()) {
-                case "网站通知":
-                    message = new InfoMessage(siteNotification.getTitle(), siteNotification.getContent());
-                    break;
-                case "网站警告":
-                    message = new WarningMessage(siteNotification.getTitle(), siteNotification.getContent());
-                    break;
-                case "网站错误":
-                    message = new ErrorMessage(siteNotification.getTitle(), siteNotification.getContent());
-                    break;
-                default:
-                    message = new Message(siteNotification.getTitle(), siteNotification.getContent());
-            }
-
-            message.setCloseable(true);
+        if (StringUtils.isNotBlank(menuNavigationId)) {
+            navigationService.get(menuNavigationId).getItems().forEach(navigation -> {
+                if (navigation.isVisible(userService.currentUser())) {
+                    if (navigation.getItems().isEmpty()) {
+                        TextItem textItem = new TextItem(navigation.getTitle(), navigation.getAnchor().getHref());
+                        if (StringUtils.equals(menuNavigationActivateId, navigation.getId())) {
+                            textItem.setActive();
+                        }
+                        textItem.addContext("navigation-id", navigation.getId());
+                        verticalMenu.addItem(textItem);
+                    }
+                }
+            });
         }
 
-        return message;
+        menuBadge.forEach((s, label) ->
+                verticalMenu.getItems()
+                        .forEach(menuItem -> {
+                            if (Objects.nonNull(menuItem.getContext("navigation-id")) && StringUtils.equals(menuItem.getContext("navigation-id").toString(), s)) {
+                                if (menuItem instanceof TextItem) {
+                                    TextItem textItem = (TextItem) menuItem;
+                                    textItem.setBadge(label);
+                                }
+                            }
+                        }));
+
+        return verticalMenu;
     }
 
     @Autowired

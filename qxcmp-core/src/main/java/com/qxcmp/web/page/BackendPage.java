@@ -46,7 +46,6 @@ import java.util.function.Supplier;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_PROFILE;
 import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_SIDEBAR;
 
 @org.springframework.stereotype.Component
@@ -196,8 +195,6 @@ public class BackendPage extends AbstractLegacyPage {
         menu.setInverted().setFixed(Fixed.TOP);
         menu.addItem(new LogoImageItem(siteService.getLogo(), siteService.getTitle()));
         RightMenu rightMenu = new RightMenu();
-        rightMenu.addItem(new BackendAccountAlarmItem(innerMessageService.countByUserId(user.getId())));
-        rightMenu.addItem(new BackendAccountMenuItem(user, navigationService.get(NAVIGATION_ADMIN_PROFILE).getItems()));
         menu.setRightMenu(rightMenu);
         sidebar.setTopFixedMenu(menu);
     }

@@ -19,7 +19,7 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 public class AdminSettingsPage extends AbstractQxcmpAdminPage {
     @Override
     public void render() {
-        setVerticalMenu(VERTICAL_MENU_ADMIN_SETTINGS, "");
+        setMenu(VERTICAL_MENU_ADMIN_SETTINGS, "");
         addComponent(viewHelper.nextOverview("设置中心"));
     }
 
