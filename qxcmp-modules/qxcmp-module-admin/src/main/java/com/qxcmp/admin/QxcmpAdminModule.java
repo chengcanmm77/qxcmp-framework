@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class QxcmpAdminModule extends ModuleLoaderAdapter {
 
     public static final String ADMIN_URL = "/admin";
+    public static final String ADMIN_AUDIT_LOG_URL = ADMIN_URL + "/audit";
 
     public static final String PRIVILEGE_SYSTEM_ADMIN = "系统管理员权限";
     public static final String PRIVILEGE_SYSTEM_ADMIN_DESCRIPTION = "可以进入后台系统";
