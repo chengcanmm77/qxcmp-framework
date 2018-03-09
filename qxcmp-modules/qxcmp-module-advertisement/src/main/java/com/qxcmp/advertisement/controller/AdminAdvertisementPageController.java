@@ -43,7 +43,8 @@ public class AdminAdvertisementPageController extends QxcmpAdminController {
 
     @GetMapping("/new")
     public ModelAndView newGet(final AdminAdvertisementNewForm form, BindingResult bindingResult) {
-        return page(AdminAdvertisementNewPage.class, form, bindingResult).addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
+        return entityCreatePage(AdminAdvertisementNewPage.class, form, bindingResult)
+                .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
     }
 
     @PostMapping("/new")
@@ -55,20 +56,21 @@ public class AdminAdvertisementPageController extends QxcmpAdminController {
     }
 
     @GetMapping("/{id}/edit")
-    public ModelAndView editPageGet(@PathVariable Long id, final AdminAdvertisementEditForm form, BindingResult bindingResult) {
-        return entityUpdatePage(AdminAdvertisementEditPage.class, id, advertisementService, form, bindingResult).addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
+    public ModelAndView editGet(@PathVariable Long id, final AdminAdvertisementEditForm form, BindingResult bindingResult) {
+        return entityUpdatePage(AdminAdvertisementEditPage.class, id, advertisementService, form, bindingResult)
+                .addObject("selection_items_type", AdvertisementModule.SUPPORT_TYPES);
     }
 
     @PostMapping("/{id}/edit")
-    public ModelAndView editPagePost(@PathVariable Long id, @Valid final AdminAdvertisementEditForm form, BindingResult bindingResult) {
+    public ModelAndView editPost(@PathVariable Long id, @Valid final AdminAdvertisementEditForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return editPageGet(id, form, bindingResult);
+            return editGet(id, form, bindingResult);
         }
         return updateEntity(id, advertisementService, form);
     }
 
     @PostMapping("/{id}/remove")
-    public ResponseEntity<RestfulResponse> advertisementRemove(@PathVariable Long id) {
+    public ResponseEntity<RestfulResponse> remove(@PathVariable Long id) {
         return deleteEntity("删除广告", id, advertisementService);
     }
 }

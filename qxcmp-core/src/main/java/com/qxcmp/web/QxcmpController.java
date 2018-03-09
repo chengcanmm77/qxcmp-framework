@@ -179,6 +179,20 @@ public abstract class QxcmpController {
     }
 
     /**
+     * 获取一个实体创建页面
+     *
+     * @param qClass        实体创建页面类型
+     * @param form          创建表单
+     * @param bindingResult 错误结果
+     * @param <Q>           页面类型
+     *
+     * @return 实体创建页面
+     */
+    protected <Q extends QxcmpPage> ModelAndView entityCreatePage(Class<Q> qClass, Object form, BindingResult bindingResult) {
+        return page(qClass, form, bindingResult);
+    }
+
+    /**
      * 使用表单创建一个实体对象
      * <p>
      * 注意：

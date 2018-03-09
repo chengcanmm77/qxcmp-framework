@@ -1,4 +1,4 @@
-package com.qxcmp.web.form;
+package com.qxcmp.link.form;
 
 import com.qxcmp.web.view.annotation.form.Form;
 import com.qxcmp.web.view.annotation.form.NumberField;
@@ -6,7 +6,10 @@ import com.qxcmp.web.view.annotation.form.TextInputField;
 import com.qxcmp.web.view.annotation.form.TextSelectionField;
 import lombok.Data;
 
-@Form(value = "添加链接", submitText = "确认添加")
+/**
+ * @author Aaric
+ */
+@Form(value = "新建链接")
 @Data
 public class AdminLinkNewForm {
 
