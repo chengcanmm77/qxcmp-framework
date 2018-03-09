@@ -8,8 +8,6 @@ import java.util.List;
 import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
 
 /**
- * 广告模块
- *
  * @author Aaric
  */
 @Component

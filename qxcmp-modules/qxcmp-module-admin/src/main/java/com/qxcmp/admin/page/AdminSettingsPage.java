@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.qxcmp.admin.QxcmpAdminModuleNavigation.VERTICAL_MENU_ADMIN_SETTINGS;
+import static com.qxcmp.admin.QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
@@ -19,7 +19,7 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 public class AdminSettingsPage extends AbstractQxcmpAdminPage {
     @Override
     public void render() {
-        setMenu(VERTICAL_MENU_ADMIN_SETTINGS, "");
+        setMenu(ADMIN_MENU_SETTINGS, "");
         addComponent(viewHelper.nextOverview("设置中心"));
     }
 

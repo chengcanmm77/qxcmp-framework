@@ -21,6 +21,10 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
     public static final String PRIVILEGE_SYSTEM_ADMIN = "系统管理员权限";
     public static final String PRIVILEGE_SYSTEM_ADMIN_DESCRIPTION = "可以进入后台系统";
 
+    public static final String PRIVILEGE_ADMIN_LOG = "系统日志管理权限";
+    public static final String PRIVILEGE_ADMIN_LOG_DESCRIPTION = "可以管理系统日志";
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -28,6 +32,7 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
                 .antMatchers(ADMIN_URL + "/**")
                 .and()
                 .authorizeRequests()
+                .antMatchers(ADMIN_URL + "/audit").hasRole(PRIVILEGE_ADMIN_LOG)
                 .antMatchers(ADMIN_URL + "/**").hasRole(PRIVILEGE_SYSTEM_ADMIN)
                 .and().formLogin().loginPage("/login").permitAll();
     }

@@ -2,7 +2,6 @@ package com.qxcmp.admin.controller;
 
 import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.admin.page.AdminToolsPage;
-import com.qxcmp.core.extension.AdminToolPageExtensionPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +18,8 @@ import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
 @RequiredArgsConstructor
 public class AdminToolsPageController extends QxcmpAdminController {
 
-    private final AdminToolPageExtensionPoint adminToolPageExtensionPoint;
-
     @GetMapping("")
     public ModelAndView toolsPage() {
-        return page(AdminToolsPage.class, adminToolPageExtensionPoint.getExtensions());
+        return page(AdminToolsPage.class);
     }
 }
