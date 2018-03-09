@@ -12,7 +12,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import static com.qxcmp.advertisement.AdvertisementModule.ADMIN_ADVERTISEMENT_URL;
-import static com.qxcmp.advertisement.AdvertisementModule.PRIVILEGE_ADMIN_ADVERTISEMENT;
+import static com.qxcmp.advertisement.AdvertisementModuleSecurity.PRIVILEGE_ADMIN_ADVERTISEMENT;
 
 /**
  * @author Aaric

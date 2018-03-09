@@ -1,6 +1,6 @@
 package com.qxcmp.admin.page;
 
-import static com.qxcmp.admin.QxcmpAdminModule.VERTICAL_MENU_ADMIN_SETTINGS;
+import static com.qxcmp.admin.QxcmpAdminModuleNavigation.VERTICAL_MENU_ADMIN_SETTINGS;
 
 /**
  * @author Aaric
