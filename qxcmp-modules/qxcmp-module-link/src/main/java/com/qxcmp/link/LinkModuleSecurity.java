@@ -11,7 +11,7 @@ import static com.qxcmp.link.LinkModule.ADMIN_LINK_URL;
 /**
  * @author Aaric
  */
-@Order(Ordered.HIGHEST_PRECEDENCE + 100)
+@Order(Ordered.HIGHEST_PRECEDENCE + 200)
 @Configuration
 public class LinkModuleSecurity extends WebSecurityConfigurerAdapter {
 
