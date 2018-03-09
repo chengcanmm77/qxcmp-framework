@@ -1,6 +1,9 @@
-package com.qxcmp.core.event;
+package com.qxcmp.admin.listener;
 
 import com.qxcmp.config.SiteService;
+import com.qxcmp.core.event.AdminSettingsDictionaryEvent;
+import com.qxcmp.core.event.AdminSettingsRegionEvent;
+import com.qxcmp.core.event.AdminSettingsSiteEvent;
 import com.qxcmp.message.MessageService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;

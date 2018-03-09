@@ -34,15 +34,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
      * */
 
     public static final String NAVIGATION_ADMIN_SIDEBAR = "ADMIN-SIDEBAR";
-    public static final String NAVIGATION_ADMIN_SIDEBAR_USER = NAVIGATION_ADMIN_SIDEBAR + "-USER";
-    public static final String NAVIGATION_ADMIN_SIDEBAR_NEWS = NAVIGATION_ADMIN_SIDEBAR + "-NEWS";
-    public static final String NAVIGATION_ADMIN_SIDEBAR_MALL = NAVIGATION_ADMIN_SIDEBAR + "-MALL";
-    public static final String NAVIGATION_ADMIN_SIDEBAR_MESSAGE = NAVIGATION_ADMIN_SIDEBAR + "-MESSAGE";
-    public static final String NAVIGATION_ADMIN_SIDEBAR_WEIXIN = NAVIGATION_ADMIN_SIDEBAR + "-WEIXIN";
-    public static final String NAVIGATION_ADMIN_SIDEBAR_FINANCE = NAVIGATION_ADMIN_SIDEBAR + "-FINANCE";
-    public static final String NAVIGATION_ADMIN_SIDEBAR_TOOLS = NAVIGATION_ADMIN_SIDEBAR + "-TOOLS";
-    public static final String NAVIGATION_ADMIN_SIDEBAR_SETTINGS = NAVIGATION_ADMIN_SIDEBAR + "-SETTINGS";
-    public static final String NAVIGATION_ADMIN_SIDEBAR_STATISTIC = NAVIGATION_ADMIN_SIDEBAR + "-STATISTIC";
 
     /*
      * 个人中心导航栏
@@ -55,12 +46,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
     /*
      * 系统设置导航栏
      * */
-
-    public static final String NAVIGATION_ADMIN_SETTINGS = "ADMIN-SETTINGS";
-    public static final String NAVIGATION_ADMIN_SETTINGS_SITE = NAVIGATION_ADMIN_SETTINGS + "-SITE";
-    public static final String NAVIGATION_ADMIN_SETTINGS_DICTIONARY = NAVIGATION_ADMIN_SETTINGS + "-DICTIONARY";
-    public static final String NAVIGATION_ADMIN_SETTINGS_REGION = NAVIGATION_ADMIN_SETTINGS + "-REGION";
-    public static final String NAVIGATION_ADMIN_SETTINGS_SECURITY = NAVIGATION_ADMIN_SETTINGS + "-SECURITY";
 
     /*
      * 安全配置导航栏
@@ -197,17 +182,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
 
     @Override
     public void configNavigation(NavigationService navigationService) {
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_SIDEBAR, "侧边导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_USER, "用户管理", QXCMP_ADMIN_URL + "/user").setIcon(new Icon("users")).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_USER)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_NEWS, "新闻管理", QXCMP_ADMIN_URL + "/news").setIcon(new Icon("newspaper")).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_NEWS)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_MALL, "商城管理", QXCMP_ADMIN_URL + "/mall").setIcon(new Icon("shipping")).setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MALL)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_MESSAGE, "消息服务", QXCMP_ADMIN_URL + "/message").setIcon(new Icon("announcement")).setOrder(40).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MESSAGE)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_WEIXIN, "微信公众平台", QXCMP_ADMIN_URL + "/weixin").setIcon(new Icon("wechat")).setOrder(50).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_WEIXIN)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_FINANCE, "财务管理", QXCMP_ADMIN_URL + "/finance").setIcon(new Icon("yen")).setOrder(60).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_STATISTIC, "网站统计", QXCMP_ADMIN_URL + "/statistic").setIcon(new Icon("bar chart")).setOrder(70).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_TOOLS, "系统工具", QXCMP_ADMIN_URL + "/tools").setIcon(new Icon("lab")).setOrder(80).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_TOOL)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_SETTINGS, "设置中心", QXCMP_ADMIN_URL + "/settings").setIcon(new Icon("settings")).setOrder(90).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
-        );
 
         navigationService.add(new Navigation(NAVIGATION_ADMIN_PROFILE, "个人中心导航栏")
                 .addItem(new Navigation(NAVIGATION_ADMIN_PROFILE_INFO, "基本资料", QXCMP_ADMIN_URL + "/profile/info").setIcon(new Icon("user")).setOrder(10))
@@ -249,12 +223,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
                 .addItem(new Navigation(NAVIGATION_ADMIN_MALL_USER_STORE_MANAGEMENT_STORE, "店铺设置", QXCMP_ADMIN_URL + "/mall/user/store/settings").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MALL)))
         );
 
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_SETTINGS, "系统配置导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_SETTINGS_SITE, "网站配置", QXCMP_ADMIN_URL + "/settings/site").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SETTINGS_DICTIONARY, "系统字典", QXCMP_ADMIN_URL + "/settings/dictionary").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SETTINGS_REGION, "地区管理", QXCMP_ADMIN_URL + "/settings/region").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SETTINGS_SECURITY, "安全配置", QXCMP_ADMIN_URL + "/security").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
-        );
 
         navigationService.add(new Navigation(NAVIGATION_ADMIN_SECURITY, "安全配置导航栏")
                 .addItem(new Navigation(NAVIGATION_ADMIN_SECURITY_ROLE, "角色管理", QXCMP_ADMIN_URL + "/security/role").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))

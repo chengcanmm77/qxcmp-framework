@@ -88,6 +88,14 @@ public class ViewHelper {
         return formHelper.convertToErrorMessage(bindingResult, form);
     }
 
+    public Overview nextOverview(String title) {
+        return overviewHelper.nextOverview(title);
+    }
+
+    public Overview nextOverview(String title, String subTitle) {
+        return overviewHelper.nextOverview(title, subTitle);
+    }
+
     public Overview nextOverview(Icon icon, String title, String subTitle) {
         return overviewHelper.nextOverview(icon, title, subTitle);
     }

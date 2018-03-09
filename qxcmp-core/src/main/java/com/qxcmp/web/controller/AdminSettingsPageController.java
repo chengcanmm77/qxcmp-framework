@@ -27,7 +27,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,13 +36,11 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 import static com.qxcmp.core.QxcmpSystemConfig.*;
 
 /**
  * @author Aaric
  */
-@Controller
 @RequestMapping(QXCMP_ADMIN_URL + "/settings")
 @RequiredArgsConstructor
 public class AdminSettingsPageController extends QxcmpController {
@@ -61,7 +58,6 @@ public class AdminSettingsPageController extends QxcmpController {
                 .addComponent(convertToTable(stringObjectMap -> {
                 })))
                 .setBreadcrumb("控制台", "", "系统设置")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, "")
                 .build();
     }
 
@@ -95,7 +91,6 @@ public class AdminSettingsPageController extends QxcmpController {
 
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "系统设置", "settings", "网站配置")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_SITE)
                 .addObject("selection_items_position", WATERMARK_POSITIONS)
                 .build();
     }
@@ -106,7 +101,6 @@ public class AdminSettingsPageController extends QxcmpController {
         if (bindingResult.hasErrors()) {
             return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "系统设置", "settings", "网站配置")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_SITE)
                     .addObject("selection_items_position", WATERMARK_POSITIONS)
                     .build();
         }
@@ -151,7 +145,6 @@ public class AdminSettingsPageController extends QxcmpController {
     public ModelAndView dictionaryPage(Pageable pageable) {
         return page().addComponent(convertToTable(pageable, systemDictionaryService))
                 .setBreadcrumb("控制台", "", "系统设置", "settings", "系统字典")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_DICTIONARY)
                 .build();
     }
 
@@ -165,7 +158,6 @@ public class AdminSettingsPageController extends QxcmpController {
             return page()
                     .addComponent(convertToForm(form))
                     .setBreadcrumb("控制台", "", "系统设置", "settings", "系统字典", "settings/dictionary", "系统字典编辑")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_DICTIONARY)
                     .build();
         }
 
@@ -174,7 +166,6 @@ public class AdminSettingsPageController extends QxcmpController {
             return page()
                     .addComponent(convertToForm(form))
                     .setBreadcrumb("控制台", "", "系统设置", "settings", "系统字典", "settings/dictionary", "系统字典编辑")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_DICTIONARY)
                     .build();
         }
 
@@ -201,7 +192,6 @@ public class AdminSettingsPageController extends QxcmpController {
             return page()
                     .addComponent(convertToForm(form))
                     .setBreadcrumb("控制台", "", "系统设置", "settings", "系统字典", "settings/dictionary", "系统字典编辑")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_DICTIONARY)
                     .build();
         }).orElse(page(new Overview(new IconHeader("字典不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/settings/dictionary")).build());
     }
@@ -210,7 +200,6 @@ public class AdminSettingsPageController extends QxcmpController {
     public ModelAndView regionPage(Pageable pageable) {
         return page().addComponent(convertToTable(new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.ASC, "level"), regionService))
                 .setBreadcrumb("控制台", "", "系统设置", "settings", "地区管理")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_REGION)
                 .build();
     }
 
@@ -239,7 +228,6 @@ public class AdminSettingsPageController extends QxcmpController {
                                 stringObjectMap.put(r.getName(), r.getCode());
                             })))
                             .setBreadcrumb("控制台", "", "系统设置", "settings", "地区管理", "settings/region", "添加地区")
-                            .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_REGION)
                             .build();
                 })
                 .orElse(page(viewHelper.nextWarningOverview("地区不存在", "").addLink("返回", QXCMP_ADMIN_URL + "/settings/region")).build());
@@ -262,7 +250,6 @@ public class AdminSettingsPageController extends QxcmpController {
                                     stringObjectMap.put(r.getName(), r.getCode());
                                 })))
                                 .setBreadcrumb("控制台", "", "系统设置", "settings", "地区管理", "settings/region", "添加地区")
-                                .setVerticalNavigation(NAVIGATION_ADMIN_SETTINGS, NAVIGATION_ADMIN_SETTINGS_REGION)
                                 .build();
                     }
 
