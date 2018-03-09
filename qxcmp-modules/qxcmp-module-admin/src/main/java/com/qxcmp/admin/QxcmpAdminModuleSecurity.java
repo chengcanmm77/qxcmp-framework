@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
 
 /**
+ * 后台安全配置
+ *
  * @author Aaric
  */
 @Order(Ordered.LOWEST_PRECEDENCE - 10)

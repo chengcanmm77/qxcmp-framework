@@ -5,6 +5,8 @@ import com.qxcmp.core.navigation.Navigation;
 import com.qxcmp.core.navigation.NavigationLoader;
 import com.qxcmp.core.navigation.NavigationService;
 import com.qxcmp.web.view.elements.icon.Icon;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
@@ -17,6 +19,7 @@ import static com.qxcmp.core.QxcmpSecurityConfiguration.PRIVILEGE_ADMIN_TOOL;
  *
  * @author Aaric
  */
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
 public class QxcmpAdminModuleNavigation implements NavigationLoader {
 

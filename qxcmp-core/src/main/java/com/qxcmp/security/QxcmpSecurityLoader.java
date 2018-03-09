@@ -94,7 +94,7 @@ public class QxcmpSecurityLoader implements QxcmpInitializer {
      * 创建超级用户并重置所有权限
      */
     private void loadRootUser() {
-        userService.update(userService.findByUsername(ROOT_USERNAME).orElse(userService.create(() -> {
+        userService.update(userService.findByUsername(ROOT_USERNAME).orElseGet(() -> userService.create(() -> {
             User next = userService.next();
             next.setUsername(ROOT_USERNAME);
             next.setNickname("超级管理员");
@@ -115,7 +115,7 @@ public class QxcmpSecurityLoader implements QxcmpInitializer {
      * @return 超级用户角色
      */
     private Role loadRootRole() {
-        return roleService.update(roleService.findByName(ROOT_ROLE).orElse(roleService.create(() -> {
+        return roleService.update(roleService.findByName(ROOT_ROLE).orElseGet(() -> roleService.create(() -> {
             Role next = roleService.next();
             next.setName(ROOT_ROLE);
             next.setDescription("超级用户角色，拥有该角色的用户会拥有所有权限");
