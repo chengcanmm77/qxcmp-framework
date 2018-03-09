@@ -210,17 +210,22 @@ public abstract class QxcmpController {
     protected <T, ID extends Serializable> ModelAndView createEntity(EntityService<T, ID> entityService, Object form) {
         return execute(getFormSubmitActionTitle(form), context -> {
             try {
-                applicationContext.publishEvent(new EntityCreateEvent<>(userService.currentUser(), entityService.create(() -> {
+                T t = entityService.create(() -> {
                     T next = entityService.next();
                     entityService.mergeToEntity(form, next);
                     return next;
-                })));
+                });
+                context.put("entity-id", entityService.getEntityId(t));
+                applicationContext.publishEvent(new EntityCreateEvent<>(userService.currentUser(), t));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
         }, (stringObjectMap, overview) -> {
-            overview.addLink("返回", request.getRequestURL().toString().replaceAll("/new", ""));
             overview.addLink("继续新建", "");
+            if (Objects.nonNull(stringObjectMap.get("entity-id"))) {
+                overview.addLink("重新编辑", stringObjectMap.get("entity-id").toString() + "/edit");
+            }
+            overview.addLink("返回", request.getRequestURL().toString().replaceAll("/new", ""));
         });
     }
 
@@ -293,6 +298,17 @@ public abstract class QxcmpController {
         });
     }
 
+    /**
+     * 删除一个实体
+     *
+     * @param title         操作名称
+     * @param id            实体主键
+     * @param entityService 实体服务
+     * @param <T>           实体类型
+     * @param <ID>          实体主键类型
+     *
+     * @return 删除结果
+     */
     protected <T, ID extends Serializable> ResponseEntity<RestfulResponse> deleteEntity(String title, ID id, EntityService<T, ID> entityService) {
         AuditLog auditLog = actionExecutor.execute(title, request.getRequestURL().toString(), getRequestContent(request), currentUser().orElse(null), context -> {
             try {
