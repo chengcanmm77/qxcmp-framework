@@ -15,7 +15,8 @@
         <module>qxcmp-module-article</module>
         <module>qxcmp-module-spider</module>
         <module>qxcmp-module-admin</module>
-        <module>qxcmp-module-admin-tools-advertisement</module>
+        <module>qxcmp-module-advertisement</module>
+        <module>qxcmp-module-link</module>
     </modules>
 
     <artifactId>qxcmp-modules</artifactId>
