@@ -6,7 +6,6 @@ import com.qxcmp.core.entity.EntityCreateEvent;
 import com.qxcmp.core.entity.EntityDeleteEvent;
 import com.qxcmp.core.entity.EntityUpdateEvent;
 import com.qxcmp.message.MessageService;
-import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -23,7 +22,6 @@ import static com.qxcmp.advertisement.AdvertisementModule.PRIVILEGE_ADMIN_ADVERT
 public class AdvertisementEventListener {
 
     private final MessageService messageService;
-    private final UserService userService;
     private final SiteService siteService;
 
     @EventListener

@@ -12,7 +12,7 @@ import static com.qxcmp.admin.QxcmpAdminModule.PRIVILEGE_SYSTEM_ADMIN;
 /**
  * @author Aaric
  */
-@Order(Ordered.HIGHEST_PRECEDENCE + 10)
+@Order(Ordered.LOWEST_PRECEDENCE - 10)
 @Configuration
 public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter {
     @Override

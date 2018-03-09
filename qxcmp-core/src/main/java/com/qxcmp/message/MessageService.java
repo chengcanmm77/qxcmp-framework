@@ -34,12 +34,15 @@ public class MessageService {
     public void feedForUsers(String privilege, User target, Consumer<Feed> consumer) {
         List<User> users = userService.findByAuthority(privilege);
         users.add(target);
-        Feed feed = new Feed();
-        consumer.accept(feed);
-        feed.setId(null);
-        feed.setTarget(target);
-        feed.setDateCreated(DateTime.now().toDate());
-        feedService.create(feed);
+        users.forEach(user -> {
+            Feed feed = feedService.next();
+            consumer.accept(feed);
+            feed.setId(null);
+            feed.setOwner(user.getId());
+            feed.setTarget(target);
+            feed.setDateCreated(DateTime.now().toDate());
+            feedService.create(feed);
+        });
     }
 
     /**

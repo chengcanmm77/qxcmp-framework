@@ -1,5 +1,6 @@
-package com.qxcmp.web.controller;
+package com.qxcmp.admin.controller;
 
+import com.qxcmp.admin.page.AdminAuditLogTablePage;
 import com.qxcmp.audit.AuditLog;
 import com.qxcmp.audit.AuditLogService;
 import com.qxcmp.web.QxcmpController;
@@ -38,9 +39,7 @@ public class AdminAuditPageController extends QxcmpController {
 
     @GetMapping("")
     public ModelAndView logPage(Pageable pageable) {
-        return page().addComponent(convertToTable(pageable, auditLogService))
-                .setBreadcrumb("控制台", "", "系统工具", "tools", "系统日志")
-                .build();
+        return page(AdminAuditLogTablePage.class, auditLogService, pageable);
     }
 
     @GetMapping("/{id}/details")
