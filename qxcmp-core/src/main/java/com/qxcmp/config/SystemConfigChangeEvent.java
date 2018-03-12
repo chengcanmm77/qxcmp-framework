@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public class SystemConfigChangeEvent<T> implements QxcmpEvent {
+public class SystemConfigChangeEvent implements QxcmpEvent {
 
     /**
      * 系统配置名称空间，系统配置所在类的全名

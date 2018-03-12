@@ -3,7 +3,6 @@ package com.qxcmp.redeem.listener;
 import com.qxcmp.config.SiteService;
 import com.qxcmp.config.SystemConfigChangeEvent;
 import com.qxcmp.message.MessageService;
-import com.qxcmp.redeem.RedeemModuleSystemConfig;
 import com.qxcmp.redeem.event.AdminRedeemGenerateEvent;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
@@ -44,7 +43,7 @@ public class AdminRedeemEventListener {
     }
 
     @EventListener
-    public void onSettingsEvent(SystemConfigChangeEvent<RedeemModuleSystemConfig> event) {
+    public void onSettingsEvent(SystemConfigChangeEvent event) {
         System.out.println(event.toString());
     }
 }
