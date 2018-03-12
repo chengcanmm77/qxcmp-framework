@@ -12,7 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
+import static com.qxcmp.advertisement.AdvertisementModule.ADMIN_ADVERTISEMENT_URL;
 
 /**
  * 广告实体
@@ -21,7 +21,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
  *
  * @author aaric
  */
-@EntityTable(value = "广告管理", action = QXCMP_ADMIN_URL + "/advertisement",
+@EntityTable(value = "广告管理", action = ADMIN_ADVERTISEMENT_URL,
         tableActions = @TableAction(value = "新建", action = "new", primary = true),
         rowActions = {
                 @RowAction(value = "编辑", action = "edit"),

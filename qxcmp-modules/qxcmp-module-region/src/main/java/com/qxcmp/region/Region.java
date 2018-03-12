@@ -13,7 +13,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
+import static com.qxcmp.region.RegionModule.ADMIN_REGION_URL;
 
 /**
  * 地区实体
@@ -22,7 +22,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
  *
  * @author Aaric
  */
-@EntityTable(value = "地区列表", action = QXCMP_ADMIN_URL + "/settings/region", entityIndex = "code",
+@EntityTable(value = "地区列表", action = ADMIN_REGION_URL, entityIndex = "code",
         rowActions = {
                 @RowAction(value = "禁用", action = "disable", method = FormMethod.POST, color = Color.RED),
                 @RowAction(value = "启用", action = "enable", method = FormMethod.POST, color = Color.GREEN),
@@ -108,6 +108,8 @@ public class Region {
                 break;
             case COUNTY:
                 tableData.setContent("区、县");
+                break;
+            default:
                 break;
         }
         return tableData;

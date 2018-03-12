@@ -179,6 +179,38 @@ public abstract class QxcmpController {
     }
 
     /**
+     * 执行一个操作并审计
+     *
+     * @param title  操作名称
+     * @param action 要执行的操作
+     *
+     * @return 操作结果相应
+     */
+    protected ResponseEntity<RestfulResponse> execute(String title, Action action) {
+        AuditLog auditLog = actionExecutor.execute(title, request.getRequestURL().toString(), getRequestContent(request), currentUser().orElse(null), action);
+
+        RestfulResponse.RestfulResponseBuilder builder = RestfulResponse.builder();
+
+        switch (auditLog.getStatus()) {
+            case SUCCESS:
+                builder.status(HttpStatus.OK.value());
+                break;
+            case FAILURE:
+                builder.status(HttpStatus.BAD_GATEWAY.value());
+                break;
+            default:
+                builder.status(HttpStatus.NOT_ACCEPTABLE.value());
+                break;
+        }
+
+        builder.message(auditLog.getTitle());
+        builder.developerMessage(auditLog.getComments());
+        RestfulResponse response = builder.build();
+        return ResponseEntity.status(response.getStatus()).body(response);
+
+    }
+
+    /**
      * 获取一个实体创建页面
      *
      * @param qClass        实体创建页面类型

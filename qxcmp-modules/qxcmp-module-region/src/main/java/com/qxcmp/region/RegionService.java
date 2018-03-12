@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import java.io.InputStreamReader;
 import java.util.List;
 
+/**
+ * @author Aaric
+ */
 @Service
 @RequiredArgsConstructor
 public class RegionService extends AbstractEntityService<Region, String, RegionRepository> implements QxcmpInitializer {

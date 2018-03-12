@@ -2,7 +2,6 @@ package com.qxcmp.admin.listener;
 
 import com.qxcmp.config.SiteService;
 import com.qxcmp.core.event.AdminSettingsDictionaryEvent;
-import com.qxcmp.core.event.AdminSettingsRegionEvent;
 import com.qxcmp.core.event.AdminSettingsSiteEvent;
 import com.qxcmp.message.MessageService;
 import com.qxcmp.user.User;
@@ -51,30 +50,4 @@ public class AdminSettingsEventListener {
                         , event.getSystemDictionary().getName()));
     }
 
-    @EventListener
-    public void onRegionEvent(AdminSettingsRegionEvent event) {
-        User target = event.getUser();
-        List<User> feedUsers = userService.findByAuthority(PRIVILEGE_ADMIN_SETTINGS);
-        feedUsers.add(target);
-
-        messageService.feed(feedUsers.stream().map(User::getId).collect(Collectors.toList()), target,
-                String.format("%s %s了区域 <a href='https://%s/admin/settings/region'>%s</a>"
-                        , target.getDisplayName()
-                        , getRegionAction(event.getAction())
-                        , siteService.getDomain()
-                        , event.getRegion().getName()));
-    }
-
-    private String getRegionAction(String action) {
-        switch (action) {
-            case "new":
-                return "新建";
-            case "disable":
-                return "禁用";
-            case "enable":
-                return "启用";
-            default:
-                return "";
-        }
-    }
 }

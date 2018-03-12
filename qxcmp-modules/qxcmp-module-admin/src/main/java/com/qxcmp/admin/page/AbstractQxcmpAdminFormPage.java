@@ -15,8 +15,8 @@ import org.springframework.validation.BindingResult;
 @RequiredArgsConstructor
 public abstract class AbstractQxcmpAdminFormPage<T> extends AbstractQxcmpAdminPage {
 
-    private final T form;
-    private final BindingResult bindingResult;
+    protected final T form;
+    protected final BindingResult bindingResult;
 
     @Override
     public void render() {

@@ -18,6 +18,7 @@
         <module>qxcmp-module-advertisement</module>
         <module>qxcmp-module-link</module>
         <module>qxcmp-module-calendar</module>
+        <module>qxcmp-module-region</module>
     </modules>
 
     <artifactId>qxcmp-modules</artifactId>
