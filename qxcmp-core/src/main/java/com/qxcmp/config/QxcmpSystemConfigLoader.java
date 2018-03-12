@@ -1,6 +1,5 @@
 package com.qxcmp.config;
 
-import com.google.common.base.CaseFormat;
 import com.qxcmp.core.init.QxcmpInitializer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor
 public class QxcmpSystemConfigLoader implements QxcmpInitializer {
 
-    private static final String DEFAULT_VALUE_SUFFIX = "_DEFAULT";
+    public static final String DEFAULT_VALUE_SUFFIX = "_DEFAULT";
     private final ApplicationContext applicationContext;
     private final SystemConfigService systemConfigService;
 
@@ -57,7 +56,7 @@ public class QxcmpSystemConfigLoader implements QxcmpInitializer {
 
     private void loadFromClass(Object bean) {
 
-        String prefix = getSystemConfigPrefix(bean);
+        String prefix = systemConfigService.getPrefix(bean.getClass());
 
         Arrays.stream(bean.getClass().getFields())
                 .filter(field -> !StringUtils.contains(field.getName(), "$"))
@@ -94,16 +93,5 @@ public class QxcmpSystemConfigLoader implements QxcmpInitializer {
                         log.error("Can't get system init information {}:{}", bean.getClass().getSimpleName(), field.getName());
                     }
                 });
-    }
-
-    /**
-     * 获取系统配置名称空间
-     *
-     * @param bean 含有配置信息的类
-     *
-     * @return 系统配置名称空间
-     */
-    private String getSystemConfigPrefix(Object bean) {
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, StringUtils.substringBefore(bean.getClass().getSimpleName().replaceAll("SystemConfig", ""), "$$")).replaceAll("_", ".") + ".";
     }
 }

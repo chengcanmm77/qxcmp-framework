@@ -1,9 +1,9 @@
-package com.qxcmp.core.listener;
+package com.qxcmp.redeem.listener;
 
 import com.qxcmp.config.SiteService;
-import com.qxcmp.core.event.AdminRedeemGenerateEvent;
-import com.qxcmp.core.event.AdminRedeemSettingsEvent;
 import com.qxcmp.message.MessageService;
+import com.qxcmp.redeem.event.AdminRedeemGenerateEvent;
+import com.qxcmp.redeem.event.AdminRedeemSettingsEvent;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.qxcmp.core.QxcmpSecurityConfiguration.PRIVILEGE_ADMIN_REDEEM;
+import static com.qxcmp.redeem.RedeemModuleSecurity.PRIVILEGE_ADMIN_REDEEM;
+
 
 /**
  * @author Aaric

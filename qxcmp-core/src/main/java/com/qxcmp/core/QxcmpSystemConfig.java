@@ -179,16 +179,6 @@ public class QxcmpSystemConfig implements SystemConfigLoader {
     public static Boolean FINANCE_PAYMENT_SUPPORT_ALIPAY_DEFAULT = false;
 
     /*
-     * 兑换码相关配置
-     * */
-
-    public static String REDEEM_ENABLE;
-    public static Boolean REDEEM_ENABLE_DEFAULT = true;
-    public static String REDEEM_DEFAULT_EXPIRE_DURATION;
-    public static Integer REDEEM_DEFAULT_EXPIRE_DURATION_DEFAULT = 7200;
-    public static String REDEEM_TYPE_LIST;
-
-    /*
      * 文章相关配置
      * */
 

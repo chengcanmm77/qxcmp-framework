@@ -245,16 +245,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
                 .addItem(new Navigation(NAVIGATION_ADMIN_MESSAGE_EMAIL_SETTINGS, "邮件服务配置", QXCMP_ADMIN_URL + "/message/email/settings").setOrder(60).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MESSAGE_EMAIL_CONFIG)))
         );
 
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_REDEEM, "兑换码管理导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_REDEEM_MANAGEMENT, "兑换码管理", QXCMP_ADMIN_URL + "/redeem").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_REDEEM)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_REDEEM_SETTINGS, "兑换码配置", QXCMP_ADMIN_URL + "/redeem/settings").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_REDEEM)))
-        );
-
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_SPIDER, "蜘蛛管理导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_SPIDER_STATUS, "运行状态", QXCMP_ADMIN_URL + "/spider/status").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SPIDER)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SPIDER_LOG, "抓取日志", QXCMP_ADMIN_URL + "/spider/log").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SPIDER)))
-        );
-
         navigationService.add(new Navigation(NAVIGATION_ADMIN_WEIXIN, "微信公众号导航栏")
                 .addItem(new Navigation(NAVIGATION_ADMIN_WEIXIN_MATERIAL, "素材管理", QXCMP_ADMIN_URL + "/weixin/material").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_WEIXIN_MATERIAL)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_WEIXIN_MENU, "公众号菜单", QXCMP_ADMIN_URL + "/weixin/menu").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_WEIXIN_MENU)))

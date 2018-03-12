@@ -1,5 +1,6 @@
 package com.qxcmp.config;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -91,5 +92,10 @@ public class SystemConfigServiceImpl implements SystemConfigService {
     public List<String> update(String name, List<String> value) {
         checkNotNull(value, "SystemConfig value can not be null");
         return update(name, StringUtils.join(value.stream().map(String::trim).collect(Collectors.toList()), SEPARATOR)).map(systemConfig -> getList(systemConfig.getName())).orElse(Lists.newArrayList());
+    }
+
+    @Override
+    public String getPrefix(Class<?> cls) {
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, StringUtils.substringBefore(cls.getSimpleName().replaceAll("SystemConfig", "").replaceAll("Module", ""), "$$")).replaceAll("_", ".") + ".";
     }
 }

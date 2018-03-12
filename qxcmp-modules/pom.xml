@@ -19,6 +19,7 @@
         <module>qxcmp-module-link</module>
         <module>qxcmp-module-calendar</module>
         <module>qxcmp-module-region</module>
+        <module>qxcmp-module-redeem</module>
     </modules>
 
     <artifactId>qxcmp-modules</artifactId>

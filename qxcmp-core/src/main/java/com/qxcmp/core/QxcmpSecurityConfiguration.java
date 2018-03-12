@@ -33,8 +33,6 @@ public class QxcmpSecurityConfiguration implements SecurityLoader {
 
     public static final String PRIVILEGE_ADMIN_TOOL = "系统工具使用权限";
     public static final String PRIVILEGE_ADMIN_TOOL_DESCRIPTION = "可以使用系统工具，还需要具有具体工具的使用权限";
-    public static final String PRIVILEGE_ADMIN_REDEEM = "兑换码管理权限";
-    public static final String PRIVILEGE_ADMIN_REDEEM_DESCRIPTION = "可以管理平台兑换码";
     public static final String PRIVILEGE_ADMIN_SPIDER = "蜘蛛管理权限";
     public static final String PRIVILEGE_ADMIN_SPIDER_DESCRIPTION = "可以管理平台蜘蛛";
 

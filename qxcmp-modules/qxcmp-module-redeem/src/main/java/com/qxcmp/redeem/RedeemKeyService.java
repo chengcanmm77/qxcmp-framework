@@ -48,11 +48,9 @@ public class RedeemKeyService extends AbstractEntityService<RedeemKey, String, R
     @Override
     public RedeemKey create(Supplier<RedeemKey> supplier) {
         RedeemKey entity = supplier.get();
-
         entity.setId(IDGenerator.next());
         entity.setStatus(RedeemKeyStatus.NEW);
         entity.setDateCreated(new Date());
-
-        return super.create(() -> entity);
+        return super.create(entity);
     }
 }
