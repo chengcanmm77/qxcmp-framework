@@ -80,7 +80,7 @@ public abstract class QxcmpAdminController extends QxcmpController {
                     String currentFormValue = String.valueOf(formBean.getPropertyValue(field.getName()));
                     systemConfigService.update(systemConfigName, currentFormValue).ifPresent(systemConfig -> {
                         counter.incrementAndGet();
-                        applicationContext.publishEvent(new SystemConfigChangeEvent(currentUser().orElse(null), systemConfigName, matchedValue, currentFormValue));
+                        applicationContext.publishEvent(new SystemConfigChangeEvent(tClass.getName(), currentUser().orElse(null), systemConfigName, matchedValue, currentFormValue));
                     });
                 }
             } catch (Exception ignored) {

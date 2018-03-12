@@ -1,5 +1,6 @@
 package com.qxcmp.config;
 
+import com.qxcmp.core.event.QxcmpEvent;
 import com.qxcmp.user.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,15 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public class SystemConfigChangeEvent {
+public class SystemConfigChangeEvent<T> implements QxcmpEvent {
 
+    /**
+     * 系统配置名称空间，系统配置所在类的全名
+     */
+    private final String namespace;
     private final User user;
     private final String name;
     private final String previous;
     private final String current;
+
 }

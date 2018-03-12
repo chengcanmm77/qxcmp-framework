@@ -1,9 +1,10 @@
 package com.qxcmp.redeem.listener;
 
 import com.qxcmp.config.SiteService;
+import com.qxcmp.config.SystemConfigChangeEvent;
 import com.qxcmp.message.MessageService;
+import com.qxcmp.redeem.RedeemModuleSystemConfig;
 import com.qxcmp.redeem.event.AdminRedeemGenerateEvent;
-import com.qxcmp.redeem.event.AdminRedeemSettingsEvent;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -43,14 +44,7 @@ public class AdminRedeemEventListener {
     }
 
     @EventListener
-    public void onSettingsEvent(AdminRedeemSettingsEvent event) {
-        User target = event.getTarget();
-        List<User> feedUsers = userService.findByAuthority(PRIVILEGE_ADMIN_REDEEM);
-        feedUsers.add(target);
-
-        messageService.feed(feedUsers.stream().map(User::getId).collect(Collectors.toList()), target,
-                String.format("%s 修改了 <a href='https://%s/admin/redeem/settings'>兑换码配置</a>",
-                        target.getDisplayName(),
-                        siteService.getDomain()));
+    public void onSettingsEvent(SystemConfigChangeEvent<RedeemModuleSystemConfig> event) {
+        System.out.println(event.toString());
     }
 }
