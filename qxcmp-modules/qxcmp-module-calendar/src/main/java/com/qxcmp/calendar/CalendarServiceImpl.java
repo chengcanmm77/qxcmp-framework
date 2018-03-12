@@ -14,6 +14,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * @author Aaric
+ */
 @Service
 public class CalendarServiceImpl implements CalendarService, QxcmpInitializer {
 
