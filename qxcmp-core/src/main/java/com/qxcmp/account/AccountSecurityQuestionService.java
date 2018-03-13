@@ -2,11 +2,9 @@ package com.qxcmp.account;
 
 import com.qxcmp.core.entity.AbstractEntityService;
 import com.qxcmp.core.support.IDGenerator;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * 密保问题服务
@@ -20,18 +18,30 @@ public class AccountSecurityQuestionService extends AbstractEntityService<Accoun
         return repository.findByUserId(userId);
     }
 
-    @Override
-    public AccountSecurityQuestion create(Supplier<AccountSecurityQuestion> supplier) {
-        AccountSecurityQuestion securityQuestion = supplier.get();
-
-        if (StringUtils.isNotEmpty(securityQuestion.getId())) {
-            return null;
-        }
-
-        securityQuestion.setId(IDGenerator.next());
-
-        return super.create(() -> securityQuestion);
+    /**
+     * 为用户设置密保
+     *
+     * @param userId           用户ID
+     * @param securityQuestion 密保问题
+     */
+    public void setForUser(String userId, AccountSecurityQuestion securityQuestion) {
+        findByUserId(userId).map(question -> update(question.getId(), q -> {
+            /*
+             * 避免ID被自动覆盖
+             * */
+            String id = q.getId();
+            mergeToEntity(securityQuestion, q);
+            q.setId(id);
+            q.setUserId(userId);
+        })).orElseGet(() -> {
+            securityQuestion.setUserId(userId);
+            return create(securityQuestion);
+        });
     }
 
-
+    @Override
+    public AccountSecurityQuestion create(AccountSecurityQuestion entity) {
+        entity.setId(IDGenerator.next());
+        return super.create(entity);
+    }
 }

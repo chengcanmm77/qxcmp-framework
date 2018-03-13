@@ -1,4 +1,4 @@
-package com.qxcmp.web.form;
+package com.qxcmp.admin.form;
 
 import com.qxcmp.web.view.annotation.form.AvatarField;
 import com.qxcmp.web.view.annotation.form.Form;

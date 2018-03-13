@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ExtensionConfigurator implements QxcmpInitializer {
+public class ExtensionLoader implements QxcmpInitializer {
 
     private final ApplicationContext applicationContext;
 

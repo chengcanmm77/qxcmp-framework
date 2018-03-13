@@ -1,9 +1,12 @@
-package com.qxcmp.web.form;
+package com.qxcmp.admin.form;
 
 import com.qxcmp.web.view.annotation.form.Form;
 import com.qxcmp.web.view.annotation.form.TextInputField;
 import lombok.Data;
 
+/**
+ * @author Aaric
+ */
 @Form(value = "邮箱绑定", submitText = "确认绑定")
 @Data
 public class AdminProfileSecurityEmailBindForm {

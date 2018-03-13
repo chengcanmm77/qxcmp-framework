@@ -3,7 +3,6 @@ package com.qxcmp.core.entity;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.qxcmp.core.support.ReflectionUtils;
-import com.qxcmp.web.view.annotation.form.Form;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -26,7 +25,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * 实体服务抽象实现
@@ -258,7 +258,6 @@ public abstract class AbstractEntityService<T, ID extends Serializable, R extend
 
     @Override
     public void mergeToEntity(Object object, T entity) {
-        checkArgument(Objects.nonNull(object.getClass().getAnnotation(Form.class)), "No Form annotation for merge object");
         BeanWrapperImpl formBean = new BeanWrapperImpl(object);
         BeanWrapperImpl entityBean = new BeanWrapperImpl(entity);
         ReflectionUtils.getAllFields(object.getClass()).stream()
@@ -275,7 +274,6 @@ public abstract class AbstractEntityService<T, ID extends Serializable, R extend
 
     @Override
     public void mergeToObject(T entity, Object object) {
-        checkArgument(Objects.nonNull(object.getClass().getAnnotation(Form.class)), "No Form annotation for merge object");
         BeanWrapperImpl entityBean = new BeanWrapperImpl(entity);
         BeanWrapperImpl formBean = new BeanWrapperImpl(object);
         ReflectionUtils.getAllFields(object.getClass()).stream()

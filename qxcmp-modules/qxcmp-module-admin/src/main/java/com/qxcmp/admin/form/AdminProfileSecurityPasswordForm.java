@@ -1,4 +1,4 @@
-package com.qxcmp.web.form;
+package com.qxcmp.admin.form;
 
 import com.qxcmp.web.view.annotation.form.Form;
 import com.qxcmp.web.view.annotation.form.PasswordField;
@@ -6,6 +6,9 @@ import lombok.Data;
 
 import javax.validation.constraints.Size;
 
+/**
+ * @author Aaric
+ */
 @Form(value = "修改登录密码", submitText = "确认修改")
 @Data
 public class AdminProfileSecurityPasswordForm {

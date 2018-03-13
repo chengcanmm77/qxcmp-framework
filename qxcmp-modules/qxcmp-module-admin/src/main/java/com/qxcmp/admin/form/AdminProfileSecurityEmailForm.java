@@ -1,11 +1,15 @@
-package com.qxcmp.web.form;
+package com.qxcmp.admin.form;
 
 import com.qxcmp.web.view.annotation.form.EmailField;
 import com.qxcmp.web.view.annotation.form.Form;
 import com.qxcmp.web.view.annotation.form.ImageCaptchaField;
 import lombok.Data;
-import org.hibernate.validator.constraints.Email;
 
+import javax.validation.constraints.Email;
+
+/**
+ * @author Aaric
+ */
 @Form(value = "邮箱绑定", submitText = "发送验证码")
 @Data
 public class AdminProfileSecurityEmailForm {
