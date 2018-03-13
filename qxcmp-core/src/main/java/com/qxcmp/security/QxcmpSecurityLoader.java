@@ -34,7 +34,7 @@ import static com.google.common.base.Preconditions.checkState;
 public class QxcmpSecurityLoader implements QxcmpInitializer {
 
     private static final String ROOT_USERNAME = "administrator";
-    private static final String ROOT_ROLE = "ROOT_USERNAME";
+    private static final String ROOT_ROLE = "ROOT";
     private static final String DEFAULT_PREFIX = "PRIVILEGE_";
     private static final String DEFAULT_SUFFIX = "_DESCRIPTION";
 

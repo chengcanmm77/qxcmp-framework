@@ -9,6 +9,9 @@ import lombok.Data;
 
 import java.util.Set;
 
+/**
+ * @author Aaric
+ */
 @Form("新建角色")
 @Data
 public class AdminSecurityRoleNewForm {
