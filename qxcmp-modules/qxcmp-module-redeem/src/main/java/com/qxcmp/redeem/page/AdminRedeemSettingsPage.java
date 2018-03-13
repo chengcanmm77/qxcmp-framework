@@ -10,7 +10,9 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
+import static com.qxcmp.admin.QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS;
 import static com.qxcmp.redeem.RedeemModule.ADMIN_REDEEM_URL;
+import static com.qxcmp.redeem.RedeemModuleNavigation.ADMIN_MENU_SETTINGS_REDEEM;
 
 /**
  * @author Aaric
@@ -20,6 +22,11 @@ import static com.qxcmp.redeem.RedeemModule.ADMIN_REDEEM_URL;
 public class AdminRedeemSettingsPage extends AbstractQxcmpAdminFormPage<AdminRedeemSettingsForm> {
     public AdminRedeemSettingsPage(AdminRedeemSettingsForm form, BindingResult bindingResult) {
         super(form, bindingResult);
+    }
+
+    @Override
+    protected void postRender() {
+        setMenu(ADMIN_MENU_SETTINGS, ADMIN_MENU_SETTINGS_REDEEM);
     }
 
     @Override

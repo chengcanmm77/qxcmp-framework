@@ -1,4 +1,4 @@
-package com.qxcmp.web.form;
+package com.qxcmp.admin.form;
 
 import com.google.common.collect.Lists;
 import com.qxcmp.config.SystemDictionaryItem;
@@ -9,7 +9,10 @@ import lombok.Data;
 
 import java.util.List;
 
-@Form(value = "系统字典编辑")
+/**
+ * @author Aaric
+ */
+@Form(value = "编辑系统字典")
 @Data
 public class AdminSettingsDictionaryForm {
 

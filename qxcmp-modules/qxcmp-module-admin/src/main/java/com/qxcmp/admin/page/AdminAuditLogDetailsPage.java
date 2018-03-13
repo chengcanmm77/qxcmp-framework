@@ -1,5 +1,6 @@
 package com.qxcmp.admin.page;
 
+import com.google.common.collect.ImmutableList;
 import com.qxcmp.audit.AuditLog;
 import com.qxcmp.web.view.elements.container.TextContainer;
 import com.qxcmp.web.view.elements.header.ContentHeader;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_AUDIT_LOG_URL;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
@@ -45,5 +47,10 @@ public class AdminAuditLogDetailsPage extends AbstractQxcmpAdminPage {
                 .addComponent(new Segment().addComponent(new ContentHeader("操作内容", Size.SMALL).setDividing()).addComponent(new P(auditLog.getContent())))
                 .addLink("返回", ADMIN_AUDIT_LOG_URL)
         ));
+    }
+
+    @Override
+    protected List<String> getBreadcrumb() {
+        return ImmutableList.of("系统日志", ADMIN_AUDIT_LOG_URL, "日志详情");
     }
 }
