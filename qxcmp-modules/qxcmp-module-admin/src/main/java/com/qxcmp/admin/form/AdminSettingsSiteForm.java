@@ -1,7 +1,6 @@
 package com.qxcmp.admin.form;
 
 import com.qxcmp.web.view.annotation.form.*;
-import com.qxcmp.web.view.modules.form.field.BooleanFieldStyle;
 import lombok.Data;
 
 import javax.validation.constraints.Max;
@@ -33,7 +32,7 @@ public class AdminSettingsSiteForm {
     @TextInputField(value = "网站描述信息", section = "SEO配置")
     private String siteDescription;
 
-    @BooleanField(value = "开启水印", section = "水印设置", style = BooleanFieldStyle.TOGGLE)
+    @BooleanField(value = "开启水印", section = "水印设置")
     private Boolean imageWatermarkEnable;
 
     @Size(max = 20)
@@ -49,16 +48,16 @@ public class AdminSettingsSiteForm {
     @NumberField(value = "字体大小", min = 1, max = 36, section = "水印设置")
     private Integer imageWatermarkFontSize;
 
-    @BooleanField(value = "用户名注册", section = "账户注册配置", style = BooleanFieldStyle.TOGGLE)
+    @BooleanField(value = "用户名注册", section = "账户注册配置")
     private Boolean accountEnableUsername;
 
-    @BooleanField(value = "邮箱注册", section = "账户注册配置", style = BooleanFieldStyle.TOGGLE)
+    @BooleanField(value = "邮箱注册", section = "账户注册配置")
     private Boolean accountEnableEmail;
 
-    @BooleanField(value = "手机号注册", section = "账户注册配置", style = BooleanFieldStyle.TOGGLE)
+    @BooleanField(value = "手机号注册", section = "账户注册配置")
     private Boolean accountEnablePhone;
 
-    @BooleanField(value = "邀请码注册", section = "账户注册配置", style = BooleanFieldStyle.TOGGLE)
+    @BooleanField(value = "邀请码注册", section = "账户注册配置")
     private Boolean accountEnableInvite;
 
     @NumberField(value = "线程池大小", section = "任务调度配置", tooltip = "修改该配置需要重新服务")

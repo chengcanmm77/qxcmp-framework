@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
+import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_SETTINGS_URL;
 import static com.qxcmp.admin.QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS;
 import static com.qxcmp.admin.QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_SITE;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
@@ -30,6 +31,6 @@ public class AdminSettingsSitePage extends AbstractQxcmpAdminFormPage<AdminSetti
 
     @Override
     protected List<String> getBreadcrumb() {
-        return ImmutableList.of("设置中心", "", "网站设置");
+        return ImmutableList.of("设置中心", ADMIN_SETTINGS_URL, "网站设置");
     }
 }
