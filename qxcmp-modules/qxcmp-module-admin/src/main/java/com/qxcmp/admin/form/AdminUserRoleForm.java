@@ -1,4 +1,4 @@
-package com.qxcmp.web.form;
+package com.qxcmp.admin.form;
 
 import com.google.common.collect.Sets;
 import com.qxcmp.security.Role;
@@ -11,6 +11,9 @@ import java.util.Set;
 
 import static com.qxcmp.web.view.support.utils.FormHelper.SELF_ACTION;
 
+/**
+ * @author Aaric
+ */
 @Form(value = "编辑用户角色", action = SELF_ACTION)
 @Data
 public class AdminUserRoleForm {

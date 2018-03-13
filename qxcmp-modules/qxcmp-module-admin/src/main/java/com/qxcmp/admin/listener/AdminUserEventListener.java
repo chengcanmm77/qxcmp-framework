@@ -1,8 +1,8 @@
-package com.qxcmp.core.listener;
+package com.qxcmp.admin.listener;
 
+import com.qxcmp.admin.event.AdminUserRoleEditEvent;
+import com.qxcmp.admin.event.AdminUserStatusEditEvent;
 import com.qxcmp.config.SiteService;
-import com.qxcmp.core.event.AdminUserRoleEditEvent;
-import com.qxcmp.core.event.AdminUserStatusEditEvent;
 import com.qxcmp.message.MessageService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;

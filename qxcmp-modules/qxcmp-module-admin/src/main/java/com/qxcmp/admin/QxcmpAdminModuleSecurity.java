@@ -20,6 +20,8 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
 
     public static final String PRIVILEGE_SYSTEM_ADMIN = "系统管理员权限";
     public static final String PRIVILEGE_SYSTEM_ADMIN_DESCRIPTION = "可以进入后台系统";
+    public static final String PRIVILEGE_ADMIN_USER = "用户管理权限";
+    public static final String PRIVILEGE_ADMIN_USER_DESCRIPTION = "可以查看用户信息";
     public static final String PRIVILEGE_ADMIN_LOG = "系统日志管理权限";
     public static final String PRIVILEGE_ADMIN_LOG_DESCRIPTION = "可以管理系统日志";
     public static final String PRIVILEGE_ADMIN_SETTINGS = "设置中心进入权限";
@@ -51,6 +53,7 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
                 .antMatchers(ADMIN_AUDIT_LOG_URL).hasRole(PRIVILEGE_ADMIN_LOG)
                 .antMatchers(ADMIN_STATISTIC_URL).hasRole(PRIVILEGE_ADMIN_STATISTIC)
                 .antMatchers(ADMIN_TOOLS_URL).hasRole(PRIVILEGE_ADMIN_TOOL)
+                .antMatchers(ADMIN_USER_URL).hasRole(PRIVILEGE_ADMIN_USER)
                 .antMatchers(ADMIN_SETTINGS_SITE_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS_SITE)
                 .antMatchers(ADMIN_SETTINGS_DICTIONARY_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS_DICTIONARY)
                 .antMatchers(ADMIN_SETTINGS_EMAIL_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS_EMAIL)

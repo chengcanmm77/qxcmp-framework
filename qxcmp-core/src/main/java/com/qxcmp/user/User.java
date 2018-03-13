@@ -13,13 +13,14 @@ import com.qxcmp.web.view.support.Color;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Email;
+import org.springframework.core.Ordered;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
@@ -33,10 +34,8 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
  *
  * @author aaric
  */
-@EntityTable(value = "全部用户", name = "all", action = QXCMP_ADMIN_URL + "/user/all",
-        rowActions = {@RowAction(value = "查看", action = "details", primary = true)})
-@EntityTable(value = "微信用户", name = "weixin", action = QXCMP_ADMIN_URL + "/user/weixin", disableFilter = true,
-        tableActions = @TableAction(value = "开始同步", action = "sync", method = FormMethod.POST, primary = true),
+@EntityTable(action = QXCMP_ADMIN_URL + "/user",
+        tableActions = @TableAction(value = "微信同步", action = "sync", method = FormMethod.POST, secondary = true, showConfirmDialog = true, confirmDialogTitle = "同步微信公众号用户", confirmDialogDescription = "该操作需要提前配置好微信公众号参数，且会花费一些时间，是否继续？"),
         rowActions = {@RowAction(value = "查看", action = "details", primary = true)})
 @Entity
 @Table
@@ -147,7 +146,7 @@ public class User implements UserDetails {
     /**
      * 上次登陆时间
      */
-    @TableField(value = "登录时间", name = "weixin")
+    @TableField(value = "登录时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dateLogin = new Date();
 
@@ -171,49 +170,49 @@ public class User implements UserDetails {
     /**
      * 用户昵称
      */
-    @TableField(value = "昵称", name = "weixin")
+    @TableField(value = "昵称")
     private String nickname;
 
     /**
      * 用户头像URL
      */
-    @TableField(value = "头像", image = true, order = Integer.MIN_VALUE)
+    @TableField(value = "头像", image = true, order = Ordered.HIGHEST_PRECEDENCE)
     private String portrait;
 
     /**
      * 用户是否订阅平台所属的公众号
      */
-    @TableField(value = "是否订阅", name = "weixin")
+    @TableField(value = "是否订阅")
     private boolean subscribe;
 
     /**
      * 用户性别
      */
-    @TableField(value = "性别", name = "weixin")
+    @TableField(value = "性别")
     private String sex;
 
     /**
      * 用户所使用语言
      */
-    @TableField(value = "语言", name = "weixin")
+    @TableField(value = "语言")
     private String language;
 
     /**
      * 用户所在城市
      */
-    @TableField(value = "城市", name = "weixin")
+    @TableField(value = "城市")
     private String city;
 
     /**
      * 用户所在省份
      */
-    @TableField(value = "省份", name = "weixin")
+    @TableField(value = "省份")
     private String province;
 
     /**
      * 用户所在国家
      */
-    @TableField(value = "国家", name = "weixin")
+    @TableField(value = "国家")
     private String country;
 
     /**

@@ -1,4 +1,4 @@
-package com.qxcmp.core.event;
+package com.qxcmp.admin.event;
 
 import com.qxcmp.user.User;
 import lombok.Getter;
@@ -7,12 +7,12 @@ import lombok.Getter;
  * @author Aaric
  */
 @Getter
-public class AdminUserStatusEditEvent {
+public class AdminUserRoleEditEvent {
 
     private final User source;
     private final User target;
 
-    public AdminUserStatusEditEvent(User source, User target) {
+    public AdminUserRoleEditEvent(User source, User target) {
         this.source = source;
         this.target = target;
     }

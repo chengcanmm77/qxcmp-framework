@@ -12,6 +12,7 @@ import java.util.List;
 public class QxcmpAdminModule {
 
     public static final String ADMIN_URL = "/admin";
+    public static final String ADMIN_USER_URL = ADMIN_URL + "/user";
     public static final String ADMIN_PROFILE_URL = ADMIN_URL + "/profile";
     public static final String ADMIN_AUDIT_LOG_URL = ADMIN_URL + "/audit";
     public static final String ADMIN_TOOLS_URL = ADMIN_URL + "/tools";

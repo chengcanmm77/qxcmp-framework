@@ -22,6 +22,7 @@ import static com.qxcmp.admin.QxcmpAdminModuleSecurity.*;
 public class QxcmpAdminModuleNavigation implements NavigationLoader {
 
     public static final String NAVIGATION_ADMIN_SIDEBAR = "ADMIN-SIDEBAR";
+    public static final String NAVIGATION_ADMIN_SIDEBAR_USER = NAVIGATION_ADMIN_SIDEBAR + "-USER";
     public static final String NAVIGATION_ADMIN_SIDEBAR_SECURITY = NAVIGATION_ADMIN_SIDEBAR + "-SECURITY";
     public static final String NAVIGATION_ADMIN_SIDEBAR_TOOLS = NAVIGATION_ADMIN_SIDEBAR + "-TOOLS";
     public static final String NAVIGATION_ADMIN_SIDEBAR_SETTINGS = NAVIGATION_ADMIN_SIDEBAR + "-SETTINGS";
@@ -44,9 +45,10 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
     @Override
     public void configNavigation(NavigationService navigationService) {
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR, "后台侧边导航栏")
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SECURITY, "安全配置", ADMIN_SECURITY_URL).setIcon(new Icon("lock")).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_TOOLS, "系统工具", ADMIN_TOOLS_URL).setIcon(new Icon("lab")).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_TOOL)))
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SETTINGS, "设置中心", ADMIN_SETTINGS_URL).setIcon(new Icon("settings")).setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_USER, "用户管理", ADMIN_USER_URL).setIcon(new Icon("users")).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SECURITY, "安全配置", ADMIN_SECURITY_URL).setIcon(new Icon("lock")).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_TOOLS, "系统工具", ADMIN_TOOLS_URL).setIcon(new Icon("lab")).setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_TOOL)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SETTINGS, "设置中心", ADMIN_SETTINGS_URL).setIcon(new Icon("settings")).setOrder(40).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
         );
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS, "系统工具菜单")
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS_LOG, "系统日志", ADMIN_AUDIT_LOG_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_LOG)))
