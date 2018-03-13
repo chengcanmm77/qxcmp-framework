@@ -2,11 +2,9 @@ package com.qxcmp.admin.controller;
 
 import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.admin.form.AdminSettingsDictionaryForm;
+import com.qxcmp.admin.form.AdminSettingsEmailForm;
 import com.qxcmp.admin.form.AdminSettingsSiteForm;
-import com.qxcmp.admin.page.AdminSettingsDictionaryTablePage;
-import com.qxcmp.admin.page.AdminSettingsDictionaryUpdatePage;
-import com.qxcmp.admin.page.AdminSettingsPage;
-import com.qxcmp.admin.page.AdminSettingsSitePage;
+import com.qxcmp.admin.page.*;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.config.SystemDictionaryItem;
 import com.qxcmp.config.SystemDictionaryItemService;
@@ -99,5 +97,18 @@ public class AdminSettingsPageController extends QxcmpAdminController {
     @GetMapping("/dictionary/{name}/edit")
     public ModelAndView dictionaryGet(@PathVariable String name, final AdminSettingsDictionaryForm form, BindingResult bindingResult) {
         return entityUpdatePage(AdminSettingsDictionaryUpdatePage.class, name, systemDictionaryService, form, bindingResult);
+    }
+
+    @GetMapping("/email")
+    public ModelAndView emailGet(final AdminSettingsEmailForm form, BindingResult bindingResult) {
+        return systemConfigPage(AdminSettingsEmailPage.class, form, bindingResult, QxcmpSystemConfig.class);
+    }
+
+    @PostMapping("/email")
+    public ModelAndView emailPost(@Valid final AdminSettingsEmailForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return emailGet(form, bindingResult);
+        }
+        return updateSystemConfig(QxcmpSystemConfig.class, form);
     }
 }

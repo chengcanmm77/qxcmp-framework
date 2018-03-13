@@ -189,10 +189,4 @@ public class QxcmpSystemConfig implements SystemConfigLoader {
      * */
 
     public static String MALL_COMMODITY_CATALOG = "";
-
-    /*
-     * 链接管理配置
-     * */
-
-    public static String LINK_TYPE = "";
 }

@@ -1,11 +1,13 @@
 package com.qxcmp.core.validation;
 
-import org.apache.commons.lang3.StringUtils;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Objects;
 
-public class PortValidator implements ConstraintValidator<Port, String> {
+/**
+ * @author Aaric
+ */
+public class PortValidator implements ConstraintValidator<Port, Integer> {
 
     private static final int MIN_PORT_NUMBER = 0;
 
@@ -17,17 +19,10 @@ public class PortValidator implements ConstraintValidator<Port, String> {
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
-
-        if (StringUtils.isEmpty(value)) {
+    public boolean isValid(Integer port, ConstraintValidatorContext constraintValidatorContext) {
+        if (Objects.isNull(port)) {
             return true;
         }
-
-        try {
-            Integer port = Integer.parseInt(value);
-            return port >= MIN_PORT_NUMBER && port <= MAX_PORT_NUMBER;
-        } catch (Exception e) {
-            return false;
-        }
+        return port >= MIN_PORT_NUMBER && port <= MAX_PORT_NUMBER;
     }
 }

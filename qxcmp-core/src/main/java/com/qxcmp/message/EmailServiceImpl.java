@@ -1,9 +1,13 @@
 package com.qxcmp.message;
 
+import com.qxcmp.config.SystemConfigChangeEvent;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.core.support.ThrowingConsumer;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,12 +19,15 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+/**
+ * @author Aaric
+ */
+@Slf4j
 @Service
 @AllArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
     private SystemConfigService systemConfigService;
-
     private JavaMailSender javaMailSender;
 
     @Override
@@ -41,6 +48,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void config() {
+        log.info("Loading email service");
+
         JavaMailSenderImpl sender = (JavaMailSenderImpl) javaMailSender;
         sender.setProtocol("smtp");
         sender.setHost(systemConfigService.getString(QxcmpSystemConfig.MESSAGE_EMAIL_HOSTNAME).orElse(QxcmpSystemConfig.MESSAGE_EMAIL_HOSTNAME_DEFAULT));
@@ -59,5 +68,12 @@ public class EmailServiceImpl implements EmailService {
         properties.put("mail.smtp.starttls.enable", "true");
 
         sender.setJavaMailProperties(properties);
+    }
+
+    @EventListener
+    public void onSystemConfigChange(SystemConfigChangeEvent event) {
+        if (StringUtils.startsWith(event.getName(), "qxcmp.message.email")) {
+            config();
+        }
     }
 }

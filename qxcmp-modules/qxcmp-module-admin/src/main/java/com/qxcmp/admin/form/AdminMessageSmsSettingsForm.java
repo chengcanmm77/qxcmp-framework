@@ -1,4 +1,4 @@
-package com.qxcmp.web.form;
+package com.qxcmp.admin.form;
 
 import com.google.common.collect.Lists;
 import com.qxcmp.message.SmsTemplate;

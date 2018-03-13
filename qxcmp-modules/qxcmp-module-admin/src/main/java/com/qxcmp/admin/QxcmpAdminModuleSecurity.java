@@ -28,6 +28,10 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
     public static final String PRIVILEGE_ADMIN_SETTINGS_SITE_DESCRIPTION = "可以修改网站设置";
     public static final String PRIVILEGE_ADMIN_SETTINGS_DICTIONARY = "系统字典设置权限";
     public static final String PRIVILEGE_ADMIN_SETTINGS_DICTIONARY_DESCRIPTION = "可以修改系统字典";
+    public static final String PRIVILEGE_ADMIN_SETTINGS_EMAIL = "邮件服务设置权限";
+    public static final String PRIVILEGE_ADMIN_SETTINGS_EMAIL_DESCRIPTION = "可以修改邮件服务设置";
+    public static final String PRIVILEGE_ADMIN_SETTINGS_SMS = "短信服务设置权限";
+    public static final String PRIVILEGE_ADMIN_SETTINGS_SMS_DESCRIPTION = "可以修改短信服务设置";
     public static final String PRIVILEGE_ADMIN_TOOL = "系统工具使用权限";
     public static final String PRIVILEGE_ADMIN_TOOL_DESCRIPTION = "可以使用系统工具，还需要具有具体工具的使用权限";
 
@@ -43,6 +47,8 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
                 .antMatchers(ADMIN_TOOLS_URL).hasRole(PRIVILEGE_ADMIN_TOOL)
                 .antMatchers(ADMIN_SETTINGS_SITE_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS_SITE)
                 .antMatchers(ADMIN_SETTINGS_DICTIONARY_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS_DICTIONARY)
+                .antMatchers(ADMIN_SETTINGS_EMAIL_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS_EMAIL)
+                .antMatchers(ADMIN_SETTINGS_SMS_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS_SMS)
                 .antMatchers(ADMIN_SETTINGS_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS)
                 .antMatchers(ADMIN_URL + "/**").hasRole(PRIVILEGE_SYSTEM_ADMIN)
                 .and().formLogin().loginPage("/login").permitAll();

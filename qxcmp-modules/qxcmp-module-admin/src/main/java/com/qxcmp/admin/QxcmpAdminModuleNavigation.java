@@ -31,6 +31,8 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
     public static final String ADMIN_MENU_SETTINGS = "ADMIN-SETTINGS";
     public static final String ADMIN_MENU_SETTINGS_SITE = ADMIN_MENU_SETTINGS + "-SITE";
     public static final String ADMIN_MENU_SETTINGS_DICTIONARY = ADMIN_MENU_SETTINGS + "-DICTIONARY";
+    public static final String ADMIN_MENU_SETTINGS_EMAIL = ADMIN_MENU_SETTINGS + "-EMAIL";
+    public static final String ADMIN_MENU_SETTINGS_SMS = ADMIN_MENU_SETTINGS + "-SMS";
 
     @Override
     public void configNavigation(NavigationService navigationService) {
@@ -44,6 +46,8 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS, "设置中心菜单")
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_SITE, "网站设置", ADMIN_SETTINGS_SITE_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_SITE)))
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_DICTIONARY, "字典设置", ADMIN_SETTINGS_DICTIONARY_URL).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_DICTIONARY)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_EMAIL, "邮件服务设置", ADMIN_SETTINGS_EMAIL_URL).setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_EMAIL)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_SMS, "短信服务设置", ADMIN_SETTINGS_SMS_URL).setOrder(40).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_SMS)))
         );
     }
 }

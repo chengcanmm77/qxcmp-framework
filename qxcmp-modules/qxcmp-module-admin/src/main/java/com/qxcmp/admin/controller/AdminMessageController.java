@@ -1,7 +1,9 @@
-package com.qxcmp.web.controller;
+package com.qxcmp.admin.controller;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+import com.qxcmp.admin.form.AdminMessageSmsSettingsForm;
+import com.qxcmp.admin.form.AdminSettingsEmailForm;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.message.*;
 import com.qxcmp.security.RoleService;
@@ -18,7 +20,6 @@ import org.joda.time.DateTime;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,7 +42,6 @@ import static com.qxcmp.core.QxcmpSystemConfig.*;
  *
  * @author Aaric
  */
-@Controller
 @RequestMapping(QXCMP_ADMIN_URL + "/message")
 @RequiredArgsConstructor
 public class AdminMessageController extends QxcmpController {
@@ -231,18 +231,7 @@ public class AdminMessageController extends QxcmpController {
     }
 
     @GetMapping("/email/settings")
-    public ModelAndView emailSettingsPage(final AdminMessageEmailSettingsForm form) {
-
-        form.setHost(systemConfigService.getString(MESSAGE_EMAIL_HOSTNAME).orElse(MESSAGE_EMAIL_HOSTNAME_DEFAULT));
-        form.setPort(systemConfigService.getString(MESSAGE_EMAIL_PORT).orElse(String.valueOf(MESSAGE_EMAIL_PORT_DEFAULT)));
-        form.setUsername(systemConfigService.getString(ACCOUNT_ENABLE_USERNAME).orElse(MESSAGE_EMAIL_USERNAME_DEFAULT));
-        form.setPassword(systemConfigService.getString(MESSAGE_EMAIL_PASSWORD).orElse(MESSAGE_EMAIL_PASSWORD_DEFAULT));
-        form.setActivateSubject(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_SUBJECT).orElse(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_SUBJECT_DEFAULT));
-        form.setActivateContent(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_CONTENT).orElse(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_CONTENT_DEFAULT));
-        form.setResetSubject(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_RESET_SUBJECT).orElse(MESSAGE_EMAIL_ACCOUNT_RESET_SUBJECT_DEFAULT));
-        form.setResetContent(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_RESET_CONTENT).orElse(MESSAGE_EMAIL_ACCOUNT_RESET_CONTENT_DEFAULT));
-        form.setBindingSubject(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_BINDING_SUBJECT).orElse(MESSAGE_EMAIL_ACCOUNT_BINDING_SUBJECT_DEFAULT));
-        form.setBindingContent(systemConfigService.getString(MESSAGE_EMAIL_ACCOUNT_BINDING_CONTENT).orElse(MESSAGE_EMAIL_ACCOUNT_BINDING_CONTENT_DEFAULT));
+    public ModelAndView emailSettingsPage(final AdminSettingsEmailForm form) {
 
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "消息服务", "message", "邮件服务配置")
@@ -251,7 +240,7 @@ public class AdminMessageController extends QxcmpController {
     }
 
     @PostMapping("/email/settings")
-    public ModelAndView emailSettingsPage(@Valid final AdminMessageEmailSettingsForm form, BindingResult bindingResult) {
+    public ModelAndView emailSettingsPage(@Valid final AdminSettingsEmailForm form, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
@@ -261,17 +250,6 @@ public class AdminMessageController extends QxcmpController {
         }
 
         return submitForm(form, context -> {
-            systemConfigService.update(MESSAGE_EMAIL_HOSTNAME, form.getHost());
-            systemConfigService.update(MESSAGE_EMAIL_PORT, form.getPort());
-            systemConfigService.update(ACCOUNT_ENABLE_USERNAME, form.getUsername());
-            systemConfigService.update(MESSAGE_EMAIL_PASSWORD, form.getPassword());
-            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_SUBJECT, form.getActivateSubject());
-            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_ACTIVATE_CONTENT, form.getActivateContent());
-            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_RESET_SUBJECT, form.getResetSubject());
-            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_RESET_CONTENT, form.getResetContent());
-            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_BINDING_SUBJECT, form.getBindingSubject());
-            systemConfigService.update(MESSAGE_EMAIL_ACCOUNT_BINDING_CONTENT, form.getBindingContent());
-
             emailService.config();
         });
     }

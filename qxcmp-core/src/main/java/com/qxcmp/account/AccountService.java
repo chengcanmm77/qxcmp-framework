@@ -13,6 +13,7 @@ import com.qxcmp.message.EmailService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
@@ -32,6 +33,7 @@ import static com.qxcmp.core.QxcmpSystemConfig.*;
  *
  * @author aaric
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService implements QxcmpInitializer {
@@ -323,6 +325,7 @@ public class AccountService implements QxcmpInitializer {
      * 加载平台当前激活账户模块
      */
     public void loadConfig() {
+        log.info("Loading account components");
         activateComponents.clear();
 
         if (systemConfigService.getBoolean(ACCOUNT_ENABLE_USERNAME).orElse(false)) {
