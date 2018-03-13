@@ -8,14 +8,22 @@ import com.aliyun.mns.model.MessageAttributes;
 import com.aliyun.mns.model.RawTopicMessage;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import com.qxcmp.config.SystemConfigChangeEvent;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpSystemConfig;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * @author Aaric
+ */
+@Slf4j
 @Service
 public class SmsServiceImpl implements SmsService {
 
@@ -73,6 +81,7 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public void config() {
+        log.info("Loading sms service");
         accessKey = systemConfigService.getString(QxcmpSystemConfig.MESSAGE_SMS_ACCESS_KEY).orElse("");
         accessSecret = systemConfigService.getString(QxcmpSystemConfig.MESSAGE_SMS_ACCESS_SECRET).orElse("");
         endPoint = systemConfigService.getString(QxcmpSystemConfig.MESSAGE_SMS_END_POINT).orElse("");
@@ -81,4 +90,10 @@ public class SmsServiceImpl implements SmsService {
         captchaTemplateCode = systemConfigService.getString(QxcmpSystemConfig.MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE).orElse("");
     }
 
+    @EventListener
+    public void onSystemConfigChange(SystemConfigChangeEvent event) {
+        if (StringUtils.startsWith(event.getName(), "qxcmp.message.sms")) {
+            config();
+        }
+    }
 }

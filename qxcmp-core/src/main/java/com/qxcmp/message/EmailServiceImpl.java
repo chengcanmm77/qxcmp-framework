@@ -49,7 +49,6 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void config() {
         log.info("Loading email service");
-
         JavaMailSenderImpl sender = (JavaMailSenderImpl) javaMailSender;
         sender.setProtocol("smtp");
         sender.setHost(systemConfigService.getString(QxcmpSystemConfig.MESSAGE_EMAIL_HOSTNAME).orElse(QxcmpSystemConfig.MESSAGE_EMAIL_HOSTNAME_DEFAULT));

@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Form(value = "短信发送服务", submitText = "发送验证短信")
 @Data
-public class AdminMessageSmsSendForm {
+public class AdminSettingsSmsSendForm {
 
     @TextInputField("短信模板Code")
     private String templateCode;
