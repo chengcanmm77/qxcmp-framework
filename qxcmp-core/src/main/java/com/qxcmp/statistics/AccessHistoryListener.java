@@ -27,7 +27,6 @@ public class AccessHistoryListener {
     private final UserService userService;
 
     private final AccessHistoryService accessHistoryService;
-    private final AccessAddressService accessAddressService;
     private final IpAddressResolver ipAddressResolver;
     private final DeviceResolver deviceResolver;
 
@@ -40,7 +39,7 @@ public class AccessHistoryListener {
             String requestURI = request.getRequestURI();
             Device device = deviceResolver.resolveDevice(request);
 
-            if (isAccessRequest(requestURI) && !isSpider(ipAddress)) {
+            if (isAccessRequest(requestURI)) {
                 AccessHistory accessHistory = accessHistoryService.next();
                 accessHistory.setDateCreated(new Date());
                 accessHistory.setIp(ipAddress);
@@ -59,10 +58,6 @@ public class AccessHistoryListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private boolean isSpider(String ipAddress) {
-        return accessAddressService.findOne(ipAddress).map(accessAddress -> Objects.equals(accessAddress.getType(), AccessAddressType.SPIDER)).orElse(false);
     }
 
     private boolean isAccessRequest(String requestURI) {

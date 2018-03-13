@@ -3,9 +3,7 @@ package com.qxcmp.security;
 import com.qxcmp.account.auth.AuthenticationFilter;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpSystemConfig;
-import com.qxcmp.statistics.AccessAddressService;
 import com.qxcmp.user.UserService;
-import com.qxcmp.util.IpAddressResolver;
 import com.qxcmp.web.filter.QxcmpFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SystemConfigService systemConfigService;
     private final UserService userService;
     private final UserDetailsService userDetailsService;
-    private final AccessAddressService accessAddressService;
-    private final IpAddressResolver ipAddressResolver;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
@@ -60,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public QxcmpFilter qxcmpFilter() {
-        return new QxcmpFilter(applicationContext, accessAddressService, ipAddressResolver);
+        return new QxcmpFilter(applicationContext);
     }
 
     /**
@@ -69,7 +65,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * 该过滤结果平台的认证配置进行相关的认证操作
      *
      * @return 平台认证过滤器
-     *
      * @throws Exception
      */
     @Bean
@@ -96,7 +91,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * 配置平台用户获取服务
      *
      * @param auth 认证管理器构建器
-     *
      * @throws Exception 如果配置失败则平台启动失败
      */
     @Autowired
@@ -112,7 +106,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * 拦截所有未知请求
      *
      * @param http Spring Security Http 安全配置
-     *
      * @throws Exception 如果配置失败则平台启动失败
      */
     @Override
