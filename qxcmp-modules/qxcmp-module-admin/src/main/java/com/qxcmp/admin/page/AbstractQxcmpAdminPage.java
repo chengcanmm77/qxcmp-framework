@@ -1,10 +1,8 @@
 package com.qxcmp.admin.page;
 
 import com.google.common.collect.Maps;
-import com.qxcmp.admin.view.AdminTopMenuAlarmItem;
 import com.qxcmp.admin.view.AdminTopMenuMobileItem;
 import com.qxcmp.admin.view.AdminTopMenuProfileItem;
-import com.qxcmp.message.InnerMessageService;
 import com.qxcmp.message.SiteNotificationService;
 import com.qxcmp.user.User;
 import com.qxcmp.web.view.Component;
@@ -64,10 +62,8 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
     private String menuNavigationActivateId;
     private Map<String, AbstractLabel> menuBadge = Maps.newLinkedHashMap();
     private RightMenu topFixedRightMenu = new RightMenu();
-    private VerticalMenu verticalMenu;
     private Col content = new Col(Wide.SIXTEEN);
 
-    private InnerMessageService innerMessageService;
     private SiteNotificationService siteNotificationService;
 
     /**
@@ -161,7 +157,6 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
             buildMenuForMobile();
         }
 
-        topFixedRightMenu.addItem(new AdminTopMenuAlarmItem(innerMessageService.countByUserId(user.getId())));
         topFixedRightMenu.addItem(new AdminTopMenuProfileItem(user, navigationService.get(NAVIGATION_ADMIN_PROFILE).getItems()));
         menu.setRightMenu(topFixedRightMenu);
         sidebar.setTopFixedMenu(menu);
@@ -319,11 +314,6 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
                         }));
 
         return verticalMenu;
-    }
-
-    @Autowired
-    public void setInnerMessageService(InnerMessageService innerMessageService) {
-        this.innerMessageService = innerMessageService;
     }
 
     @Autowired

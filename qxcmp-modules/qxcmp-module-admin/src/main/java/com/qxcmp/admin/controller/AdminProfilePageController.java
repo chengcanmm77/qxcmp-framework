@@ -1,22 +1,18 @@
-package com.qxcmp.web.controller;
+package com.qxcmp.admin.controller;
 
 import com.qxcmp.account.AccountSecurityQuestion;
 import com.qxcmp.account.AccountSecurityQuestionService;
 import com.qxcmp.account.AccountService;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.message.InnerMessage;
-import com.qxcmp.message.InnerMessageService;
 import com.qxcmp.user.User;
 import com.qxcmp.util.ProfilePageHelper;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.form.*;
-import com.qxcmp.web.model.RestfulResponse;
 import com.qxcmp.web.view.elements.button.Button;
 import com.qxcmp.web.view.elements.container.TextContainer;
 import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.IconHeader;
 import com.qxcmp.web.view.elements.header.PageHeader;
-import com.qxcmp.web.view.elements.html.HtmlText;
 import com.qxcmp.web.view.elements.html.P;
 import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.segment.Segment;
@@ -27,98 +23,34 @@ import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
 import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_PROFILE_URL;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_ADMIN_URL + "/profile")
+@RequestMapping(ADMIN_PROFILE_URL)
 @RequiredArgsConstructor
 public class AdminProfilePageController extends QxcmpController {
 
     private final AccountSecurityQuestionService securityQuestionService;
     private final AccountService accountService;
-    private final InnerMessageService innerMessageService;
-
-    @GetMapping("/message")
-    public ModelAndView messagePage(Pageable pageable) {
-        User user = currentUser().orElseThrow(RuntimeException::new);
-        Page<InnerMessage> messages = innerMessageService.findByUserID(user.getId(), pageable);
-        return page().addComponent(convertToTable(InnerMessage.class, messages))
-                .setBreadcrumb("控制台", "", "个人中心", null, "站内消息")
-                .build();
-    }
-
-    @GetMapping("/message/{id}/details")
-    public ModelAndView messageDetailsPage(@PathVariable String id) {
-        User user = currentUser().orElseThrow(RuntimeException::new);
-        return innerMessageService.findOne(id)
-                .filter(innerMessage -> StringUtils.equals(innerMessage.getUserId(), user.getId()))
-                .map(innerMessage -> {
-
-                    innerMessageService.update(innerMessage.getId(), message -> message.setUnread(false));
-
-                    return page()
-                            .addComponent(new Overview(innerMessage.getTitle(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(innerMessage.getSendTime()))
-                                    .addComponent(new HtmlText(innerMessage.getContent()))
-                                    .addLink("返回我的站内信", QXCMP_ADMIN_URL + "/profile/message"))
-                            .setBreadcrumb("控制台", "", "个人中心", null, "站内消息", "profile/message", innerMessage.getTitle())
-                            .build();
-                })
-                .orElse(page(viewHelper.nextWarningOverview("站内消息不存在", "")).build());
-    }
-
-    @PostMapping("/message/{id}/read")
-    public ResponseEntity<RestfulResponse> messageRead(@PathVariable String id) {
-        return innerMessageService.findOne(id)
-                .map(innerMessage -> {
-                    RestfulResponse restfulResponse = audit("标记站内信为已读", context -> {
-                        try {
-                            innerMessageService.update(innerMessage.getId(), message -> message.setUnread(false));
-                        } catch (Exception e) {
-                            throw new ActionException(e.getMessage(), e);
-                        }
-                    });
-                    return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
-                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
-    }
-
-    @PostMapping("/message/{id}/remove")
-    public ResponseEntity<RestfulResponse> messageRemove(@PathVariable String id) {
-        return innerMessageService.findOne(id)
-                .map(innerMessage -> {
-                    RestfulResponse restfulResponse = audit("删除站内信", context -> {
-                        try {
-                            innerMessageService.delete(innerMessage);
-                        } catch (Exception e) {
-                            throw new ActionException(e.getMessage(), e);
-                        }
-                    });
-                    return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
-                }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
-    }
 
     @GetMapping("/info")
     public ModelAndView infoPage(final AdminProfileInfoForm form) {

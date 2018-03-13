@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
+import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_AUDIT_LOG_URL;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_ADMIN_URL + "/audit")
+@RequestMapping(ADMIN_AUDIT_LOG_URL)
 @RequiredArgsConstructor
 public class AdminAuditPageController extends QxcmpAdminController {
 

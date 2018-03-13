@@ -1,6 +1,7 @@
 package com.qxcmp.admin.controller;
 
 import com.qxcmp.admin.QxcmpAdminController;
+import com.qxcmp.admin.page.AdminAboutPage;
 import com.qxcmp.admin.page.AdminHomePage;
 import com.qxcmp.message.FeedService;
 import com.qxcmp.user.User;
@@ -29,5 +30,10 @@ public class AdminPageController extends QxcmpAdminController {
         User user = currentUser().orElseThrow(RuntimeException::new);
         Page<com.qxcmp.message.Feed> feeds = feedService.findByOwner(user.getId(), pageable);
         return page(AdminHomePage.class, feeds);
+    }
+
+    @GetMapping("/about")
+    public ModelAndView aboutPage() {
+        return page(AdminAboutPage.class);
     }
 }
