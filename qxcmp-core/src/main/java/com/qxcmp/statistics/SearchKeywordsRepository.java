@@ -13,9 +13,22 @@ import java.util.Date;
 @Repository
 interface SearchKeywordsRepository extends JpaRepository<SearchKeywords, Long>, JpaSpecificationExecutor<SearchKeywords> {
 
+    /**
+     * 查询指定日期后的关键字搜索记录
+     *
+     * @param date     日期
+     * @param pageable 分页信息
+     * @return 关键字分组记录
+     */
     @Query("select new com.qxcmp.statistics.SearchKeywordsPageResult(a.title, count(a)) from SearchKeywords a where a.dateCreated > :date group by a.title order by count(a) desc")
     Page<SearchKeywordsPageResult> findByDateCreatedAfter(@Param("date") Date date, Pageable pageable);
 
+    /**
+     * 查询并分组关键字记录
+     *
+     * @param pageable 分页信息
+     * @return 关键字分组记录
+     */
     @Query("select new com.qxcmp.statistics.SearchKeywordsPageResult(a.title, count(a)) from SearchKeywords a group by a.title order by count(a) desc")
     Page<SearchKeywordsPageResult> findAllResult(Pageable pageable);
 }

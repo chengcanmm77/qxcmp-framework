@@ -28,6 +28,7 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
 
     public static final String ADMIN_MENU_TOOLS = "ADMIN-TOOLS";
     public static final String ADMIN_MENU_TOOLS_LOG = ADMIN_MENU_TOOLS + "-LOG";
+    public static final String ADMIN_MENU_TOOLS_STATISTIC = ADMIN_MENU_TOOLS + "-STATISTIC";
 
     public static final String ADMIN_MENU_SETTINGS = "ADMIN-SETTINGS";
     public static final String ADMIN_MENU_SETTINGS_SITE = ADMIN_MENU_SETTINGS + "-SITE";
@@ -49,6 +50,7 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
         );
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS, "系统工具菜单")
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS_LOG, "系统日志", ADMIN_AUDIT_LOG_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_LOG)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS_STATISTIC, "统计信息", ADMIN_STATISTIC_URL).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_LOG)))
         );
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS, "设置中心菜单")
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_SITE, "网站设置", ADMIN_SETTINGS_SITE_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_SITE)))

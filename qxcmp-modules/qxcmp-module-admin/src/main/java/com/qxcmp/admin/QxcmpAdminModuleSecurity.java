@@ -36,6 +36,8 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
     public static final String PRIVILEGE_ADMIN_TOOL_DESCRIPTION = "可以使用系统工具，还需要具有具体工具的使用权限";
     public static final String PRIVILEGE_ADMIN_SECURITY = "系统安全管理权限";
     public static final String PRIVILEGE_ADMIN_SECURITY_DESCRIPTION = "可以修改系统安全配置";
+    public static final String PRIVILEGE_ADMIN_STATISTIC = "统计信息查看权限";
+    public static final String PRIVILEGE_ADMIN_STATISTIC_DESCRIPTION = "可以查看网站统计信息";
 
 
     @Override
@@ -47,6 +49,7 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
                 .authorizeRequests()
                 .antMatchers(ADMIN_SECURITY_URL).hasRole(PRIVILEGE_ADMIN_SECURITY)
                 .antMatchers(ADMIN_AUDIT_LOG_URL).hasRole(PRIVILEGE_ADMIN_LOG)
+                .antMatchers(ADMIN_STATISTIC_URL).hasRole(PRIVILEGE_ADMIN_STATISTIC)
                 .antMatchers(ADMIN_TOOLS_URL).hasRole(PRIVILEGE_ADMIN_TOOL)
                 .antMatchers(ADMIN_SETTINGS_SITE_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS_SITE)
                 .antMatchers(ADMIN_SETTINGS_DICTIONARY_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS_DICTIONARY)

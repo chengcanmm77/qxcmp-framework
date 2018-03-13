@@ -21,6 +21,7 @@ public class QxcmpAdminModule {
     public static final String ADMIN_SETTINGS_EMAIL_URL = ADMIN_SETTINGS_URL + "/email";
     public static final String ADMIN_SETTINGS_SMS_URL = ADMIN_SETTINGS_URL + "/sms";
     public static final String ADMIN_SECURITY_URL = ADMIN_URL + "/security";
+    public static final String ADMIN_STATISTIC_URL = ADMIN_URL + "/statistic";
 
     public static final String EMAIL_BINDING_SESSION_ATTR = "EMAIL_BINDING_CAPTCHA";
     public static final String EMAIL_BINDING_CONTENT_SESSION_ATTR = "EMAIL_BINDING_CONTENT";
