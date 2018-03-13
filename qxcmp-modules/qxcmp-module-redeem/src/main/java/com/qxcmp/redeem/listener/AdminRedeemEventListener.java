@@ -3,6 +3,7 @@ package com.qxcmp.redeem.listener;
 import com.qxcmp.config.SiteService;
 import com.qxcmp.config.SystemConfigChangeEvent;
 import com.qxcmp.message.FeedService;
+import com.qxcmp.redeem.RedeemKeyEvent;
 import com.qxcmp.redeem.RedeemModuleSystemConfig;
 import com.qxcmp.redeem.event.AdminRedeemGenerateEvent;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import static com.qxcmp.redeem.RedeemModuleSecurity.PRIVILEGE_ADMIN_REDEEM_GENERATE;
-import static com.qxcmp.redeem.RedeemModuleSecurity.PRIVILEGE_ADMIN_REDEEM_SETTING;
+import static com.qxcmp.redeem.RedeemModuleSecurity.*;
 
 
 /**
@@ -42,5 +42,11 @@ public class AdminRedeemEventListener {
                             siteService.getDomain()),
                     String.format("[%s]从[%s]修改为[%s]", event.getName(), event.getPrevious(), event.getCurrent()));
         }
+    }
+
+    @EventListener
+    public void onRedeemEvent(RedeemKeyEvent event) {
+        feedService.feedForUserGroup(PRIVILEGE_ADMIN_REDEEM, event.getUser()
+                , String.format("%s 使用了兑换码 [%s][%s]", event.getUser().getDisplayName(), event.getRedeemKey().getType(), event.getRedeemKey().getContent()));
     }
 }
