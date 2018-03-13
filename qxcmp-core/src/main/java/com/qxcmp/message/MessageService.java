@@ -45,6 +45,13 @@ public class MessageService {
         });
     }
 
+    public void feedForUsers(String privilege, User target, String content, String extraContent) {
+        feedForUsers(privilege, target, feed -> {
+            feed.setContent(content);
+            feed.setExtraContent(extraContent);
+        });
+    }
+
     /**
      * 为用户组中的每一个用户生成一个Feed
      *

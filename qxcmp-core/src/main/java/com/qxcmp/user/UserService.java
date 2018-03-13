@@ -97,6 +97,14 @@ public class UserService extends AbstractEntityService<User, String, UserReposit
         return repository.findByAuthority(privilege, pageable);
     }
 
+    public List<User> findByAuthorityContains(Set<String> privileges) {
+        return repository.findByAuthorityContains(privileges);
+    }
+
+    public Page<User> findByAuthorityContains(Set<String> privileges, Pageable pageable) {
+        return repository.findByAuthorityContains(privileges, pageable);
+    }
+
     public List<User> findByRole(Role role) {
         return repository.findByRole(role);
     }

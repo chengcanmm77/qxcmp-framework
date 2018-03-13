@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 interface UserRepository extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
@@ -70,7 +71,7 @@ interface UserRepository extends JpaRepository<User, String>, JpaSpecificationEx
      *
      * @return 拥有该权限的用户列表
      */
-    @Query("select user from User user join user.roles role inner join role.privileges privilege where privilege.name = :privilege and user.username <> 'administrator'")
+    @Query("select user from User user join user.roles role inner join role.privileges privilege where privilege.name = :privilege")
     List<User> findByAuthority(@Param("privilege") String privilege);
 
     /**
@@ -83,8 +84,29 @@ interface UserRepository extends JpaRepository<User, String>, JpaSpecificationEx
      *
      * @return 拥有该权限的用户列表
      */
-    @Query("select user from User user join user.roles role inner join role.privileges privilege where privilege.name = :privilege and user.username <> 'administrator'")
+    @Query("select user from User user join user.roles role inner join role.privileges privilege where privilege.name = :privilege")
     Page<User> findByAuthority(@Param("privilege") String privilege, Pageable pageable);
+
+    /**
+     * 查找包含某些权限的用户
+     *
+     * @param privileges 权限集
+     *
+     * @return 包含某些权限的用户
+     */
+    @Query("select user from User user join user.roles role inner join  role.privileges privilege where privilege.name in :privileges")
+    List<User> findByAuthorityContains(@Param("privileges") Set<String> privileges);
+
+    /**
+     * 查找包含某些权限的用户
+     *
+     * @param privileges 权限集
+     * @param pageable   分页信息
+     *
+     * @return 包含某些权限的用户
+     */
+    @Query("select user from User user join user.roles role inner join  role.privileges privilege where privilege.name in :privileges")
+    Page<User> findByAuthorityContains(@Param("privileges") Set<String> privileges, Pageable pageable);
 
     /**
      * 查找拥有指定角色的用户
