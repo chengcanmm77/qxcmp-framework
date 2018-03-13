@@ -124,8 +124,6 @@ public class QxcmpSystemConfig implements SystemConfigLoader {
     public static Boolean AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT = false;
     public static String AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION = "";
     public static Integer AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT = 90;
-    public static String AUTHENTICATION_CREDENTIAL_UNIQUE = "";
-    public static Boolean AUTHENTICATION_CREDENTIAL_UNIQUE_DEFAULT = false;
 
     /*
      * 系统字典相关配置

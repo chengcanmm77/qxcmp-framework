@@ -1,12 +1,18 @@
 package com.qxcmp.admin.controller;
 
+import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.admin.QxcmpAdminModuleNavigation;
-import com.qxcmp.admin.event.*;
+import com.qxcmp.admin.event.AdminSecurityPrivilegeDisableEvent;
+import com.qxcmp.admin.event.AdminSecurityPrivilegeEnableEvent;
+import com.qxcmp.admin.event.AdminSecurityRoleEditEvent;
+import com.qxcmp.admin.event.AdminSecurityRoleNewEvent;
+import com.qxcmp.admin.page.AdminSecurityAuthenticationPage;
+import com.qxcmp.admin.page.AdminSecurityPage;
 import com.qxcmp.audit.ActionException;
+import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.security.PrivilegeService;
 import com.qxcmp.security.Role;
 import com.qxcmp.security.RoleService;
-import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.form.AdminSecurityAuthenticationForm;
 import com.qxcmp.web.form.AdminSecurityRoleEditForm;
 import com.qxcmp.web.form.AdminSecurityRoleNewForm;
@@ -28,7 +34,6 @@ import java.util.List;
 
 import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_SECURITY_URL;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
-import static com.qxcmp.core.QxcmpSystemConfig.*;
 
 /**
  * @author Aaric
@@ -36,31 +41,14 @@ import static com.qxcmp.core.QxcmpSystemConfig.*;
 @Controller
 @RequestMapping(ADMIN_SECURITY_URL)
 @RequiredArgsConstructor
-public class AdminSecurityPageController extends QxcmpController {
+public class AdminSecurityPageController extends QxcmpAdminController {
 
     private final PrivilegeService privilegeService;
     private final RoleService roleService;
 
     @GetMapping("")
     public ModelAndView messagePage() {
-        return page().addComponent(new Overview("安全配置")
-                .addComponent(convertToTable(stringStringMap -> {
-                    stringStringMap.put("角色总数", roleService.count());
-                    stringStringMap.put("权限总数", privilegeService.count());
-                    stringStringMap.put("验证码阈值", systemConfigService.getInteger(AUTHENTICATION_CAPTCHA_THRESHOLD).orElse(AUTHENTICATION_CAPTCHA_THRESHOLD_DEFAULT));
-                    stringStringMap.put("验证码长度", systemConfigService.getInteger(AUTHENTICATION_CAPTCHA_LENGTH).orElse(AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT));
-                    stringStringMap.put("是否启用账户锁定", systemConfigService.getBoolean(AUTHENTICATION_ACCOUNT_LOCK).orElse(AUTHENTICATION_ACCOUNT_LOCK_DEFAULT));
-                    stringStringMap.put("账户锁定阈值", systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD).orElse(AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD_DEFAULT));
-                    stringStringMap.put("账户锁定时长", systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT));
-                    stringStringMap.put("是否启用账户过期", systemConfigService.getBoolean(AUTHENTICATION_ACCOUNT_EXPIRE).orElse(AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT));
-                    stringStringMap.put("账户过期时间", systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT));
-                    stringStringMap.put("是否启用密码过期", systemConfigService.getBoolean(AUTHENTICATION_CREDENTIAL_EXPIRE).orElse(AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT));
-                    stringStringMap.put("密码过期时间", systemConfigService.getInteger(AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT));
-                    stringStringMap.put("是否启用唯一密码", systemConfigService.getBoolean(AUTHENTICATION_CREDENTIAL_UNIQUE).orElse(AUTHENTICATION_CREDENTIAL_UNIQUE_DEFAULT));
-                })))
-                .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置")
-                .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, "")
-                .build();
+        return page(AdminSecurityPage.class);
     }
 
     @GetMapping("/role")
@@ -204,52 +192,15 @@ public class AdminSecurityPageController extends QxcmpController {
     }
 
     @GetMapping("/authentication")
-    public ModelAndView authenticationPage(final AdminSecurityAuthenticationForm form) {
-
-        form.setCaptchaThreshold(systemConfigService.getInteger(AUTHENTICATION_CAPTCHA_THRESHOLD).orElse(AUTHENTICATION_CAPTCHA_THRESHOLD_DEFAULT));
-        form.setCaptchaLength(systemConfigService.getInteger(AUTHENTICATION_CAPTCHA_LENGTH).orElse(AUTHENTICATION_CAPTCHA_LENGTH_DEFAULT));
-        form.setLockAccount(systemConfigService.getBoolean(AUTHENTICATION_ACCOUNT_LOCK).orElse(AUTHENTICATION_ACCOUNT_LOCK_DEFAULT));
-        form.setLockThreshold(systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD).orElse(AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD_DEFAULT));
-        form.setUnlockDuration(systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT));
-        form.setExpireAccount(systemConfigService.getBoolean(AUTHENTICATION_ACCOUNT_EXPIRE).orElse(AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT));
-        form.setExpireAccountDuration(systemConfigService.getInteger(AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT));
-        form.setExpireCredential(systemConfigService.getBoolean(AUTHENTICATION_CREDENTIAL_EXPIRE).orElse(AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT));
-        form.setExpireCredentialDuration(systemConfigService.getInteger(AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT));
-        form.setUniqueCredential(systemConfigService.getBoolean(AUTHENTICATION_CREDENTIAL_UNIQUE).orElse(AUTHENTICATION_CREDENTIAL_UNIQUE_DEFAULT));
-
-        return page().addComponent(new Segment().addComponent(convertToForm(form)))
-                .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "认证配置")
-                .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_AUTHENTICATION)
-                .build();
+    public ModelAndView authenticationGet(final AdminSecurityAuthenticationForm form, BindingResult bindingResult) {
+        return systemConfigPage(AdminSecurityAuthenticationPage.class, form, bindingResult, QxcmpSystemConfig.class);
     }
 
     @PostMapping("/authentication")
-    public ModelAndView authenticationPage(@Valid final AdminSecurityAuthenticationForm form, BindingResult bindingResult) {
-
+    public ModelAndView authenticationPost(@Valid final AdminSecurityAuthenticationForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
-                    .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "认证配置")
-                    .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_AUTHENTICATION)
-                    .build();
+            authenticationGet(form, bindingResult);
         }
-
-        return submitForm(form, context -> {
-            try {
-                systemConfigService.update(AUTHENTICATION_CAPTCHA_THRESHOLD, String.valueOf(form.getCaptchaThreshold()));
-                systemConfigService.update(AUTHENTICATION_CAPTCHA_LENGTH, String.valueOf(form.getCaptchaLength()));
-                systemConfigService.update(AUTHENTICATION_ACCOUNT_LOCK, String.valueOf(form.isLockAccount()));
-                systemConfigService.update(AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD, String.valueOf(form.getLockThreshold()));
-                systemConfigService.update(AUTHENTICATION_ACCOUNT_LOCK_DURATION, String.valueOf(form.getUnlockDuration()));
-                systemConfigService.update(AUTHENTICATION_ACCOUNT_EXPIRE, String.valueOf(form.isExpireAccount()));
-                systemConfigService.update(AUTHENTICATION_ACCOUNT_EXPIRE_DURATION, String.valueOf(form.getExpireAccountDuration()));
-                systemConfigService.update(AUTHENTICATION_CREDENTIAL_EXPIRE, String.valueOf(form.isExpireCredential()));
-                systemConfigService.update(AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION, String.valueOf(form.getExpireCredentialDuration()));
-                systemConfigService.update(AUTHENTICATION_CREDENTIAL_UNIQUE, String.valueOf(form.isUniqueCredential()));
-
-                applicationContext.publishEvent(new AdminSecurityAuthenticationEvent(currentUser().orElseThrow(RuntimeException::new)));
-            } catch (Exception e) {
-                throw new ActionException(e.getMessage(), e);
-            }
-        });
+        return updateSystemConfig(QxcmpSystemConfig.class, form);
     }
 }

@@ -65,9 +65,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         User user = userService.findById(userLoginId)
                 .orElseThrow(() -> new UsernameNotFoundException("Authentication.userNotFound"));
 
-        checkAccountLock(userLoginId, user);
-        checkAccountExpire(userLoginId, user);
-        checkCredentialExpire(userLoginId, user);
+        checkAccountLock(user);
+        checkAccountExpire(user);
+        checkCredentialExpire(user);
     }
 
     /**
@@ -75,17 +75,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
      * <p>
      * 如果满足以下全部条件，则解锁账户： <ol> <li>开启了账户锁定功能</li> <li>账户锁定时间超过了 分钟</li> </ol>
      *
-     * @param userLoginId 账户登录名
-     * @param user        账户信息
+     * @param user 账户信息
      */
-    private void checkAccountLock(String userLoginId, User user) {
+    private void checkAccountLock(User user) {
         Date dateLock = user.getDateLock();
         if (Objects.nonNull(dateLock)) {
             boolean enableAccountLock = systemConfigService.getBoolean(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DEFAULT);
             if (enableAccountLock) {
                 int lockDuration = systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT) * 1000 * 60;
                 if (System.currentTimeMillis() - dateLock.getTime() > lockDuration) {
-                    userService.update(userLoginId, u -> u.setAccountNonLocked(true));
+                    userService.update(user.getId(), u -> u.setAccountNonLocked(true));
                 }
             }
         }
@@ -96,17 +95,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
      * <p>
      * 如果满足以下全部条件，则使账户过期 <ol> <li>开启了账户过期功能</li> <li>账户上次登陆时间超过了 天</li> </ol>
      *
-     * @param userLoginId 账户登录名
-     * @param user        账户信息
+     * @param user 账户信息
      */
-    private void checkAccountExpire(String userLoginId, User user) {
+    private void checkAccountExpire(User user) {
         Date dateLogin = user.getDateLogin();
         if (Objects.nonNull(dateLogin)) {
             boolean enableAccountExpire = systemConfigService.getBoolean(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT);
             if (enableAccountExpire) {
                 int expireDuration = systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT) * 1000 * 60 * 60 * 24;
                 if (System.currentTimeMillis() - dateLogin.getTime() > expireDuration) {
-                    userService.update(userLoginId, u -> u.setAccountNonExpired(false));
+                    userService.update(user.getId(), u -> u.setAccountNonExpired(false));
                 }
             }
         }
@@ -117,10 +115,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
      * <p>
      * 如果满足以下条件，则使账户密码过期 <ol> <li>开启了密码过期功能</li> <li>账户上次密码修改时间超过了 天</li> </ol>
      *
-     * @param userLoginId 账户登录名
-     * @param user        账户信息
+     * @param user 账户信息
      */
-    private void checkCredentialExpire(String userLoginId, User user) {
+    private void checkCredentialExpire(User user) {
         Date dateCredential = user.getDatePasswordModified();
         if (Objects.isNull(dateCredential)) {
             dateCredential = user.getDateCreated();
@@ -129,7 +126,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         if (enableCredentialExpire) {
             int expireCredentialDuration = systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT) * 1000 * 60 * 60 * 24;
             if (System.currentTimeMillis() - dateCredential.getTime() > expireCredentialDuration) {
-                userService.update(userLoginId, u -> u.setCredentialsNonExpired(false));
+                userService.update(user.getId(), u -> u.setCredentialsNonExpired(false));
             }
         }
     }
