@@ -22,6 +22,7 @@ import static com.qxcmp.admin.QxcmpAdminModuleSecurity.*;
 public class QxcmpAdminModuleNavigation implements NavigationLoader {
 
     public static final String NAVIGATION_ADMIN_SIDEBAR = "ADMIN-SIDEBAR";
+    public static final String NAVIGATION_ADMIN_SIDEBAR_SECURITY = NAVIGATION_ADMIN_SIDEBAR + "-SECURITY";
     public static final String NAVIGATION_ADMIN_SIDEBAR_TOOLS = NAVIGATION_ADMIN_SIDEBAR + "-TOOLS";
     public static final String NAVIGATION_ADMIN_SIDEBAR_SETTINGS = NAVIGATION_ADMIN_SIDEBAR + "-SETTINGS";
 
@@ -34,11 +35,17 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
     public static final String ADMIN_MENU_SETTINGS_EMAIL = ADMIN_MENU_SETTINGS + "-EMAIL";
     public static final String ADMIN_MENU_SETTINGS_SMS = ADMIN_MENU_SETTINGS + "-SMS";
 
+    public static final String ADMIN_MENU_SECURITY = "ADMIN-SECURITY";
+    public static final String ADMIN_MENU_SECURITY_ROLE = ADMIN_MENU_SECURITY + "-ROLE";
+    public static final String ADMIN_MENU_SECURITY_PRIVILEGE = ADMIN_MENU_SECURITY + "-PRIVILEGE";
+    public static final String ADMIN_MENU_SECURITY_AUTHENTICATION = ADMIN_MENU_SECURITY + "-AUTHENTICATION";
+
     @Override
     public void configNavigation(NavigationService navigationService) {
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR, "后台侧边导航栏")
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_TOOLS, "系统工具", ADMIN_TOOLS_URL).setIcon(new Icon("lab")).setOrder(80).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_TOOL)))
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SETTINGS, "设置中心", ADMIN_SETTINGS_URL).setIcon(new Icon("settings")).setOrder(90).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SECURITY, "安全配置", ADMIN_SECURITY_URL).setIcon(new Icon("lock")).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_TOOLS, "系统工具", ADMIN_TOOLS_URL).setIcon(new Icon("lab")).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_TOOL)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SETTINGS, "设置中心", ADMIN_SETTINGS_URL).setIcon(new Icon("settings")).setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
         );
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS, "系统工具菜单")
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS_LOG, "系统日志", ADMIN_AUDIT_LOG_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_LOG)))
@@ -48,6 +55,11 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_DICTIONARY, "字典设置", ADMIN_SETTINGS_DICTIONARY_URL).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_DICTIONARY)))
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_EMAIL, "邮件服务设置", ADMIN_SETTINGS_EMAIL_URL).setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_EMAIL)))
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_SMS, "短信服务设置", ADMIN_SETTINGS_SMS_URL).setOrder(40).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_SMS)))
+        );
+        navigationService.add(new Navigation(ADMIN_MENU_SECURITY, "安全配置导航栏")
+                .addItem(new Navigation(ADMIN_MENU_SECURITY_ROLE, "角色管理", ADMIN_SECURITY_URL + "/role").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
+                .addItem(new Navigation(ADMIN_MENU_SECURITY_PRIVILEGE, "权限管理", ADMIN_SECURITY_URL + "/privilege").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
+                .addItem(new Navigation(ADMIN_MENU_SECURITY_AUTHENTICATION, "认证配置", ADMIN_SECURITY_URL + "/authentication").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
         );
     }
 }

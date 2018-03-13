@@ -1,7 +1,8 @@
-package com.qxcmp.web.controller;
+package com.qxcmp.admin.controller;
 
+import com.qxcmp.admin.QxcmpAdminModuleNavigation;
+import com.qxcmp.admin.event.*;
 import com.qxcmp.audit.ActionException;
-import com.qxcmp.core.event.*;
 import com.qxcmp.security.PrivilegeService;
 import com.qxcmp.security.Role;
 import com.qxcmp.security.RoleService;
@@ -25,17 +26,19 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_SECURITY_URL;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
 import static com.qxcmp.core.QxcmpSystemConfig.*;
 
+/**
+ * @author Aaric
+ */
 @Controller
-@RequestMapping(QXCMP_ADMIN_URL + "/security")
+@RequestMapping(ADMIN_SECURITY_URL)
 @RequiredArgsConstructor
 public class AdminSecurityPageController extends QxcmpController {
 
     private final PrivilegeService privilegeService;
-
     private final RoleService roleService;
 
     @GetMapping("")
@@ -56,7 +59,7 @@ public class AdminSecurityPageController extends QxcmpController {
                     stringStringMap.put("是否启用唯一密码", systemConfigService.getBoolean(AUTHENTICATION_CREDENTIAL_UNIQUE).orElse(AUTHENTICATION_CREDENTIAL_UNIQUE_DEFAULT));
                 })))
                 .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, "")
+                .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, "")
                 .build();
     }
 
@@ -64,7 +67,7 @@ public class AdminSecurityPageController extends QxcmpController {
     public ModelAndView rolePage(Pageable pageable) {
         return page().addComponent(convertToTable(pageable, roleService))
                 .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "角色管理")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, NAVIGATION_ADMIN_SECURITY_ROLE)
+                .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_ROLE)
                 .build();
     }
 
@@ -72,7 +75,7 @@ public class AdminSecurityPageController extends QxcmpController {
     public ModelAndView roleNew(final AdminSecurityRoleNewForm form) {
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "角色管理", "security/role", "新建角色")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, NAVIGATION_ADMIN_SECURITY_ROLE)
+                .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_ROLE)
                 .addObject("selection_items_privileges", privilegeService.findAll())
                 .build();
     }
@@ -82,7 +85,7 @@ public class AdminSecurityPageController extends QxcmpController {
         if (bindingResult.hasErrors()) {
             return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "角色管理", "security/role", "新建角色")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, NAVIGATION_ADMIN_SECURITY_ROLE)
+                    .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_ROLE)
                     .addObject("selection_items_privileges", privilegeService.findAll())
                     .build();
         }
@@ -111,7 +114,7 @@ public class AdminSecurityPageController extends QxcmpController {
 
             return page().addComponent(new Segment().addComponent(convertToForm(form)))
                     .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "角色管理", "security/role", "编辑角色")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, NAVIGATION_ADMIN_SECURITY_ROLE)
+                    .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_ROLE)
                     .addObject("selection_items_privileges", privilegeService.findAll())
                     .build();
         }).orElse(page(new Overview(new IconHeader("角色不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/security/role")).build());
@@ -123,7 +126,7 @@ public class AdminSecurityPageController extends QxcmpController {
         if (bindingResult.hasErrors()) {
             return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "角色管理", "security/role", "编辑角色")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, NAVIGATION_ADMIN_SECURITY_ROLE)
+                    .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_ROLE)
                     .addObject("selection_items_privileges", privilegeService.findAll())
                     .build();
         }
@@ -171,7 +174,7 @@ public class AdminSecurityPageController extends QxcmpController {
     public ModelAndView privilegePage(Pageable pageable) {
         return page().addComponent(convertToTable(pageable, privilegeService))
                 .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "权限管理")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, NAVIGATION_ADMIN_SECURITY_PRIVILEGE)
+                .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_PRIVILEGE)
                 .build();
     }
 
@@ -216,7 +219,7 @@ public class AdminSecurityPageController extends QxcmpController {
 
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "认证配置")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, NAVIGATION_ADMIN_SECURITY_AUTHENTICATION)
+                .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_AUTHENTICATION)
                 .build();
     }
 
@@ -226,7 +229,7 @@ public class AdminSecurityPageController extends QxcmpController {
         if (bindingResult.hasErrors()) {
             return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "认证配置")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_SECURITY, NAVIGATION_ADMIN_SECURITY_AUTHENTICATION)
+                    .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_AUTHENTICATION)
                     .build();
         }
 

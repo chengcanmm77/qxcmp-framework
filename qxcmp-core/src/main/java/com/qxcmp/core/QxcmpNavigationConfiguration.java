@@ -51,11 +51,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
      * 安全配置导航栏
      * */
 
-    public static final String NAVIGATION_ADMIN_SECURITY = "ADMIN-SECURITY";
-    public static final String NAVIGATION_ADMIN_SECURITY_ROLE = NAVIGATION_ADMIN_SECURITY + "-ROLE";
-    public static final String NAVIGATION_ADMIN_SECURITY_PRIVILEGE = NAVIGATION_ADMIN_SECURITY + "-PRIVILEGE";
-    public static final String NAVIGATION_ADMIN_SECURITY_AUTHENTICATION = NAVIGATION_ADMIN_SECURITY + "-AUTHENTICATION";
-
     /*
      * 新闻管理导航栏
      * */
@@ -224,11 +219,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
         );
 
 
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_SECURITY, "安全配置导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_SECURITY_ROLE, "角色管理", QXCMP_ADMIN_URL + "/security/role").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SECURITY_PRIVILEGE, "权限管理", QXCMP_ADMIN_URL + "/security/privilege").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_SECURITY_AUTHENTICATION, "认证配置", QXCMP_ADMIN_URL + "/security/authentication").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
-        );
 
         navigationService.add(new Navigation(NAVIGATION_ADMIN_FINANCE, "财务管理导航栏")
                 .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_DEPOSIT, "充值订单管理", QXCMP_ADMIN_URL + "/finance/deposit").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_DEPOSIT)))

@@ -29,15 +29,13 @@ import static com.qxcmp.core.QxcmpSystemConfig.AUTHENTICATION_CAPTCHA_LENGTH_DEF
  * 验证码Web API
  * <p>
  * 负责设置Session验证码并返回图片内容，没有权限控制
- * <p>
- * 需要激活 Spring Profile {@code api}
  *
  * @author aaric
  */
 @Controller
 @RequestMapping("/api/captcha/")
 @RequiredArgsConstructor
-public class CaptchaAPI extends QxcmpController {
+public class CaptchaApi extends QxcmpController {
 
     private final CaptchaService captchaComponent;
 

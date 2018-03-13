@@ -1,7 +1,7 @@
-package com.qxcmp.core.listener;
+package com.qxcmp.admin.listener;
 
+import com.qxcmp.admin.event.*;
 import com.qxcmp.config.SiteService;
-import com.qxcmp.core.event.*;
 import com.qxcmp.message.MessageService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.qxcmp.core.QxcmpSecurityConfiguration.PRIVILEGE_ADMIN_SECURITY;
+import static com.qxcmp.admin.QxcmpAdminModuleSecurity.PRIVILEGE_ADMIN_SECURITY;
 
 /**
  * @author Aaric

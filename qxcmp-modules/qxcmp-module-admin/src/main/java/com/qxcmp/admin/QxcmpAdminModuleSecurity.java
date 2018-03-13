@@ -34,6 +34,8 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
     public static final String PRIVILEGE_ADMIN_SETTINGS_SMS_DESCRIPTION = "可以修改短信服务设置";
     public static final String PRIVILEGE_ADMIN_TOOL = "系统工具使用权限";
     public static final String PRIVILEGE_ADMIN_TOOL_DESCRIPTION = "可以使用系统工具，还需要具有具体工具的使用权限";
+    public static final String PRIVILEGE_ADMIN_SECURITY = "系统安全管理权限";
+    public static final String PRIVILEGE_ADMIN_SECURITY_DESCRIPTION = "可以修改系统安全配置";
 
 
     @Override
@@ -43,6 +45,7 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
                 .antMatchers(ADMIN_URL + "/**")
                 .and()
                 .authorizeRequests()
+                .antMatchers(ADMIN_SECURITY_URL).hasRole(PRIVILEGE_ADMIN_SECURITY)
                 .antMatchers(ADMIN_AUDIT_LOG_URL).hasRole(PRIVILEGE_ADMIN_LOG)
                 .antMatchers(ADMIN_TOOLS_URL).hasRole(PRIVILEGE_ADMIN_TOOL)
                 .antMatchers(ADMIN_SETTINGS_SITE_URL).hasRole(PRIVILEGE_ADMIN_SETTINGS_SITE)

@@ -1,4 +1,4 @@
-package com.qxcmp.core.event;
+package com.qxcmp.admin.event;
 
 import com.qxcmp.security.Privilege;
 import com.qxcmp.user.User;
