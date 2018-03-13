@@ -82,7 +82,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         if (Objects.nonNull(dateLock)) {
             boolean enableAccountLock = systemConfigService.getBoolean(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DEFAULT);
             if (enableAccountLock) {
-                int lockDuration = systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT) * 1000 * 60;
+                long lockDuration = systemConfigService.getLong(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT) * 1000 * 60;
                 if (System.currentTimeMillis() - dateLock.getTime() > lockDuration) {
                     userService.update(user.getId(), u -> u.setAccountNonLocked(true));
                 }
@@ -102,7 +102,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         if (Objects.nonNull(dateLogin)) {
             boolean enableAccountExpire = systemConfigService.getBoolean(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT);
             if (enableAccountExpire) {
-                int expireDuration = systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT) * 1000 * 60 * 60 * 24;
+                long expireDuration = systemConfigService.getLong(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT) * 1000 * 60 * 60 * 24;
                 if (System.currentTimeMillis() - dateLogin.getTime() > expireDuration) {
                     userService.update(user.getId(), u -> u.setAccountNonExpired(false));
                 }
@@ -124,7 +124,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         }
         boolean enableCredentialExpire = systemConfigService.getBoolean(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE).orElse(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT);
         if (enableCredentialExpire) {
-            int expireCredentialDuration = systemConfigService.getInteger(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT) * 1000 * 60 * 60 * 24;
+            long expireCredentialDuration = systemConfigService.getLong(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION).orElse(QxcmpSystemConfig.AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT) * 1000 * 60 * 60 * 24;
             if (System.currentTimeMillis() - dateCredential.getTime() > expireCredentialDuration) {
                 userService.update(user.getId(), u -> u.setCredentialsNonExpired(false));
             }

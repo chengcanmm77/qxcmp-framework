@@ -115,15 +115,15 @@ public class QxcmpSystemConfig implements SystemConfigLoader {
     public static String AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD = "";
     public static Integer AUTHENTICATION_ACCOUNT_LOCK_THRESHOLD_DEFAULT = 5;
     public static String AUTHENTICATION_ACCOUNT_LOCK_DURATION = "";
-    public static Integer AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT = 15;
+    public static Long AUTHENTICATION_ACCOUNT_LOCK_DURATION_DEFAULT = 15L;
     public static String AUTHENTICATION_ACCOUNT_EXPIRE = "";
     public static Boolean AUTHENTICATION_ACCOUNT_EXPIRE_DEFAULT = false;
     public static String AUTHENTICATION_ACCOUNT_EXPIRE_DURATION = "";
-    public static Integer AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT = 180;
+    public static Long AUTHENTICATION_ACCOUNT_EXPIRE_DURATION_DEFAULT = 180L;
     public static String AUTHENTICATION_CREDENTIAL_EXPIRE = "";
     public static Boolean AUTHENTICATION_CREDENTIAL_EXPIRE_DEFAULT = false;
     public static String AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION = "";
-    public static Integer AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT = 90;
+    public static Long AUTHENTICATION_CREDENTIAL_EXPIRE_DURATION_DEFAULT = 90L;
 
     /*
      * 系统字典相关配置

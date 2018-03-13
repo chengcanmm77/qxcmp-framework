@@ -6,16 +6,17 @@ import com.qxcmp.admin.event.AdminSecurityPrivilegeDisableEvent;
 import com.qxcmp.admin.event.AdminSecurityPrivilegeEnableEvent;
 import com.qxcmp.admin.event.AdminSecurityRoleEditEvent;
 import com.qxcmp.admin.event.AdminSecurityRoleNewEvent;
+import com.qxcmp.admin.form.AdminSecurityAuthenticationForm;
+import com.qxcmp.admin.form.AdminSecurityRoleEditForm;
+import com.qxcmp.admin.form.AdminSecurityRoleNewForm;
 import com.qxcmp.admin.page.AdminSecurityAuthenticationPage;
 import com.qxcmp.admin.page.AdminSecurityPage;
+import com.qxcmp.admin.page.AdminSecurityPrivilegeTablePage;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.security.PrivilegeService;
 import com.qxcmp.security.Role;
 import com.qxcmp.security.RoleService;
-import com.qxcmp.web.form.AdminSecurityAuthenticationForm;
-import com.qxcmp.web.form.AdminSecurityRoleEditForm;
-import com.qxcmp.web.form.AdminSecurityRoleNewForm;
 import com.qxcmp.web.model.RestfulResponse;
 import com.qxcmp.web.view.elements.header.IconHeader;
 import com.qxcmp.web.view.elements.icon.Icon;
@@ -160,35 +161,31 @@ public class AdminSecurityPageController extends QxcmpAdminController {
 
     @GetMapping("/privilege")
     public ModelAndView privilegePage(Pageable pageable) {
-        return page().addComponent(convertToTable(pageable, privilegeService))
-                .setBreadcrumb("控制台", "", "系统配置", "settings", "安全配置", "security", "权限管理")
-                .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY, QxcmpAdminModuleNavigation.ADMIN_MENU_SECURITY_PRIVILEGE)
-                .build();
+        return page(AdminSecurityPrivilegeTablePage.class, privilegeService, pageable);
     }
 
     @PostMapping("/privilege/{id}/enable")
-    public ResponseEntity<RestfulResponse> privilegeEnable(@PathVariable String id) {
-        RestfulResponse restfulResponse = audit("启用权限", context -> {
+    public ResponseEntity<RestfulResponse> privilegeEnable(@PathVariable Long id) {
+        return execute("启用权限", context -> {
             try {
-                applicationContext.publishEvent(new AdminSecurityPrivilegeEnableEvent(currentUser().orElseThrow(RuntimeException::new), privilegeService.update(Long.parseLong(id), privilege -> privilege.setDisabled(false))));
+                applicationContext.publishEvent(new AdminSecurityPrivilegeEnableEvent(currentUser().orElseThrow(RuntimeException::new), privilegeService.update(id, privilege -> privilege.setDisabled(false))));
+
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
         });
-        return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
     }
 
     @PostMapping("/privilege/{id}/disable")
-    public ResponseEntity<RestfulResponse> privilegeDisable(@PathVariable String id) {
-        RestfulResponse restfulResponse = audit("禁用权限", context -> {
+    public ResponseEntity<RestfulResponse> privilegeDisable(@PathVariable Long id) {
+        return execute("启用权限", context -> {
             try {
+                applicationContext.publishEvent(new AdminSecurityPrivilegeDisableEvent(currentUser().orElseThrow(RuntimeException::new), privilegeService.update(id, privilege -> privilege.setDisabled(true))));
 
-                applicationContext.publishEvent(new AdminSecurityPrivilegeDisableEvent(currentUser().orElseThrow(RuntimeException::new), privilegeService.update(Long.parseLong(id), privilege -> privilege.setDisabled(true))));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
         });
-        return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
     }
 
     @GetMapping("/authentication")

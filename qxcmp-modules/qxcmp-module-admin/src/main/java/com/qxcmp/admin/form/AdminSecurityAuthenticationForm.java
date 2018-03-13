@@ -1,4 +1,4 @@
-package com.qxcmp.web.form;
+package com.qxcmp.admin.form;
 
 import com.qxcmp.web.view.annotation.form.BooleanField;
 import com.qxcmp.web.view.annotation.form.Form;
@@ -33,17 +33,17 @@ public class AdminSecurityAuthenticationForm {
     private Integer authenticationAccountLockThreshold;
 
     @NumberField(value = "锁定时长", section = "账户锁定配置", min = 1, tooltip = "锁定时长为分钟，超过锁定时长以后将解锁用户")
-    private Integer authenticationAccountLockDuration;
+    private Long authenticationAccountLockDuration;
 
     @BooleanField(value = "账户过期", section = "账户过期配置", tooltip = "如果用户长时间不登录，是否使账户过期", style = BooleanFieldStyle.TOGGLE)
     private Boolean authenticationAccountExpire;
 
     @NumberField(value = "过期时间", section = "账户过期配置", min = 1, tooltip = "时间为天，超过时间不登录的用户将会使账户过期")
-    private Integer authenticationAccountExpireDuration;
+    private Long authenticationAccountExpireDuration;
 
     @BooleanField(value = "密码过期", section = "账户密码配置", tooltip = "如果密码长时间不修改，是否使密码过期", style = BooleanFieldStyle.TOGGLE)
     private Boolean authenticationCredentialExpire;
 
     @NumberField(value = "过期时间", section = "账户密码配置", min = 1, tooltip = "时间为天，多少天以后不修改密码会使密码过期")
-    private Integer authenticationCredentialExpireDuration;
+    private Long authenticationCredentialExpireDuration;
 }

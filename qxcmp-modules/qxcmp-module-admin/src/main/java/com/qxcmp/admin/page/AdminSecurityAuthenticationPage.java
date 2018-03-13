@@ -1,7 +1,7 @@
 package com.qxcmp.admin.page;
 
 import com.google.common.collect.ImmutableList;
-import com.qxcmp.web.form.AdminSecurityAuthenticationForm;
+import com.qxcmp.admin.form.AdminSecurityAuthenticationForm;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
