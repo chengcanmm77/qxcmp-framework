@@ -2,7 +2,7 @@ package com.qxcmp.region;
 
 import com.qxcmp.config.SiteService;
 import com.qxcmp.core.entity.EntityCreateEvent;
-import com.qxcmp.message.MessageService;
+import com.qxcmp.message.FeedService;
 import com.qxcmp.region.event.RegionDisableEvent;
 import com.qxcmp.region.event.RegionEnableEvent;
 import lombok.RequiredArgsConstructor;
@@ -19,39 +19,35 @@ import static com.qxcmp.region.RegionModuleSecurity.PRIVILEGE_ADMIN_REGION;
 @RequiredArgsConstructor
 public class RegionEventListener {
 
-    private final MessageService messageService;
+    private final FeedService feedService;
     private final SiteService siteService;
 
     @EventListener
     public void onNewEvent(EntityCreateEvent<Region> event) {
         Region region = event.getEntity();
-        messageService.feedForUsers(PRIVILEGE_ADMIN_REGION, event.getUser(), feed -> {
-            feed.setContent(String.format("%s 添加在了地区 <a href='https://%s'>%s</a>",
-                    event.getUser().getDisplayName(),
-                    siteService.getDomain() + ADMIN_REGION_URL,
-                    region.getName() + "-" + region.getCode()));
-        });
+        feedService.feedForUserGroup(PRIVILEGE_ADMIN_REGION, event.getUser(),
+                String.format("%s 添加在了地区 <a href='https://%s'>%s</a>",
+                        event.getUser().getDisplayName(),
+                        siteService.getDomain() + ADMIN_REGION_URL,
+                        region.getName() + "-" + region.getCode()));
     }
 
     @EventListener
     public void onDisableEvent(RegionDisableEvent event) {
         Region region = event.getRegion();
-        messageService.feedForUsers(PRIVILEGE_ADMIN_REGION, event.getUser(), feed -> {
-            feed.setContent(String.format("%s 禁用了地区 <a href='https://%s'>%s</a>",
-                    event.getUser().getDisplayName(),
-                    siteService.getDomain() + ADMIN_REGION_URL,
-                    region.getName() + "-" + region.getCode()));
-        });
+        feedService.feedForUserGroup(PRIVILEGE_ADMIN_REGION, event.getUser(),
+                String.format("%s 禁用了地区 <a href='https://%s'>%s</a>",
+                        event.getUser().getDisplayName(),
+                        siteService.getDomain() + ADMIN_REGION_URL,
+                        region.getName() + "-" + region.getCode()));
     }
 
     @EventListener
     public void onEnableEvent(RegionEnableEvent event) {
         Region region = event.getRegion();
-        messageService.feedForUsers(PRIVILEGE_ADMIN_REGION, event.getUser(), feed -> {
-            feed.setContent(String.format("%s 启用了地区 <a href='https://%s'>%s</a>",
-                    event.getUser().getDisplayName(),
-                    siteService.getDomain() + ADMIN_REGION_URL,
-                    region.getName() + "-" + region.getCode()));
-        });
+        feedService.feedForUserGroup(PRIVILEGE_ADMIN_REGION, event.getUser(), String.format("%s 启用了地区 <a href='https://%s'>%s</a>",
+                event.getUser().getDisplayName(),
+                siteService.getDomain() + ADMIN_REGION_URL,
+                region.getName() + "-" + region.getCode()));
     }
 }
