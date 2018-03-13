@@ -90,7 +90,6 @@ public abstract class QxcmpController {
     protected SystemConfigService systemConfigService;
     protected MessageService messageService;
     protected ViewHelper viewHelper;
-    protected com.qxcmp.util.QxcmpPageResolver pageResolver;
     protected QxcmpPageResolver pageRevolveService;
 
     private TableHelper tableHelper;
@@ -382,11 +381,10 @@ public abstract class QxcmpController {
      *
      * @return 由页面解析器解析出来的页面
      *
-     * @see com.qxcmp.util.QxcmpPageResolver
      * @deprecated
      */
     protected AbstractLegacyPage page() {
-        return pageResolver.resolve(request, response);
+        return null;
     }
 
     /**
@@ -804,11 +802,6 @@ public abstract class QxcmpController {
     @Autowired
     public void setCaptchaService(CaptchaService captchaService) {
         this.captchaService = captchaService;
-    }
-
-    @Autowired
-    public void setPageResolver(com.qxcmp.util.QxcmpPageResolver pageResolver) {
-        this.pageResolver = pageResolver;
     }
 
     @Autowired

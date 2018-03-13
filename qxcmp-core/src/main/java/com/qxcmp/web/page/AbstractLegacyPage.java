@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.qxcmp.web.view.Component;
 import com.qxcmp.web.view.elements.label.AbstractLabel;
 import com.qxcmp.web.view.support.Color;
-import com.qxcmp.web.view.views.ProfileHeader;
 import lombok.Getter;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -197,21 +196,6 @@ public abstract class AbstractLegacyPage {
     }
 
     /**
-     * 设置移动端底部激活菜单项
-     * <p>
-     * 仅支持移动端页面
-     *
-     * @param id 导航ID
-     *
-     * @return 页面
-     *
-     * @see MobilePage
-     */
-    public AbstractLegacyPage setMobileBottomMenuActiveItem(String id) {
-        return this;
-    }
-
-    /**
      * 隐藏移动端底部导航栏
      * <p>
      * 仅支持移动端页面
@@ -219,19 +203,6 @@ public abstract class AbstractLegacyPage {
      * @return 页面
      */
     public AbstractLegacyPage hideMobileBottomMenu() {
-        return this;
-    }
-
-    /**
-     * 覆盖默认的账户组件
-     * <p>
-     * 仅支持移动端页面
-     *
-     * @param profileHeader 新的账户组件
-     *
-     * @return 页面
-     */
-    public AbstractLegacyPage setProfileHeader(ProfileHeader profileHeader) {
         return this;
     }
 
