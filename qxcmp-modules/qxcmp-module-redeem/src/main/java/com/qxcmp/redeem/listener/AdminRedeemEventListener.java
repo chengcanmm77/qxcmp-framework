@@ -9,6 +9,7 @@ import com.qxcmp.redeem.event.AdminRedeemGenerateEvent;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import static com.qxcmp.redeem.RedeemModuleSecurity.*;
@@ -44,6 +45,7 @@ public class AdminRedeemEventListener {
         }
     }
 
+    @Order
     @EventListener
     public void onRedeemEvent(RedeemKeyEvent event) {
         feedService.feedForUserGroup(PRIVILEGE_ADMIN_REDEEM, event.getUser()
