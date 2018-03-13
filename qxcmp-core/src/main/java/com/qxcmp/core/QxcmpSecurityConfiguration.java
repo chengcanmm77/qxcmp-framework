@@ -13,17 +13,9 @@ import org.springframework.context.annotation.Configuration;
 public class QxcmpSecurityConfiguration implements SecurityLoader {
 
     /*
-     * 平台内置角色
-     * */
-    public static final String ROLE_NEWS = "新闻编辑";
-    public static final String ROLE_NEWS_DESCRIPTION = "内置角色：可以访问新闻管理、我的文章、我的栏目页面";
-
-    /*
      * 基本权限
      * */
 
-    public static final String PRIVILEGE_ADMIN_SETTINGS = "系统配置管理权限";
-    public static final String PRIVILEGE_ADMIN_SETTINGS_DESCRIPTION = "可以修改系统全局配置";
     public static final String PRIVILEGE_ADMIN_SECURITY = "系统安全管理权限";
     public static final String PRIVILEGE_ADMIN_SECURITY_DESCRIPTION = "可以修改系统安全配置";
 
@@ -31,8 +23,6 @@ public class QxcmpSecurityConfiguration implements SecurityLoader {
      * 系统工具权限
      * */
 
-    public static final String PRIVILEGE_ADMIN_TOOL = "系统工具使用权限";
-    public static final String PRIVILEGE_ADMIN_TOOL_DESCRIPTION = "可以使用系统工具，还需要具有具体工具的使用权限";
     public static final String PRIVILEGE_ADMIN_SPIDER = "蜘蛛管理权限";
     public static final String PRIVILEGE_ADMIN_SPIDER_DESCRIPTION = "可以管理平台蜘蛛";
 

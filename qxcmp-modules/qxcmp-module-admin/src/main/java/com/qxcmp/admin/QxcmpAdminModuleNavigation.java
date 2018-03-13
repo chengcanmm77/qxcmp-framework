@@ -10,9 +10,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import static com.qxcmp.admin.QxcmpAdminModule.*;
-import static com.qxcmp.admin.QxcmpAdminModuleSecurity.PRIVILEGE_ADMIN_LOG;
-import static com.qxcmp.core.QxcmpSecurityConfiguration.PRIVILEGE_ADMIN_SETTINGS;
-import static com.qxcmp.core.QxcmpSecurityConfiguration.PRIVILEGE_ADMIN_TOOL;
+import static com.qxcmp.admin.QxcmpAdminModuleSecurity.*;
 
 /**
  * 后台导航配置
@@ -44,8 +42,8 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS_LOG, "系统日志", ADMIN_AUDIT_LOG_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_LOG)))
         );
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS, "设置中心菜单")
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_SITE, "网站设置", ADMIN_SETTINGS_SITE_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_DICTIONARY, "字典设置", ADMIN_SETTINGS_DICTIONARY_URL).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_SITE, "网站设置", ADMIN_SETTINGS_SITE_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_SITE)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_DICTIONARY, "字典设置", ADMIN_SETTINGS_DICTIONARY_URL).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_DICTIONARY)))
         );
     }
 }
