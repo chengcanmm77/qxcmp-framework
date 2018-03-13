@@ -1,6 +1,7 @@
 package com.qxcmp.admin;
 
 import com.google.common.base.CaseFormat;
+import com.qxcmp.admin.form.IgnoredSystemConfig;
 import com.qxcmp.admin.page.AbstractQxcmpAdminFormPage;
 import com.qxcmp.admin.page.AdminPageRevolver;
 import com.qxcmp.config.SystemConfigChangeEvent;
@@ -46,7 +47,14 @@ public abstract class QxcmpAdminController extends QxcmpController {
     protected <Q extends AbstractQxcmpAdminFormPage, T> ModelAndView systemConfigPage(Class<Q> qClass, Object form, BindingResult bindingResult, Class<T> tClass) {
         List<Field> systemConfigFields = ReflectionUtils.getAllFields(tClass);
         BeanWrapperImpl formBean = new BeanWrapperImpl(form);
-        ReflectionUtils.getAllFields(form.getClass()).forEach(field -> {
+        ReflectionUtils.getAllFields(form.getClass()).stream().filter(field -> {
+            try {
+                field.setAccessible(true);
+                return Objects.isNull(field.get(form));
+            } catch (IllegalAccessException e) {
+                return true;
+            }
+        }).forEach(field -> {
             String matchedValue = getMatchedSystemConfigValue(systemConfigFields, field);
             try {
                 formBean.setPropertyValue(field.getName(), convertSystemConfigValue(matchedValue, field.getType()));
@@ -70,23 +78,25 @@ public abstract class QxcmpAdminController extends QxcmpController {
         AtomicInteger counter = new AtomicInteger();
         List<Field> systemConfigFields = ReflectionUtils.getAllFields(tClass);
         BeanWrapperImpl formBean = new BeanWrapperImpl(form);
-        ReflectionUtils.getAllFields(form.getClass()).forEach(field -> {
-            try {
-                String matchFieldName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, field.getName());
-                String systemConfigName = getMatchedField(systemConfigFields, matchFieldName).map(this::getSystemConfigName).orElse("");
-                String matchedValue = getMatchedSystemConfigValue(systemConfigFields, field);
-                Object currentValue = formBean.getPropertyValue(field.getName());
-                if (Objects.nonNull(currentValue) && !StringUtils.equals(matchedValue, currentValue.toString())) {
-                    String currentFormValue = String.valueOf(formBean.getPropertyValue(field.getName()));
-                    systemConfigService.update(systemConfigName, currentFormValue).ifPresent(systemConfig -> {
-                        counter.incrementAndGet();
-                        applicationContext.publishEvent(new SystemConfigChangeEvent(tClass.getName(), currentUser().orElse(null), systemConfigName, matchedValue, currentFormValue));
-                    });
-                }
-            } catch (Exception ignored) {
+        ReflectionUtils.getAllFields(form.getClass()).stream()
+                .filter(field -> Objects.isNull(field.getAnnotation(IgnoredSystemConfig.class)))
+                .forEach(field -> {
+                    try {
+                        String matchFieldName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, field.getName());
+                        String systemConfigName = getMatchedField(systemConfigFields, matchFieldName).map(this::getSystemConfigName).orElse("");
+                        String matchedValue = getMatchedSystemConfigValue(systemConfigFields, field);
+                        Object currentValue = formBean.getPropertyValue(field.getName());
+                        if (Objects.nonNull(currentValue) && !StringUtils.equals(matchedValue, currentValue.toString())) {
+                            String currentFormValue = String.valueOf(formBean.getPropertyValue(field.getName()));
+                            systemConfigService.update(systemConfigName, currentFormValue).ifPresent(systemConfig -> {
+                                counter.incrementAndGet();
+                                applicationContext.publishEvent(new SystemConfigChangeEvent(tClass.getName(), currentUser().orElse(null), systemConfigName, matchedValue, currentFormValue));
+                            });
+                        }
+                    } catch (Exception ignored) {
 
-            }
-        });
+                    }
+                });
         return overviewPage(viewHelper.nextSuccessOverview("操作成功", counter.toString() + "项配置已修改").addLink("返回", request.getRequestURL().toString()));
     }
 

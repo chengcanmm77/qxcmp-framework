@@ -127,7 +127,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().logout()
                 .and().sessionManagement()
                 .maximumSessions(systemConfigService.getInteger(QxcmpSystemConfig.SESSION_MAX_ACTIVE_COUNT).orElse(QxcmpSystemConfig.SESSION_MAX_ACTIVE_COUNT_DEFAULT))
-                .maxSessionsPreventsLogin(systemConfigService.getBoolean(QxcmpSystemConfig.SESSION_MAX_PREVENT_LOGIN).orElse(QxcmpSystemConfig.SESSION_MAX_PREVENT_LOGIN_DEFAULT))
+                .maxSessionsPreventsLogin(systemConfigService.getBoolean(QxcmpSystemConfig.SESSION_PREVENT_LOGIN).orElse(QxcmpSystemConfig.SESSION_PREVENT_LOGIN_DEFAULT))
                 .expiredUrl("/login?expired")
                 .sessionRegistry(sessionRegistry())
                 .and().and().addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)

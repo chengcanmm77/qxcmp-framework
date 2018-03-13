@@ -50,8 +50,8 @@ public class QxcmpSystemConfig implements SystemConfigLoader {
     public static Integer SESSION_TIMEOUT_DEFAULT = 3600;
     public static String SESSION_MAX_ACTIVE_COUNT = "qxcmp.session.max.active.count";
     public static Integer SESSION_MAX_ACTIVE_COUNT_DEFAULT = 1;
-    public static String SESSION_MAX_PREVENT_LOGIN = "qxcmp.session.max.prevent.login";
-    public static Boolean SESSION_MAX_PREVENT_LOGIN_DEFAULT = false;
+    public static String SESSION_PREVENT_LOGIN = "qxcmp.session.max.prevent.login";
+    public static Boolean SESSION_PREVENT_LOGIN_DEFAULT = false;
 
     /*
      * 网站配置

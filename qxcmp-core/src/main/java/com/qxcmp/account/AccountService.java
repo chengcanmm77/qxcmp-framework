@@ -5,6 +5,7 @@ import com.qxcmp.account.event.UserLogonEvent;
 import com.qxcmp.account.event.UserResetEvent;
 import com.qxcmp.account.form.*;
 import com.qxcmp.config.SiteService;
+import com.qxcmp.config.SystemConfigChangeEvent;
 import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.core.init.QxcmpInitializer;
@@ -14,6 +15,7 @@ import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -180,6 +182,7 @@ public class AccountService implements QxcmpInitializer {
      *
      * @param form          表单
      * @param bindingResult 错误对象
+     *
      * @return 用户密保问题
      */
     public AccountSecurityQuestion getUserSecurityQuestion(AccountResetUsernameForm form, BindingResult bindingResult) {
@@ -201,6 +204,7 @@ public class AccountService implements QxcmpInitializer {
      * 验证用户密保问题，如果验证成功，返回重置码
      *
      * @param form 表单
+     *
      * @return 账户重置码
      */
     public AccountCode validateSecurityQuestion(AccountResetUsernameQuestionForm form) {
@@ -261,6 +265,7 @@ public class AccountService implements QxcmpInitializer {
      *
      * @param form          表单
      * @param bindingResult 错误对象
+     *
      * @return 账户重置码
      */
     public AccountCode reset(AccountResetPhoneForm form, BindingResult bindingResult) {
@@ -345,6 +350,15 @@ public class AccountService implements QxcmpInitializer {
     @Override
     public void init() {
         loadConfig();
+    }
+
+    @EventListener
+    public void onSystemConfigChange(SystemConfigChangeEvent event) {
+        if (StringUtils.equals(event.getNamespace(), QxcmpSystemConfig.class.getName())) {
+            if (StringUtils.startsWith(event.getName(), "qxcmp.account.enable")) {
+                loadConfig();
+            }
+        }
     }
 
     /**
