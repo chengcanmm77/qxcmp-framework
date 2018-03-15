@@ -2,12 +2,12 @@ package com.qxcmp.weixin;
 
 import com.google.common.collect.Lists;
 import com.qxcmp.config.SiteService;
-import com.qxcmp.core.event.AdminWeixinMaterialSyncFinishEvent;
-import com.qxcmp.core.event.AdminWeixinMaterialSyncStartEvent;
 import com.qxcmp.image.Image;
 import com.qxcmp.image.ImageService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
+import com.qxcmp.weixin.event.AdminWeixinMaterialSyncFinishEvent;
+import com.qxcmp.weixin.event.AdminWeixinMaterialSyncStartEvent;
 import com.qxcmp.weixin.event.WeixinUserSyncFinishEvent;
 import com.qxcmp.weixin.event.WeixinUserSyncStartEvent;
 import jodd.http.HttpRequest;

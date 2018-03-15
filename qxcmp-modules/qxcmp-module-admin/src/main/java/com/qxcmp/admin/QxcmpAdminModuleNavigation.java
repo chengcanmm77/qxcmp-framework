@@ -50,9 +50,9 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
     public void configNavigation(NavigationService navigationService) {
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR, "后台侧边导航栏")
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_USER, "用户管理", ADMIN_USER_URL).setIcon(new Icon("users")).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SECURITY, "安全配置", ADMIN_SECURITY_URL).setIcon(new Icon("lock")).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_TOOLS, "系统工具", ADMIN_TOOLS_URL).setIcon(new Icon("lab")).setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_TOOL)))
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SETTINGS, "设置中心", ADMIN_SETTINGS_URL).setIcon(new Icon("settings")).setOrder(40).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SECURITY, "安全配置", ADMIN_SECURITY_URL).setIcon(new Icon("lock")).setOrder(70).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_TOOLS, "系统工具", ADMIN_TOOLS_URL).setIcon(new Icon("lab")).setOrder(80).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_TOOL)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR_SETTINGS, "设置中心", ADMIN_SETTINGS_URL).setIcon(new Icon("settings")).setOrder(100).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS)))
         );
         navigationService.add(new Navigation(NAVIGATION_ADMIN_PROFILE, "个人中心导航栏")
                 .addItem(new Navigation(NAVIGATION_ADMIN_PROFILE_INFO, "基本资料", ADMIN_PROFILE_URL + "/info").setIcon(new Icon("user")).setOrder(10))

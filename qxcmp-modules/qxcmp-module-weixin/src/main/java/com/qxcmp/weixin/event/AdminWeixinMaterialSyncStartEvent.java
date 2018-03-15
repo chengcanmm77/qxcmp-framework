@@ -1,4 +1,4 @@
-package com.qxcmp.core.event;
+package com.qxcmp.weixin.event;
 
 import com.qxcmp.user.User;
 import lombok.Getter;
@@ -7,11 +7,11 @@ import lombok.Getter;
  * @author Aaric
  */
 @Getter
-public class AdminWeixinMenuEvent {
+public class AdminWeixinMaterialSyncStartEvent {
 
     private final User target;
 
-    public AdminWeixinMenuEvent(User target) {
+    public AdminWeixinMaterialSyncStartEvent(User target) {
         this.target = target;
     }
 }

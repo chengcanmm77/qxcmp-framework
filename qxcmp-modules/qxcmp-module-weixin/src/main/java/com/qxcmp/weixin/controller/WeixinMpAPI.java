@@ -1,4 +1,4 @@
-package com.qxcmp.web.api;
+package com.qxcmp.weixin.controller;
 
 import com.qxcmp.core.QxcmpConfiguration;
 import com.qxcmp.web.QxcmpController;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.qxcmp.core.QxcmpSystemConfig.WECHAT_DEBUG;
+import static com.qxcmp.weixin.WeixinModuleSystemConfig.DEBUG_MODE;
 
 /**
  * 微信公众平台网关路由
@@ -124,7 +124,7 @@ public class WeixinMpAPI extends QxcmpController {
             jsapiSignature.setSignature(wxJsapiSignature.getSignature());
             jsapiSignature.setTimestamp(wxJsapiSignature.getTimestamp());
             jsapiSignature.setUrl(wxJsapiSignature.getUrl());
-            jsapiSignature.setDebug(systemConfigService.getBoolean(WECHAT_DEBUG).orElse(false));
+            jsapiSignature.setDebug(systemConfigService.getBoolean(DEBUG_MODE).orElse(false));
 
             return ResponseEntity.ok(jsapiSignature);
         } catch (Exception e) {

@@ -1,16 +1,7 @@
 package com.qxcmp.core;
 
-import com.github.binarywang.wxpay.config.WxPayConfig;
-import com.github.binarywang.wxpay.service.WxPayService;
-import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
 import com.qxcmp.config.SystemConfigService;
-import com.qxcmp.weixin.WeixinMpMessageHandler;
 import lombok.RequiredArgsConstructor;
-import me.chanjar.weixin.mp.api.WxMpConfigStorage;
-import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
-import me.chanjar.weixin.mp.api.WxMpMessageRouter;
-import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -43,12 +34,8 @@ public class QxcmpConfiguration {
 
     public static final String QXCMP = "清醒内容管理平台";
     public static final String QXCMP_ADMIN_URL = "/admin";
-    public static final String QXCMP_ACCOUNT_URL = "/account";
     public static final String QXCMP_LOGIN_URL = "/login";
-    public static final String QXCMP_LOGOUT_URL = "/logout";
     public static final String QXCMP_FILE_UPLOAD_TEMP_FOLDER = "/tmp/";
-
-    private final WeixinMpMessageHandler defaultMessageHandler;
     private final SystemConfigService systemConfigService;
 
     @Bean
@@ -82,51 +69,6 @@ public class QxcmpConfiguration {
 
         javaMailSender.setJavaMailProperties(properties);
         return javaMailSender;
-    }
-
-    @Bean
-    public WxMpService wxMpService() {
-        WxMpService wxMpService = new WxMpServiceImpl();
-        wxMpService.setWxMpConfigStorage(wxMpConfigStorage());
-        return wxMpService;
-    }
-
-    @Bean
-    public WxMpConfigStorage wxMpConfigStorage() {
-        WxMpInMemoryConfigStorage configStorage = new WxMpInMemoryConfigStorage();
-        configStorage.setAppId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_APP_ID).orElse(""));
-        configStorage.setSecret(systemConfigService.getString(QxcmpSystemConfig.WECHAT_SECRET).orElse(""));
-        configStorage.setToken(systemConfigService.getString(QxcmpSystemConfig.WECHAT_TOKEN).orElse(""));
-        configStorage.setAesKey(systemConfigService.getString(QxcmpSystemConfig.WECHAT_AES_KEY).orElse(""));
-        return configStorage;
-    }
-
-    @Bean
-    public WxMpMessageRouter wxMpMessageRouter() {
-        WxMpMessageRouter wxMpMessageRouter = new WxMpMessageRouter(wxMpService());
-        wxMpMessageRouter.rule().async(false).handler(defaultMessageHandler).end();
-        return wxMpMessageRouter;
-    }
-
-    @Bean
-    public WxPayService wxPayService() {
-        WxPayService wxPayService = new WxPayServiceImpl();
-        wxPayService.setConfig(wxPayConfig());
-        return wxPayService;
-    }
-
-    @Bean
-    public WxPayConfig wxPayConfig() {
-        WxPayConfig wxPayConfig = new WxPayConfig();
-        wxPayConfig.setAppId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_APP_ID).orElse(""));
-        wxPayConfig.setMchId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_MCH_ID).orElse(""));
-        wxPayConfig.setMchKey(systemConfigService.getString(QxcmpSystemConfig.WECHAT_MCH_KEY).orElse(""));
-        wxPayConfig.setSubAppId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_SUB_APP_ID).orElse(""));
-        wxPayConfig.setSubMchId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_SUB_MCH_ID).orElse(""));
-        wxPayConfig.setNotifyUrl(systemConfigService.getString(QxcmpSystemConfig.WECHAT_NOTIFY_URL).orElse(""));
-        wxPayConfig.setKeyPath(systemConfigService.getString(QxcmpSystemConfig.WECHAT_KEY_PATH).orElse(""));
-        wxPayConfig.setTradeType("JSAPI");
-        return wxPayConfig;
     }
 
     @Bean

@@ -101,11 +101,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
      * 微信公众平台导航栏
      * */
 
-    public static final String NAVIGATION_ADMIN_WEIXIN = "ADMIN-WEIXIN";
-    public static final String NAVIGATION_ADMIN_WEIXIN_MATERIAL = NAVIGATION_ADMIN_WEIXIN + "-MATERIAL";
-    public static final String NAVIGATION_ADMIN_WEIXIN_MENU = NAVIGATION_ADMIN_SPIDER + "-MENU";
-    public static final String NAVIGATION_ADMIN_WEIXIN_SETTINGS = NAVIGATION_ADMIN_SPIDER + "-SETTINGS";
-
     @Override
     public void configNavigation(NavigationService navigationService) {
 
@@ -148,13 +143,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
         navigationService.add(new Navigation(NAVIGATION_ADMIN_FINANCE, "财务管理导航栏")
                 .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_DEPOSIT, "充值订单管理", QXCMP_ADMIN_URL + "/finance/deposit").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_DEPOSIT)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_WALLET_MANAGEMENT, "用户钱包管理", QXCMP_ADMIN_URL + "/finance/wallet").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WALLET_MANAGEMENT)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS, "微信支付配置", QXCMP_ADMIN_URL + "/finance/weixin").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WEIXIN)))
-        );
-
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_WEIXIN, "微信公众号导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_WEIXIN_MATERIAL, "素材管理", QXCMP_ADMIN_URL + "/weixin/material").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_WEIXIN_MATERIAL)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_WEIXIN_MENU, "公众号菜单", QXCMP_ADMIN_URL + "/weixin/menu").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_WEIXIN_MENU)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_WEIXIN_SETTINGS, "公众号配置", QXCMP_ADMIN_URL + "/weixin/settings").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_WEIXIN_SETTINGS)))
         );
     }
 }

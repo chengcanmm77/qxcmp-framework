@@ -2,12 +2,10 @@ package com.qxcmp.admin.page;
 
 import com.google.common.collect.ImmutableList;
 import com.qxcmp.web.view.elements.divider.HorizontalDivider;
-import com.qxcmp.web.view.elements.message.InfoMessage;
 import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.elements.statistic.Statistic;
 import com.qxcmp.web.view.elements.statistic.Statistics;
 import com.qxcmp.web.view.support.ItemCount;
-import com.qxcmp.weixin.WeixinService;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Scope;
@@ -30,15 +28,9 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 public class AdminUserTablePage extends AbstractQxcmpAdminPage {
 
     private final Pageable pageable;
-    private final WeixinService weixinService;
 
     @Override
     public void render() {
-
-        if (weixinService.getSyncService().isWeixinUserSync()) {
-            addComponent(new InfoMessage(String.format("微信用户正在同步中... 当前进度为 %d/%d，请稍后刷新查看", weixinService.getSyncService().getCurrentUserSync(), weixinService.getSyncService().getTotalUserSync())).setCloseable());
-        }
-
         addComponent(viewHelper.nextOverview("用户管理")
                 .addComponent(new Segment()
                         .addComponent(new HorizontalDivider("今日统计"))

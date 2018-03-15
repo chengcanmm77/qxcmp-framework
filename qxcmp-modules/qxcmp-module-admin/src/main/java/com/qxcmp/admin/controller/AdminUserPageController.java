@@ -9,17 +9,12 @@ import com.qxcmp.admin.page.AdminUserDetailsPage;
 import com.qxcmp.admin.page.AdminUserRoleEditPage;
 import com.qxcmp.admin.page.AdminUserStatusEditPage;
 import com.qxcmp.admin.page.AdminUserTablePage;
-import com.qxcmp.core.extension.AdminUserDetailsPageToolbarExtensionPoint;
 import com.qxcmp.finance.DepositOrder;
 import com.qxcmp.finance.DepositOrderService;
 import com.qxcmp.security.RoleService;
-import com.qxcmp.web.model.RestfulResponse;
-import com.qxcmp.weixin.WeixinService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,19 +36,11 @@ import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_USER_URL;
 public class AdminUserPageController extends QxcmpAdminController {
 
     private final RoleService roleService;
-    private final WeixinService weixinService;
     private final DepositOrderService depositOrderService;
-    private final AdminUserDetailsPageToolbarExtensionPoint userDetailsPageToolbarExtensionPoint;
 
     @GetMapping("")
     public ModelAndView tablePage(Pageable pageable) {
-        return page(AdminUserTablePage.class, pageable, weixinService);
-    }
-
-    @PostMapping("/sync")
-    public ResponseEntity<RestfulResponse> weixinUserSync() {
-        weixinService.getSyncService().syncUsers(currentUser().orElseThrow(RuntimeException::new));
-        return ResponseEntity.ok(RestfulResponse.builder().status(HttpStatus.OK.value()).build());
+        return page(AdminUserTablePage.class, pageable);
     }
 
     @GetMapping("/{id}/details")

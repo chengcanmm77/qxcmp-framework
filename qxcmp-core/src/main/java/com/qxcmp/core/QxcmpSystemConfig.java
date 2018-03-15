@@ -153,22 +153,6 @@ public class QxcmpSystemConfig implements SystemConfigLoader {
      * 微信公众平台相关配置
      * */
 
-    public static String WECHAT_APP_ID = "qxcmp.wechat.app.id";
-    public static String WECHAT_SECRET = "qxcmp.wechat.secret";
-    public static String WECHAT_TOKEN = "qxcmp.wechat.token";
-    public static String WECHAT_AES_KEY = "qxcmp.wechat.aes.key";
-    public static String WECHAT_OAUTH2_CALLBACK_URL = "";
-    public static String WECHAT_OAUTH2_AUTHORIZATION_URL;
-    public static String WECHAT_SUBSCRIBE_WELCOME_MESSAGE = "";
-    public static String WECHAT_DEBUG = "";
-    public static String WECHAT_PAYMENT_ENABLE;
-    public static Boolean WECHAT_PAYMENT_ENABLE_DEFAULT = false;
-    public static String WECHAT_MCH_ID = "qxcmp.wechat.mch.id";
-    public static String WECHAT_MCH_KEY = "qxcmp.wechat.mch.key";
-    public static String WECHAT_SUB_APP_ID = "qxcmp.wechat.sub.app.id";
-    public static String WECHAT_SUB_MCH_ID = "qxcmp.wechat.sub.mch.id";
-    public static String WECHAT_KEY_PATH = "qxcmp.wechat.key.path";
-    public static String WECHAT_NOTIFY_URL = "qxcmp.wechat.notify.url";
     public static String FINANCE_PAYMENT_SUPPORT_WEIXIN;
     public static Boolean FINANCE_PAYMENT_SUPPORT_WEIXIN_DEFAULT = false;
     public static String WECHAT_PAYMENT_DEFAULT_TRADE_TYPE;

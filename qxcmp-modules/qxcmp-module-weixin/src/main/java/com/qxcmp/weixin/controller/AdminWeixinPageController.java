@@ -1,10 +1,12 @@
-package com.qxcmp.web.controller;
+package com.qxcmp.weixin.controller;
 
+import com.github.binarywang.wxpay.config.WxPayConfig;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.GsonBuilder;
+import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.core.QxcmpSystemConfig;
-import com.qxcmp.core.event.AdminWeixinSettingsEvent;
-import com.qxcmp.web.QxcmpController;
+import com.qxcmp.web.form.AdminFinanceWeixinForm;
 import com.qxcmp.web.form.AdminWeixinMenuForm;
 import com.qxcmp.web.form.AdminWeixinSettingsForm;
 import com.qxcmp.web.model.RestfulResponse;
@@ -18,9 +20,11 @@ import com.qxcmp.web.view.elements.message.InfoMessage;
 import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.support.Wide;
 import com.qxcmp.web.view.views.Overview;
+import com.qxcmp.weixin.WeixinModuleSystemConfig;
 import com.qxcmp.weixin.WeixinMpMaterialService;
 import com.qxcmp.weixin.WeixinMpMaterialType;
 import com.qxcmp.weixin.WeixinService;
+import com.qxcmp.weixin.event.AdminWeixinSettingsEvent;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
@@ -41,41 +45,52 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
-import static com.qxcmp.core.QxcmpSystemConfig.*;
+import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_FINANCE;
+import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS;
+import static com.qxcmp.weixin.WeixinModule.ADMIN_WEIXIN_URL;
 import static me.chanjar.weixin.common.api.WxConsts.OAuth2Scope.SNSAPI_USERINFO;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_ADMIN_URL + "/weixin")
+@RequestMapping(ADMIN_WEIXIN_URL)
 @RequiredArgsConstructor
-public class AdminWeixinPageController extends QxcmpController {
+public class AdminWeixinPageController extends QxcmpAdminController {
 
+
+    private static final List<String> SUPPORT_WEIXIN_PAYMENT = ImmutableList.of("NATIVE", "JSAPI");
+
+    private final WxPayConfig wxPayConfig;
     private final WxMpService wxMpService;
     private final WxMpConfigStorage wxMpConfigStorage;
     private final WeixinMpMaterialService weixinMpMaterialService;
     private final WeixinService weixinService;
 
+    @PostMapping("/sync")
+    public ResponseEntity<RestfulResponse> weixinUserSync() {
+        weixinService.getSyncService().syncUsers(currentUser().orElseThrow(RuntimeException::new));
+        return ResponseEntity.ok(RestfulResponse.builder().status(HttpStatus.OK.value()).build());
+    }
+
     @GetMapping("")
     public ModelAndView weixinPage() {
         return page().addComponent(new Overview("微信公众平台")
                 .addComponent(convertToTable(stringObjectMap -> {
-                    stringObjectMap.put("App ID", systemConfigService.getString(WECHAT_APP_ID).orElse(""));
-                    stringObjectMap.put("App Secret", systemConfigService.getString(WECHAT_SECRET).orElse(""));
-                    stringObjectMap.put("Token", systemConfigService.getString(WECHAT_TOKEN).orElse(""));
-                    stringObjectMap.put("AES Key", systemConfigService.getString(WECHAT_AES_KEY).orElse(""));
-                    stringObjectMap.put("授权回调链接", systemConfigService.getString(WECHAT_OAUTH2_CALLBACK_URL).orElse(""));
-                    stringObjectMap.put("网页授权链接", systemConfigService.getString(WECHAT_OAUTH2_AUTHORIZATION_URL).orElse(""));
-                    stringObjectMap.put("调试模式", systemConfigService.getString(WECHAT_DEBUG).orElse(""));
-                    stringObjectMap.put("欢迎语", systemConfigService.getString(WECHAT_SUBSCRIBE_WELCOME_MESSAGE).orElse(""));
+                    stringObjectMap.put("App ID", systemConfigService.getString(WeixinModuleSystemConfig.APP_ID).orElse(""));
+                    stringObjectMap.put("App Secret", systemConfigService.getString(WeixinModuleSystemConfig.APP_SECRET).orElse(""));
+                    stringObjectMap.put("Token", systemConfigService.getString(WeixinModuleSystemConfig.TOKEN).orElse(""));
+                    stringObjectMap.put("AES Key", systemConfigService.getString(WeixinModuleSystemConfig.AES_KEY).orElse(""));
+                    stringObjectMap.put("授权回调链接", systemConfigService.getString(WeixinModuleSystemConfig.OAUTH2_CALLBACK_URL).orElse(""));
+                    stringObjectMap.put("网页授权链接", systemConfigService.getString(WeixinModuleSystemConfig.AUTHORIZATION_URL).orElse(""));
+                    stringObjectMap.put("调试模式", systemConfigService.getString(WeixinModuleSystemConfig.DEBUG_MODE).orElse(""));
+                    stringObjectMap.put("欢迎语", systemConfigService.getString(WeixinModuleSystemConfig.SUBSCRIBE_WELCOME_MESSAGE).orElse(""));
                 })))
                 .setBreadcrumb("控制台", "", "微信公众平台")
-                .setVerticalNavigation(NAVIGATION_ADMIN_WEIXIN, "")
                 .build();
     }
 
@@ -93,7 +108,6 @@ public class AdminWeixinPageController extends QxcmpController {
 
         return page().addComponent(grid.addItem(new Row().addCol(col)))
                 .setBreadcrumb("控制台", "", "微信公众平台", "weixin", "素材管理")
-                .setVerticalNavigation(NAVIGATION_ADMIN_WEIXIN, NAVIGATION_ADMIN_WEIXIN_MATERIAL)
                 .build();
     }
 
@@ -110,26 +124,24 @@ public class AdminWeixinPageController extends QxcmpController {
                 .map(weixinMpMaterial -> page()
                         .addComponent(new Segment().addComponent(new Button("转换为文章", String.format(QXCMP_ADMIN_URL + "/weixin/material/%s/convert", id)).setPrimary())
                                 .addComponent(new Overview(weixinMpMaterial.getTitle(), weixinMpMaterial.getAuthor()).addComponent(new HtmlText(weixinMpMaterial.getContent()))))
-                        .setBreadcrumb("控制台", "", "微信公众平台", "weixin", "素材管理", "weixin/material", "图文查看")
-                        .setVerticalNavigation(NAVIGATION_ADMIN_WEIXIN, NAVIGATION_ADMIN_WEIXIN_MATERIAL))
+                        .setBreadcrumb("控制台", "", "微信公众平台", "weixin", "素材管理", "weixin/material", "图文查看"))
                 .orElse(page(viewHelper.nextWarningOverview("素材不存在或者不为图文素材", "目前仅支持图文素材的查看"))).build();
     }
 
     @GetMapping("/settings")
     public ModelAndView weixinMpPage(final AdminWeixinSettingsForm form) {
 
-        form.setDebug(systemConfigService.getBoolean(QxcmpSystemConfig.WECHAT_DEBUG).orElse(false));
-        form.setAppId(systemConfigService.getString(QxcmpSystemConfig.WECHAT_APP_ID).orElse(""));
-        form.setSecret(systemConfigService.getString(QxcmpSystemConfig.WECHAT_SECRET).orElse(""));
-        form.setToken(systemConfigService.getString(QxcmpSystemConfig.WECHAT_TOKEN).orElse(""));
-        form.setAesKey(systemConfigService.getString(QxcmpSystemConfig.WECHAT_AES_KEY).orElse(""));
-        form.setOauth2Url(systemConfigService.getString(QxcmpSystemConfig.WECHAT_OAUTH2_CALLBACK_URL).orElse(""));
-        form.setSubscribeMessage(systemConfigService.getString(QxcmpSystemConfig.WECHAT_SUBSCRIBE_WELCOME_MESSAGE).orElse(""));
+        form.setDebug(systemConfigService.getBoolean(WeixinModuleSystemConfig.DEBUG_MODE).orElse(false));
+        form.setAppId(systemConfigService.getString(WeixinModuleSystemConfig.APP_ID).orElse(""));
+        form.setSecret(systemConfigService.getString(WeixinModuleSystemConfig.APP_SECRET).orElse(""));
+        form.setToken(systemConfigService.getString(WeixinModuleSystemConfig.TOKEN).orElse(""));
+        form.setAesKey(systemConfigService.getString(WeixinModuleSystemConfig.AES_KEY).orElse(""));
+        form.setOauth2Url(systemConfigService.getString(WeixinModuleSystemConfig.OAUTH2_CALLBACK_URL).orElse(""));
+        form.setSubscribeMessage(systemConfigService.getString(WeixinModuleSystemConfig.SUBSCRIBE_WELCOME_MESSAGE).orElse(""));
 
         return page()
                 .addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "微信公众平台", "weixin", "公众号配置")
-                .setVerticalNavigation(NAVIGATION_ADMIN_WEIXIN, NAVIGATION_ADMIN_WEIXIN_SETTINGS)
                 .build();
     }
 
@@ -140,19 +152,18 @@ public class AdminWeixinPageController extends QxcmpController {
             return page()
                     .addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "微信公众平台", "weixin", "公众号配置")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_WEIXIN, NAVIGATION_ADMIN_WEIXIN_SETTINGS)
                     .build();
         }
 
         return submitForm(form, context -> {
             try {
-                systemConfigService.update(QxcmpSystemConfig.WECHAT_DEBUG, String.valueOf(form.isDebug()));
-                systemConfigService.update(QxcmpSystemConfig.WECHAT_APP_ID, form.getAppId());
-                systemConfigService.update(QxcmpSystemConfig.WECHAT_SECRET, form.getSecret());
-                systemConfigService.update(QxcmpSystemConfig.WECHAT_TOKEN, form.getToken());
-                systemConfigService.update(QxcmpSystemConfig.WECHAT_AES_KEY, form.getAesKey());
-                systemConfigService.update(QxcmpSystemConfig.WECHAT_OAUTH2_CALLBACK_URL, form.getOauth2Url());
-                systemConfigService.update(QxcmpSystemConfig.WECHAT_SUBSCRIBE_WELCOME_MESSAGE, form.getSubscribeMessage());
+                systemConfigService.update(WeixinModuleSystemConfig.DEBUG_MODE, String.valueOf(form.isDebug()));
+                systemConfigService.update(WeixinModuleSystemConfig.APP_ID, form.getAppId());
+                systemConfigService.update(WeixinModuleSystemConfig.APP_SECRET, form.getSecret());
+                systemConfigService.update(WeixinModuleSystemConfig.TOKEN, form.getToken());
+                systemConfigService.update(WeixinModuleSystemConfig.AES_KEY, form.getAesKey());
+                systemConfigService.update(WeixinModuleSystemConfig.OAUTH2_CALLBACK_URL, form.getOauth2Url());
+                systemConfigService.update(WeixinModuleSystemConfig.SUBSCRIBE_WELCOME_MESSAGE, form.getSubscribeMessage());
 
                 WxMpInMemoryConfigStorage configStorage = (WxMpInMemoryConfigStorage) wxMpConfigStorage;
                 configStorage.setAppId(form.getAppId());
@@ -164,7 +175,7 @@ public class AdminWeixinPageController extends QxcmpController {
                     try {
                         String oauth2Url = wxMpService.oauth2buildAuthorizationUrl(form.getOauth2Url(), SNSAPI_USERINFO, null);
                         context.put("oauth2Url", oauth2Url);
-                        systemConfigService.update(QxcmpSystemConfig.WECHAT_OAUTH2_AUTHORIZATION_URL, oauth2Url);
+                        systemConfigService.update(WeixinModuleSystemConfig.AUTHORIZATION_URL, oauth2Url);
                     } catch (Exception e) {
                         throw new ActionException("Can't build Oauth2 Url", e);
                     }
@@ -188,7 +199,6 @@ public class AdminWeixinPageController extends QxcmpController {
             return page()
                     .addComponent(new Segment().addComponent(convertToForm(form)))
                     .setBreadcrumb("控制台", "", "微信公众平台", "weixin", "公众号菜单")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_WEIXIN, NAVIGATION_ADMIN_WEIXIN_MENU)
                     .build();
         } catch (Exception e) {
             return page(viewHelper.nextWarningOverview("无法获取公众号菜单", "")
@@ -204,7 +214,6 @@ public class AdminWeixinPageController extends QxcmpController {
             return page()
                     .addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "微信公众平台", "weixin", "公众号菜单")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_WEIXIN, NAVIGATION_ADMIN_WEIXIN_MENU)
                     .build();
         }
 
@@ -216,5 +225,59 @@ public class AdminWeixinPageController extends QxcmpController {
                 throw new ActionException(e.getMessage(), e);
             }
         });
+    }
+
+    @GetMapping("/weixin")
+    public ModelAndView weixinPayPage(final AdminFinanceWeixinForm form) {
+
+        form.setEnable(systemConfigService.getBoolean(WeixinModuleSystemConfig.PAYMENT_ENABLE).orElse(WeixinModuleSystemConfig.PAYMENT_ENABLE_DEFAULT));
+        form.setTradeType(systemConfigService.getString(QxcmpSystemConfig.WECHAT_PAYMENT_DEFAULT_TRADE_TYPE).orElse(QxcmpSystemConfig.WECHAT_PAYMENT_DEFAULT_TRADE_TYPE_DEFAULT));
+        form.setAppId(systemConfigService.getString(WeixinModuleSystemConfig.APP_ID).orElse(""));
+        form.setMchId(systemConfigService.getString(WeixinModuleSystemConfig.PAYMENT_MCH_ID).orElse(""));
+        form.setMchKey(systemConfigService.getString(WeixinModuleSystemConfig.PAYMENT_MCH_KEY).orElse(""));
+        form.setNotifyUrl(systemConfigService.getString(WeixinModuleSystemConfig.PAYMENT_NOTIFY_URL).orElse(""));
+        form.setSubAppId(systemConfigService.getString(WeixinModuleSystemConfig.PAYMENT_SUB_APP_ID).orElse(""));
+        form.setSubMchId(systemConfigService.getString(WeixinModuleSystemConfig.PAYMENT_SUB_MCH_ID).orElse(""));
+        form.setKeyPath(systemConfigService.getString(WeixinModuleSystemConfig.PAYMENT_KEY_PATH).orElse(""));
+
+        return page()
+                .addComponent(new Segment().addComponent(convertToForm(form)))
+                .setBreadcrumb("控制台", "", "财务管理", "finance", "微信支付配置")
+                .setVerticalNavigation(NAVIGATION_ADMIN_FINANCE, NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS)
+                .addObject("selection_items_tradeType", SUPPORT_WEIXIN_PAYMENT)
+                .build();
+    }
+
+    @PostMapping("/weixin")
+    public ModelAndView weixinPayPage(@Valid final AdminFinanceWeixinForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return page()
+                    .addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
+                    .setBreadcrumb("控制台", "", "财务管理", "finance", "微信支付配置")
+                    .setVerticalNavigation(NAVIGATION_ADMIN_FINANCE, NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS)
+                    .addObject("selection_items_tradeType", SUPPORT_WEIXIN_PAYMENT)
+                    .build();
+        }
+
+        return submitForm(form, context -> {
+            systemConfigService.update(WeixinModuleSystemConfig.PAYMENT_ENABLE, String.valueOf(form.isEnable()));
+            systemConfigService.update(QxcmpSystemConfig.WECHAT_PAYMENT_DEFAULT_TRADE_TYPE, form.getTradeType());
+            systemConfigService.update(WeixinModuleSystemConfig.APP_ID, form.getAppId());
+            systemConfigService.update(WeixinModuleSystemConfig.PAYMENT_MCH_ID, form.getMchId());
+            systemConfigService.update(WeixinModuleSystemConfig.PAYMENT_MCH_KEY, form.getMchKey());
+            systemConfigService.update(WeixinModuleSystemConfig.PAYMENT_SUB_APP_ID, form.getSubAppId());
+            systemConfigService.update(WeixinModuleSystemConfig.PAYMENT_SUB_MCH_ID, form.getSubMchId());
+            systemConfigService.update(WeixinModuleSystemConfig.PAYMENT_NOTIFY_URL, form.getNotifyUrl());
+            systemConfigService.update(WeixinModuleSystemConfig.PAYMENT_KEY_PATH, form.getKeyPath());
+            systemConfigService.update(QxcmpSystemConfig.FINANCE_PAYMENT_SUPPORT_WEIXIN, systemConfigService.getBoolean(WeixinModuleSystemConfig.PAYMENT_ENABLE).orElse(WeixinModuleSystemConfig.PAYMENT_ENABLE_DEFAULT).toString());
+
+            wxPayConfig.setAppId(form.getAppId());
+            wxPayConfig.setMchId(form.getMchId());
+            wxPayConfig.setMchKey(form.getMchKey());
+            wxPayConfig.setSubAppId(form.getSubAppId());
+            wxPayConfig.setSubMchId(form.getSubMchId());
+            wxPayConfig.setNotifyUrl(form.getNotifyUrl());
+            wxPayConfig.setKeyPath(form.getKeyPath());
+        }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/finance/weixin"));
     }
 }

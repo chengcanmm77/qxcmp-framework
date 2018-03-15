@@ -41,7 +41,6 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
     public static final String PRIVILEGE_ADMIN_STATISTIC = "统计信息查看权限";
     public static final String PRIVILEGE_ADMIN_STATISTIC_DESCRIPTION = "可以查看网站统计信息";
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
