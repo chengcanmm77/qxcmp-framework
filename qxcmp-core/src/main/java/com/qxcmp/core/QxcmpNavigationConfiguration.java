@@ -83,11 +83,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
      * 财务管理导航栏
      * */
 
-    public static final String NAVIGATION_ADMIN_FINANCE = "ADMIN-FINANCE";
-    public static final String NAVIGATION_ADMIN_FINANCE_DEPOSIT = NAVIGATION_ADMIN_FINANCE + "-WALLET-DEPOSIT";
-    public static final String NAVIGATION_ADMIN_FINANCE_WALLET_MANAGEMENT = NAVIGATION_ADMIN_FINANCE + "-WALLET-MANAGEMENT";
-    public static final String NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS = NAVIGATION_ADMIN_FINANCE + "-WEIXIN-SETTINGS";
-
 
     /*
      * 蜘蛛管理导航栏
@@ -137,12 +132,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
                 .addItem(new Navigation(NAVIGATION_ADMIN_MALL_USER_STORE_MANAGEMENT_ORDER, "订单管理", QXCMP_ADMIN_URL + "/mall/user/store/order").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MALL)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_MALL_USER_STORE_MANAGEMENT_COMMODITY, "商品管理", QXCMP_ADMIN_URL + "/mall/user/store/commodity").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MALL)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_MALL_USER_STORE_MANAGEMENT_STORE, "店铺设置", QXCMP_ADMIN_URL + "/mall/user/store/settings").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MALL)))
-        );
-
-
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_FINANCE, "财务管理导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_DEPOSIT, "充值订单管理", QXCMP_ADMIN_URL + "/finance/deposit").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_DEPOSIT)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_WALLET_MANAGEMENT, "用户钱包管理", QXCMP_ADMIN_URL + "/finance/wallet").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WALLET_MANAGEMENT)))
         );
     }
 }

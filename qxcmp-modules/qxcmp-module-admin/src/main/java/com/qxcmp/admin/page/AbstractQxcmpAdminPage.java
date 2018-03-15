@@ -3,7 +3,6 @@ package com.qxcmp.admin.page;
 import com.google.common.collect.Maps;
 import com.qxcmp.admin.view.AdminTopMenuMobileItem;
 import com.qxcmp.admin.view.AdminTopMenuProfileItem;
-import com.qxcmp.message.SiteNotificationService;
 import com.qxcmp.user.User;
 import com.qxcmp.web.view.Component;
 import com.qxcmp.web.view.elements.breadcrumb.Breadcrumb;
@@ -20,10 +19,6 @@ import com.qxcmp.web.view.elements.menu.RightMenu;
 import com.qxcmp.web.view.elements.menu.VerticalMenu;
 import com.qxcmp.web.view.elements.menu.VerticalSubMenu;
 import com.qxcmp.web.view.elements.menu.item.*;
-import com.qxcmp.web.view.elements.message.ErrorMessage;
-import com.qxcmp.web.view.elements.message.InfoMessage;
-import com.qxcmp.web.view.elements.message.Message;
-import com.qxcmp.web.view.elements.message.WarningMessage;
 import com.qxcmp.web.view.modules.accordion.AccordionItem;
 import com.qxcmp.web.view.modules.sidebar.AbstractSidebar;
 import com.qxcmp.web.view.modules.sidebar.AccordionMenuSidebar;
@@ -34,7 +29,6 @@ import com.qxcmp.web.view.support.Fixed;
 import com.qxcmp.web.view.support.Wide;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -63,8 +57,6 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
     private Map<String, AbstractLabel> menuBadge = Maps.newLinkedHashMap();
     private RightMenu topFixedRightMenu = new RightMenu();
     private Col content = new Col(Wide.SIXTEEN);
-
-    private SiteNotificationService siteNotificationService;
 
     /**
      * 设置后台页面面包屑导航
@@ -208,7 +200,6 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         final AbstractGrid grid = new VerticallyDividedGrid().setVerticallyPadded();
         final Row contentRow = new Row();
 
-        buildSiteNotification(container);
         buildPageBreadcrumb(grid);
 
         if (!isMobile) {
@@ -220,24 +211,6 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
         grid.addItem(contentRow);
         container.addComponent(grid);
         sidebar.addContent(container);
-    }
-
-    private void buildSiteNotification(Container container) {
-        siteNotificationService.findActiveNotifications().ifPresent(siteNotification -> {
-            switch (siteNotification.getType()) {
-                case "网站通知":
-                    container.addComponent(new InfoMessage(siteNotification.getTitle(), siteNotification.getContent()).setCloseable());
-                    break;
-                case "网站警告":
-                    container.addComponent(new WarningMessage(siteNotification.getTitle(), siteNotification.getContent()).setCloseable());
-                    break;
-                case "网站错误":
-                    container.addComponent(new ErrorMessage(siteNotification.getTitle(), siteNotification.getContent()).setCloseable());
-                    break;
-                default:
-                    container.addComponent(new Message(siteNotification.getTitle(), siteNotification.getContent()).setCloseable());
-            }
-        });
     }
 
     private void buildPageBreadcrumb(AbstractGrid grid) {
@@ -314,10 +287,5 @@ public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
                         }));
 
         return verticalMenu;
-    }
-
-    @Autowired
-    public void setSiteNotificationService(SiteNotificationService siteNotificationService) {
-        this.siteNotificationService = siteNotificationService;
     }
 }

@@ -13,13 +13,45 @@ package com.qxcmp.finance;
  */
 public enum OrderStatusEnum {
 
+    /**
+     * 已付款但是还未处理的订单
+     */
     PAYED("已付款"),
+
+    /**
+     * 用户申请取消还未处理的订单
+     */
     CANCELLING("取消中"),
+
+    /**
+     * 订单状态错误
+     */
     EXCEPTION("订单异常"),
+
+    /**
+     * 用户已下单但是还未付款
+     */
     PAYING("待付款"),
+
+    /**
+     * 已经成功取消的订单
+     */
     CANCELED("已取消"),
+
+    /**
+     * 已经完成的订单
+     */
     FINISHED("已完成"),
-    NEW("新订单");
+
+    /**
+     * 系统刚生成的订单
+     */
+    NEW("新订单"),
+
+    /**
+     * 已经过期的订单
+     */
+    EXPIRED("已过期");
 
     private String value;
 

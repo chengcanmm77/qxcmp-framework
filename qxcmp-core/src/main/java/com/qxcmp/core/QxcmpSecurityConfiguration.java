@@ -38,13 +38,6 @@ public class QxcmpSecurityConfiguration implements SecurityLoader {
      * 财务模块权限
      * */
 
-    public static final String PRIVILEGE_FINANCE = "财务管理权限";
-    public static final String PRIVILEGE_FINANCE_DESCRIPTION = "可以查看财务管理入口页面";
-    public static final String PRIVILEGE_FINANCE_DEPOSIT = "充值订单管理权限";
-    public static final String PRIVILEGE_FINANCE_DEPOSIT_DESCRIPTION = "可以查看充值订单页面";
-    public static final String PRIVILEGE_FINANCE_WALLET_MANAGEMENT = "用户钱包管理权限";
-    public static final String PRIVILEGE_FINANCE_WALLET_MANAGEMENT_DESCRIPTION = "可以修改用户钱包";
-
     /*
      * 新闻模块权限
      * */

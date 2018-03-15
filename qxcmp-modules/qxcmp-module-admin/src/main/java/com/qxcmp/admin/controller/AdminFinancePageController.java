@@ -1,10 +1,12 @@
-package com.qxcmp.web.controller;
+package com.qxcmp.admin.controller;
 
+import com.qxcmp.admin.QxcmpAdminController;
+import com.qxcmp.admin.QxcmpAdminModuleNavigation;
+import com.qxcmp.admin.page.AdminFinanceOverviewPage;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.finance.DepositOrder;
 import com.qxcmp.finance.DepositOrderService;
 import com.qxcmp.finance.WalletService;
-import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.form.AdminFinanceWalletForm;
 import com.qxcmp.web.view.elements.segment.Segment;
 import lombok.RequiredArgsConstructor;
@@ -19,25 +21,21 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
+import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_FINANCE_URL;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_ADMIN_URL + "/finance")
+@RequestMapping(ADMIN_FINANCE_URL)
 @RequiredArgsConstructor
-public class AdminFinancePageController extends QxcmpController {
+public class AdminFinancePageController extends QxcmpAdminController {
     private final WalletService walletService;
     private final DepositOrderService depositOrderService;
 
     @GetMapping("")
-    public ModelAndView financePage() {
-        return page()
-                .setBreadcrumb("控制台", "", "财务管理")
-                .setVerticalNavigation(NAVIGATION_ADMIN_FINANCE, "")
-                .build();
+    public ModelAndView overview() {
+        return page(AdminFinanceOverviewPage.class);
     }
 
     @GetMapping("/deposit")
@@ -47,7 +45,7 @@ public class AdminFinancePageController extends QxcmpController {
 
         return page().addComponent(convertToTable(DepositOrder.class, finishedOrder))
                 .setBreadcrumb("控制台", "", "财务管理", "finance", "充值订单管理")
-                .setVerticalNavigation(NAVIGATION_ADMIN_FINANCE, NAVIGATION_ADMIN_FINANCE_DEPOSIT)
+                .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_FINANCE, QxcmpAdminModuleNavigation.ADMIN_MENU_FINANCE_DEPOSIT)
                 .build();
     }
 
@@ -55,7 +53,7 @@ public class AdminFinancePageController extends QxcmpController {
     public ModelAndView financeWalletPage(final AdminFinanceWalletForm form) {
         return page().addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "财务管理", "finance", "用户钱包管理")
-                .setVerticalNavigation(NAVIGATION_ADMIN_FINANCE, NAVIGATION_ADMIN_FINANCE_WALLET_MANAGEMENT)
+                .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_FINANCE, QxcmpAdminModuleNavigation.ADMIN_MENU_FINANCE_WALLET_MANAGEMENT)
                 .build();
     }
 
@@ -69,7 +67,7 @@ public class AdminFinancePageController extends QxcmpController {
         if (bindingResult.hasErrors()) {
             return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "财务管理", "finance", "用户钱包管理")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_FINANCE, NAVIGATION_ADMIN_FINANCE_WALLET_MANAGEMENT)
+                    .setVerticalNavigation(QxcmpAdminModuleNavigation.ADMIN_MENU_FINANCE, QxcmpAdminModuleNavigation.ADMIN_MENU_FINANCE_WALLET_MANAGEMENT)
                     .build();
         }
 

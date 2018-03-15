@@ -49,9 +49,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
+import static com.qxcmp.admin.QxcmpAdminModuleNavigation.ADMIN_MENU_FINANCE;
+import static com.qxcmp.admin.QxcmpAdminModuleNavigation.ADMIN_MENU_FINANCE_WEIXIN_SETTINGS;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_FINANCE;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS;
 import static com.qxcmp.weixin.WeixinModule.ADMIN_WEIXIN_URL;
 import static me.chanjar.weixin.common.api.WxConsts.OAuth2Scope.SNSAPI_USERINFO;
 
@@ -121,10 +121,8 @@ public class AdminWeixinPageController extends QxcmpAdminController {
 
         form.setDebug(systemConfigService.getBoolean(WeixinModuleSystemConfig.DEBUG_MODE).orElse(false));
         form.setAppId(systemConfigService.getString(WeixinModuleSystemConfig.APP_ID).orElse(""));
-        form.setSecret(systemConfigService.getString(WeixinModuleSystemConfig.APP_SECRET).orElse(""));
         form.setToken(systemConfigService.getString(WeixinModuleSystemConfig.TOKEN).orElse(""));
         form.setAesKey(systemConfigService.getString(WeixinModuleSystemConfig.AES_KEY).orElse(""));
-        form.setOauth2Url(systemConfigService.getString(WeixinModuleSystemConfig.OAUTH2_CALLBACK_URL).orElse(""));
         form.setSubscribeMessage(systemConfigService.getString(WeixinModuleSystemConfig.SUBSCRIBE_WELCOME_MESSAGE).orElse(""));
 
         return page()
@@ -147,21 +145,20 @@ public class AdminWeixinPageController extends QxcmpAdminController {
             try {
                 systemConfigService.update(WeixinModuleSystemConfig.DEBUG_MODE, String.valueOf(form.isDebug()));
                 systemConfigService.update(WeixinModuleSystemConfig.APP_ID, form.getAppId());
-                systemConfigService.update(WeixinModuleSystemConfig.APP_SECRET, form.getSecret());
+                systemConfigService.update(WeixinModuleSystemConfig.APP_SECRET, form.getAppSecret());
                 systemConfigService.update(WeixinModuleSystemConfig.TOKEN, form.getToken());
                 systemConfigService.update(WeixinModuleSystemConfig.AES_KEY, form.getAesKey());
-                systemConfigService.update(WeixinModuleSystemConfig.OAUTH2_CALLBACK_URL, form.getOauth2Url());
+                systemConfigService.update(WeixinModuleSystemConfig.OAUTH2_CALLBACK_URL, form.getOauth2CallbackUrl());
                 systemConfigService.update(WeixinModuleSystemConfig.SUBSCRIBE_WELCOME_MESSAGE, form.getSubscribeMessage());
 
                 WxMpInMemoryConfigStorage configStorage = (WxMpInMemoryConfigStorage) wxMpConfigStorage;
                 configStorage.setAppId(form.getAppId());
-                configStorage.setSecret(form.getSecret());
                 configStorage.setToken(form.getToken());
                 configStorage.setAesKey(form.getAesKey());
 
-                if (StringUtils.isNotBlank(form.getOauth2Url())) {
+                if (StringUtils.isNotBlank(form.getOauth2CallbackUrl())) {
                     try {
-                        String oauth2Url = wxMpService.oauth2buildAuthorizationUrl(form.getOauth2Url(), SNSAPI_USERINFO, null);
+                        String oauth2Url = wxMpService.oauth2buildAuthorizationUrl(form.getOauth2CallbackUrl(), SNSAPI_USERINFO, null);
                         context.put("oauth2Url", oauth2Url);
                         systemConfigService.update(WeixinModuleSystemConfig.AUTHORIZATION_URL, oauth2Url);
                     } catch (Exception e) {
@@ -231,7 +228,7 @@ public class AdminWeixinPageController extends QxcmpAdminController {
         return page()
                 .addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "财务管理", "finance", "微信支付配置")
-                .setVerticalNavigation(NAVIGATION_ADMIN_FINANCE, NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS)
+                .setVerticalNavigation(ADMIN_MENU_FINANCE, ADMIN_MENU_FINANCE_WEIXIN_SETTINGS)
                 .addObject("selection_items_tradeType", SUPPORT_WEIXIN_PAYMENT)
                 .build();
     }
@@ -242,7 +239,7 @@ public class AdminWeixinPageController extends QxcmpAdminController {
             return page()
                     .addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "财务管理", "finance", "微信支付配置")
-                    .setVerticalNavigation(NAVIGATION_ADMIN_FINANCE, NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS)
+                    .setVerticalNavigation(ADMIN_MENU_FINANCE, ADMIN_MENU_FINANCE_WEIXIN_SETTINGS)
                     .addObject("selection_items_tradeType", SUPPORT_WEIXIN_PAYMENT)
                     .build();
         }

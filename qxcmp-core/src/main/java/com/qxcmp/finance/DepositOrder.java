@@ -19,8 +19,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 /**
  * 平台充值订单
  * <p>
- * 平台充值流程如下 <ol> <li>生成充值订单</li> <li>调用相关支付接口： 微信、支付宝</li> <li>用户完成支付操作</li> <li>收到支付接口发来的回调消息，消息里面应该包含充值订单号</li>
- * <li>调用平台充值服务接口处理充值订单</li> <li>处理订单成功以后，给用户的钱包里面增加对应金钱</li> </ol>
+ * 使用 {@link DepositOrderService} 来创建订单，如果收到充值资金以后使用 {@link DepositOrderService#process(String)} 来处理该订单
  *
  * @author aaric
  */
@@ -41,6 +40,11 @@ public class DepositOrder {
      */
     @TableField(value = "用户ID", enableUrl = true, urlPrefix = QXCMP_ADMIN_URL + "/user/", urlSuffix = "/details", urlTarget = AnchorTarget.BLANK)
     private String userId;
+
+    /**
+     * 订单类型，用户业务拓展
+     */
+    private String type;
 
     /**
      * 订单金额，单位为分

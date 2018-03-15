@@ -26,14 +26,29 @@ public class WalletRecord {
     @GeneratedValue
     private Long id;
 
+    /**
+     * 消费该记录的用户
+     */
     private String userId;
 
+    /**
+     * 消费类型，用于扩展业务
+     */
     private String type;
 
+    /**
+     * 消费数量，整数为增加，负数为减少
+     */
     private int amount;
 
+    /**
+     * 消费时间
+     */
     private Date date;
 
+    /**
+     * 备注
+     */
     private String comments;
 
     /**

@@ -40,6 +40,12 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
     public static final String PRIVILEGE_ADMIN_SECURITY_DESCRIPTION = "可以修改系统安全配置";
     public static final String PRIVILEGE_ADMIN_STATISTIC = "统计信息查看权限";
     public static final String PRIVILEGE_ADMIN_STATISTIC_DESCRIPTION = "可以查看网站统计信息";
+    public static final String PRIVILEGE_FINANCE = "财务管理权限";
+    public static final String PRIVILEGE_FINANCE_DESCRIPTION = "可以查看财务管理入口页面";
+    public static final String PRIVILEGE_FINANCE_DEPOSIT = "充值订单管理权限";
+    public static final String PRIVILEGE_FINANCE_DEPOSIT_DESCRIPTION = "可以查看充值订单页面";
+    public static final String PRIVILEGE_FINANCE_WALLET_MANAGEMENT = "用户钱包管理权限";
+    public static final String PRIVILEGE_FINANCE_WALLET_MANAGEMENT_DESCRIPTION = "可以修改用户钱包";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -48,6 +54,9 @@ public class QxcmpAdminModuleSecurity extends WebSecurityConfigurerAdapter imple
                 .antMatchers(ADMIN_URL + "/**")
                 .and()
                 .authorizeRequests()
+                .antMatchers(ADMIN_FINANCE_URL + "/deposit").hasRole(PRIVILEGE_FINANCE_DEPOSIT)
+                .antMatchers(ADMIN_FINANCE_URL + "/wallet").hasRole(PRIVILEGE_FINANCE_WALLET_MANAGEMENT)
+                .antMatchers(ADMIN_FINANCE_URL).hasRole(PRIVILEGE_FINANCE)
                 .antMatchers(ADMIN_SECURITY_URL).hasRole(PRIVILEGE_ADMIN_SECURITY)
                 .antMatchers(ADMIN_AUDIT_LOG_URL).hasRole(PRIVILEGE_ADMIN_LOG)
                 .antMatchers(ADMIN_STATISTIC_URL).hasRole(PRIVILEGE_ADMIN_STATISTIC)
