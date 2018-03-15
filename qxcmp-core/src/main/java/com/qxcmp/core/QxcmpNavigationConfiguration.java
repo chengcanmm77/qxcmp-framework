@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import com.qxcmp.core.navigation.Navigation;
 import com.qxcmp.core.navigation.NavigationLoader;
 import com.qxcmp.core.navigation.NavigationService;
-import com.qxcmp.web.view.elements.icon.Icon;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -29,27 +28,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
     public static final String NAVIGATION_GLOBAL_MOBILE_BOTTOM = "GLOBAL-MOBILE-BOTTOM";
     public static final String NAVIGATION_GLOBAL_MOBILE_SIDEBAR = "GLOBAL-MOBILE-SIDEBAR";
 
-    /*
-     * 侧边导航栏
-     * */
-
-    public static final String NAVIGATION_ADMIN_SIDEBAR = "ADMIN-SIDEBAR";
-
-    /*
-     * 个人中心导航栏
-     * */
-
-    public static final String NAVIGATION_ADMIN_PROFILE = "ADMIN-PROFILE";
-    public static final String NAVIGATION_ADMIN_PROFILE_INFO = NAVIGATION_ADMIN_PROFILE + "-INFO";
-    public static final String NAVIGATION_ADMIN_PROFILE_SECURITY = NAVIGATION_ADMIN_PROFILE + "-SECURITY";
-
-    /*
-     * 系统设置导航栏
-     * */
-
-    /*
-     * 安全配置导航栏
-     * */
 
     /*
      * 新闻管理导航栏
@@ -110,25 +88,6 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
     public static final String NAVIGATION_ADMIN_FINANCE_WALLET_MANAGEMENT = NAVIGATION_ADMIN_FINANCE + "-WALLET-MANAGEMENT";
     public static final String NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS = NAVIGATION_ADMIN_FINANCE + "-WEIXIN-SETTINGS";
 
-    /*
-     * 消息服务导航栏
-     * */
-
-    public static final String NAVIGATION_ADMIN_MESSAGE = "ADMIN-MESSAGE";
-    public static final String NAVIGATION_ADMIN_MESSAGE_SMS_SEND = NAVIGATION_ADMIN_MESSAGE + "-SMS-SEND";
-    public static final String NAVIGATION_ADMIN_MESSAGE_EMAIL_SEND = NAVIGATION_ADMIN_MESSAGE + "-EMAIL-SEND";
-    public static final String NAVIGATION_ADMIN_MESSAGE_EMAIL_SETTINGS = NAVIGATION_ADMIN_MESSAGE + "-EMAIL-SETTINGS";
-    public static final String NAVIGATION_ADMIN_MESSAGE_SMS_SETTINGS = NAVIGATION_ADMIN_MESSAGE + "-SMS-SETTINGS";
-    public static final String NAVIGATION_ADMIN_MESSAGE_INNER_MESSAGE = NAVIGATION_ADMIN_MESSAGE + "-INNER-MESSAGE";
-    public static final String NAVIGATION_ADMIN_MESSAGE_SITE_NOTIFICATION = NAVIGATION_ADMIN_MESSAGE + "-SITE-NOTIFICATION";
-
-    /*
-     * 兑换码管理导航栏
-     * */
-
-    public static final String NAVIGATION_ADMIN_REDEEM = "ADMIN-REDEEM";
-    public static final String NAVIGATION_ADMIN_REDEEM_MANAGEMENT = NAVIGATION_ADMIN_REDEEM + "-MANAGEMENT";
-    public static final String NAVIGATION_ADMIN_REDEEM_SETTINGS = NAVIGATION_ADMIN_REDEEM + "-SETTINGS";
 
     /*
      * 蜘蛛管理导航栏
@@ -147,41 +106,8 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
     public static final String NAVIGATION_ADMIN_WEIXIN_MENU = NAVIGATION_ADMIN_SPIDER + "-MENU";
     public static final String NAVIGATION_ADMIN_WEIXIN_SETTINGS = NAVIGATION_ADMIN_SPIDER + "-SETTINGS";
 
-    /*
-     * 用户管理导航栏
-     * */
-
-    public static final String NAVIGATION_ADMIN_USER = "ADMIN-USER";
-    public static final String NAVIGATION_ADMIN_USER_ALL = NAVIGATION_ADMIN_USER + "-ALL";
-    public static final String NAVIGATION_ADMIN_USER_WEIXIN = NAVIGATION_ADMIN_USER + "-WEIXIN";
-
-    /*
-     * 链接管理导航栏
-     * */
-
-    public static final String NAVIGATION_ADMIN_LINK = "ADMIN-LINK";
-    public static final String NAVIGATION_ADMIN_LINK_ALL = NAVIGATION_ADMIN_LINK + "-ALL";
-    public static final String NAVIGATION_ADMIN_LINK_SETTINGS = NAVIGATION_ADMIN_LINK + "-SETTINGS";
-
-    /*
-     * 网站统计导航栏
-     * */
-
-    public static final String NAVIGATION_ADMIN_STATISTIC = "ADMIN-STATISTIC";
-    public static final String NAVIGATION_ADMIN_STATISTIC_PAGES = NAVIGATION_ADMIN_STATISTIC + "-PAGES";
-    public static final String NAVIGATION_ADMIN_STATISTIC_KEYWORDS = NAVIGATION_ADMIN_STATISTIC + "-KEYWORDS";
-    public static final String NAVIGATION_ADMIN_STATISTIC_ACCESS_HISTORY = NAVIGATION_ADMIN_STATISTIC + "-ACCESS-HISTORY";
-    public static final String NAVIGATION_ADMIN_STATISTIC_ACCESS_ADDRESS = NAVIGATION_ADMIN_STATISTIC + "-ACCESS-ADDRESS";
-    public static final String NAVIGATION_ADMIN_STATISTIC_BAIDU_LINK = NAVIGATION_ADMIN_STATISTIC + "-BAIDU-LINK";
-    public static final String NAVIGATION_ADMIN_STATISTIC_SETTINGS = NAVIGATION_ADMIN_STATISTIC + "-SETTINGS";
-
     @Override
     public void configNavigation(NavigationService navigationService) {
-
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_PROFILE, "个人中心导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_PROFILE_INFO, "基本资料", QXCMP_ADMIN_URL + "/profile/info").setIcon(new Icon("user")).setOrder(10))
-                .addItem(new Navigation(NAVIGATION_ADMIN_PROFILE_SECURITY, "安全设置", QXCMP_ADMIN_URL + "/profile/security").setIcon(new Icon("lock")).setOrder(20))
-        );
 
         navigationService.add(new Navigation(NAVIGATION_ADMIN_NEWS, "新闻管理导航栏")
                 .addItem(new Navigation(NAVIGATION_ADMIN_NEWS_USER_ARTICLE, "我的文章", QXCMP_ADMIN_URL + "/news/user/article").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_NEWS)))
@@ -219,45 +145,16 @@ public class QxcmpNavigationConfiguration implements NavigationLoader {
         );
 
 
-
         navigationService.add(new Navigation(NAVIGATION_ADMIN_FINANCE, "财务管理导航栏")
                 .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_DEPOSIT, "充值订单管理", QXCMP_ADMIN_URL + "/finance/deposit").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_DEPOSIT)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_WALLET_MANAGEMENT, "用户钱包管理", QXCMP_ADMIN_URL + "/finance/wallet").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WALLET_MANAGEMENT)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_FINANCE_WEIXIN_SETTINGS, "微信支付配置", QXCMP_ADMIN_URL + "/finance/weixin").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WEIXIN)))
         );
 
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_MESSAGE, "消息服务导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_MESSAGE_SMS_SEND, "短信发送服务", QXCMP_ADMIN_URL + "/message/sms/send").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MESSAGE_SMS_SEND)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_MESSAGE_EMAIL_SEND, "邮件发送服务", QXCMP_ADMIN_URL + "/message/email/send").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MESSAGE_EMAIL_SEND)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_MESSAGE_INNER_MESSAGE, "站内信服务", QXCMP_ADMIN_URL + "/message/inner/message").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MESSAGE_SITE_NOTIFICATION)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_MESSAGE_SITE_NOTIFICATION, "网站通知服务", QXCMP_ADMIN_URL + "/message/site/notification").setOrder(40).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MESSAGE_INNER_MESSAGE)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_MESSAGE_SMS_SETTINGS, "短信服务配置", QXCMP_ADMIN_URL + "/message/sms/settings").setOrder(50).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MESSAGE_SMS_CONFIG)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_MESSAGE_EMAIL_SETTINGS, "邮件服务配置", QXCMP_ADMIN_URL + "/message/email/settings").setOrder(60).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_MESSAGE_EMAIL_CONFIG)))
-        );
-
         navigationService.add(new Navigation(NAVIGATION_ADMIN_WEIXIN, "微信公众号导航栏")
                 .addItem(new Navigation(NAVIGATION_ADMIN_WEIXIN_MATERIAL, "素材管理", QXCMP_ADMIN_URL + "/weixin/material").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_WEIXIN_MATERIAL)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_WEIXIN_MENU, "公众号菜单", QXCMP_ADMIN_URL + "/weixin/menu").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_WEIXIN_MENU)))
                 .addItem(new Navigation(NAVIGATION_ADMIN_WEIXIN_SETTINGS, "公众号配置", QXCMP_ADMIN_URL + "/weixin/settings").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_WEIXIN_SETTINGS)))
-        );
-
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_USER, "用户管理导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_USER_ALL, "全部用户", QXCMP_ADMIN_URL + "/user/all").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_USER)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_USER_WEIXIN, "微信用户", QXCMP_ADMIN_URL + "/user/weixin").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_USER)))
-        );
-
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_LINK, "链接管理导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_LINK_ALL, "链接管理", QXCMP_ADMIN_URL + "/link").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_USER)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_LINK_SETTINGS, "链接设置", QXCMP_ADMIN_URL + "/link/settings").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_USER)))
-        );
-
-        navigationService.add(new Navigation(NAVIGATION_ADMIN_STATISTIC, "网站统计导航栏")
-                .addItem(new Navigation(NAVIGATION_ADMIN_STATISTIC_PAGES, "页面访问统计", QXCMP_ADMIN_URL + "/statistic/pages").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_STATISTIC)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_STATISTIC_KEYWORDS, "关键字统计", QXCMP_ADMIN_URL + "/statistic/keywords").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_STATISTIC)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_STATISTIC_ACCESS_HISTORY, "访问历史记录", QXCMP_ADMIN_URL + "/statistic/access/history").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_STATISTIC)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_STATISTIC_ACCESS_ADDRESS, "访问地址管理", QXCMP_ADMIN_URL + "/statistic/access/address").setOrder(40).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_STATISTIC)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_STATISTIC_BAIDU_LINK, "百度链接提交", QXCMP_ADMIN_URL + "/statistic/baidu/link").setOrder(50).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_STATISTIC)))
-                .addItem(new Navigation(NAVIGATION_ADMIN_STATISTIC_SETTINGS, "网站统计设置", QXCMP_ADMIN_URL + "/statistic/settings").setOrder(60).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_STATISTIC_SETTINGS)))
         );
     }
 }

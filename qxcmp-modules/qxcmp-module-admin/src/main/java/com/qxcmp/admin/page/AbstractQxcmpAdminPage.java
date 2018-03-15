@@ -42,8 +42,8 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_PROFILE;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_SIDEBAR;
+import static com.qxcmp.admin.QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_PROFILE;
+import static com.qxcmp.admin.QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
