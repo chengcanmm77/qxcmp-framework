@@ -7,7 +7,7 @@ import com.qxcmp.audit.ActionException;
 import com.qxcmp.web.view.elements.html.P;
 import com.qxcmp.weixin.WeixinModuleSystemConfig;
 import com.qxcmp.weixin.WeixinService;
-import com.qxcmp.weixin.event.AdminWeixinSettingsEvent;
+import com.qxcmp.weixin.event.AdminWeixinMenuEvent;
 import com.qxcmp.weixin.form.AdminWeixinMenuForm;
 import com.qxcmp.weixin.form.AdminWeixinSettingsForm;
 import com.qxcmp.weixin.page.AdminWeixinMenuPage;
@@ -117,7 +117,7 @@ public class AdminWeixinPageController extends QxcmpAdminController {
         return execute("修改公众号菜单", context -> {
             try {
                 wxMpService.getMenuService().menuCreate(form.getContent());
-                applicationContext.publishEvent(new AdminWeixinSettingsEvent(currentUser().orElseThrow(RuntimeException::new)));
+                applicationContext.publishEvent(new AdminWeixinMenuEvent(currentUser().orElseThrow(RuntimeException::new)));
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
             }
