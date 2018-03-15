@@ -5,9 +5,11 @@ import com.qxcmp.core.support.IDGenerator;
 import com.qxcmp.core.validation.Phone;
 import com.qxcmp.core.validation.Username;
 import com.qxcmp.security.Role;
-import com.qxcmp.web.view.annotation.table.*;
+import com.qxcmp.web.view.annotation.table.EntityTable;
+import com.qxcmp.web.view.annotation.table.RowAction;
+import com.qxcmp.web.view.annotation.table.TableField;
+import com.qxcmp.web.view.annotation.table.TableFieldRender;
 import com.qxcmp.web.view.elements.icon.Icon;
-import com.qxcmp.web.view.modules.form.FormMethod;
 import com.qxcmp.web.view.modules.table.TableData;
 import com.qxcmp.web.view.support.Color;
 import lombok.Data;
@@ -35,7 +37,6 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
  * @author aaric
  */
 @EntityTable(action = QXCMP_ADMIN_URL + "/user",
-        tableActions = @TableAction(value = "微信同步", action = "sync", method = FormMethod.POST, secondary = true, showConfirmDialog = true, confirmDialogTitle = "同步微信公众号用户", confirmDialogDescription = "该操作需要提前配置好微信公众号参数，且会花费一些时间，是否继续？"),
         rowActions = {@RowAction(value = "查看", action = "details", primary = true)})
 @Entity
 @Table

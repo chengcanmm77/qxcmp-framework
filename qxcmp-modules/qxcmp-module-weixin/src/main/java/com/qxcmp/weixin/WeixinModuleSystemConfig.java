@@ -12,10 +12,10 @@ public class WeixinModuleSystemConfig implements SystemConfigLoader {
     public static String APP_SECRET = "weixin.app.secret";
     public static String TOKEN = "weixin.token";
     public static String AES_KEY = "weixin.aes.key";
-    public static String OAUTH2_CALLBACK_URL = "";
+    public static String OAUTH2_CALLBACK_URL;
     public static String AUTHORIZATION_URL;
-    public static String SUBSCRIBE_WELCOME_MESSAGE = "";
-    public static String DEBUG_MODE = "";
+    public static String SUBSCRIBE_WELCOME_MESSAGE;
+    public static String DEBUG_MODE;
     public static String PAYMENT_ENABLE;
     public static Boolean PAYMENT_ENABLE_DEFAULT = false;
     public static String PAYMENT_MCH_ID = "weixin.payment.mch.id";

@@ -7,8 +7,6 @@ import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.core.QxcmpSystemConfig;
 import com.qxcmp.web.form.AdminFinanceWeixinForm;
-import com.qxcmp.web.form.AdminWeixinMenuForm;
-import com.qxcmp.web.form.AdminWeixinSettingsForm;
 import com.qxcmp.web.model.RestfulResponse;
 import com.qxcmp.web.view.elements.button.Button;
 import com.qxcmp.web.view.elements.grid.Col;
@@ -25,6 +23,9 @@ import com.qxcmp.weixin.WeixinMpMaterialService;
 import com.qxcmp.weixin.WeixinMpMaterialType;
 import com.qxcmp.weixin.WeixinService;
 import com.qxcmp.weixin.event.AdminWeixinSettingsEvent;
+import com.qxcmp.weixin.form.AdminWeixinMenuForm;
+import com.qxcmp.weixin.form.AdminWeixinSettingsForm;
+import com.qxcmp.weixin.page.AdminWeixinOverviewPage;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
@@ -62,7 +63,6 @@ import static me.chanjar.weixin.common.api.WxConsts.OAuth2Scope.SNSAPI_USERINFO;
 @RequiredArgsConstructor
 public class AdminWeixinPageController extends QxcmpAdminController {
 
-
     private static final List<String> SUPPORT_WEIXIN_PAYMENT = ImmutableList.of("NATIVE", "JSAPI");
 
     private final WxPayConfig wxPayConfig;
@@ -71,27 +71,15 @@ public class AdminWeixinPageController extends QxcmpAdminController {
     private final WeixinMpMaterialService weixinMpMaterialService;
     private final WeixinService weixinService;
 
+    @GetMapping("")
+    public ModelAndView weixinPage() {
+        return page(AdminWeixinOverviewPage.class);
+    }
+
     @PostMapping("/sync")
     public ResponseEntity<RestfulResponse> weixinUserSync() {
         weixinService.getSyncService().syncUsers(currentUser().orElseThrow(RuntimeException::new));
         return ResponseEntity.ok(RestfulResponse.builder().status(HttpStatus.OK.value()).build());
-    }
-
-    @GetMapping("")
-    public ModelAndView weixinPage() {
-        return page().addComponent(new Overview("微信公众平台")
-                .addComponent(convertToTable(stringObjectMap -> {
-                    stringObjectMap.put("App ID", systemConfigService.getString(WeixinModuleSystemConfig.APP_ID).orElse(""));
-                    stringObjectMap.put("App Secret", systemConfigService.getString(WeixinModuleSystemConfig.APP_SECRET).orElse(""));
-                    stringObjectMap.put("Token", systemConfigService.getString(WeixinModuleSystemConfig.TOKEN).orElse(""));
-                    stringObjectMap.put("AES Key", systemConfigService.getString(WeixinModuleSystemConfig.AES_KEY).orElse(""));
-                    stringObjectMap.put("授权回调链接", systemConfigService.getString(WeixinModuleSystemConfig.OAUTH2_CALLBACK_URL).orElse(""));
-                    stringObjectMap.put("网页授权链接", systemConfigService.getString(WeixinModuleSystemConfig.AUTHORIZATION_URL).orElse(""));
-                    stringObjectMap.put("调试模式", systemConfigService.getString(WeixinModuleSystemConfig.DEBUG_MODE).orElse(""));
-                    stringObjectMap.put("欢迎语", systemConfigService.getString(WeixinModuleSystemConfig.SUBSCRIBE_WELCOME_MESSAGE).orElse(""));
-                })))
-                .setBreadcrumb("控制台", "", "微信公众平台")
-                .build();
     }
 
     @GetMapping("/material")
