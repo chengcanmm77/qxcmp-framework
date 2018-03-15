@@ -1,24 +1,20 @@
 package com.qxcmp.web.view.components.finance;
 
+import com.qxcmp.finance.DepositExtension;
 import com.qxcmp.web.view.AbstractComponent;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
+/**
+ * @author Aaric
+ */
 @Getter
-@Setter
+@RequiredArgsConstructor
 public class DepositComponent extends AbstractComponent {
 
-    private boolean supportWeixin;
-
-    private boolean supportAlipay;
-
-    private String weixinActionUrl;
-
-    public DepositComponent(boolean supportWeixin, boolean supportAlipay, String weixinActionUrl) {
-        this.supportWeixin = supportWeixin;
-        this.supportAlipay = supportAlipay;
-        this.weixinActionUrl = weixinActionUrl;
-    }
+    private final List<DepositExtension> depositExtensions;
 
     @Override
     public String getFragmentFile() {

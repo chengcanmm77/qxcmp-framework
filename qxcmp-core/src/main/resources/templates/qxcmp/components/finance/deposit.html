@@ -4,12 +4,12 @@
 
 <!--/*@thymesVar id="component" type="com.qxcmp.web.view.components.finance.DepositComponent"*/-->
 <th:block th:fragment="default(component)">
-    <div class="ui horizontal divider">充值中心</div>
-    <form name="deposit" class="ui form" method="post" th:action="${component.weixinActionUrl}">
+    <p th:if="${#lists.isEmpty(component.depositExtensions)}">充值功能暂未开放</p>
+    <form th:unless="${#lists.isEmpty(component.depositExtensions)}" name="deposit" class="ui form" method="post">
         <input type="hidden" name="callback" th:value="${#request.getParameter('callback')}"/>
         <div class="qxcmp field">
             <label><i class="lock green icon"></i>充值金额</label>
-            <input name="fee" placeholder="请输入充值金额" type="number" min="0" th:required="${true}"/>
+            <input name="fee" placeholder="请输入充值金额(元)" type="number" min="0" th:required="${true}"/>
         </div>
         <div class="qxcmp field">
             <label><i class="credit card alternative icon"></i>支付方式</label>
@@ -18,9 +18,10 @@
                 <i class="dropdown icon"></i>
                 <div class="default text">请选择支付方式</div>
                 <div class="menu">
-                    <div th:if="${component.supportWeixin}" class="item" data-value="weixin">
-                        <img th:src="@{/assets/images/weixinpay-logo.png}"/>
-                        微信支付 | 微信安全支付
+                    <div th:each="extension : ${component.depositExtensions}" class="item"
+                         th:attr="data-value=${extension.getClass().getSimpleName()},data-url=${extension.actionUrl}">
+                        <img th:src="@{${extension.actionImage}}"/>
+                        [[${extension.actionTitle}]]
                     </div>
                 </div>
             </div>
@@ -30,11 +31,12 @@
 
     <script th:inline="javascript">
         $(document).ready(function () {
+            var defaultSelect = /*[[${#lists.isEmpty(component.depositExtensions)} ? '' : ${component.depositExtensions.get(0).getClass().getSimpleName()}]]*/"";
             $(document.deposit).find(".ui.dropdown").dropdown({
-                onChange: function () {
-                    document.deposit.action = /*[[${component.weixinActionUrl}]]*/"";
+                onChange: function (v, t, i) {
+                    document.deposit.action = $(i).attr("data-url");
                 }
-            }).dropdown("set selected", "weixin");
+            }).dropdown("set selected", defaultSelect);
         });
     </script>
 </th:block>

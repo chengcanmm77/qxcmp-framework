@@ -1,7 +1,7 @@
 package com.qxcmp.admin.page;
 
 import com.google.common.collect.ImmutableList;
-import com.qxcmp.core.extension.AdminUserDetailsPageToolbarExtensionPoint;
+import com.qxcmp.admin.extension.AdminUserDetailsPageToolbarExtensionPoint;
 import com.qxcmp.finance.DepositOrder;
 import com.qxcmp.user.User;
 import com.qxcmp.web.view.elements.button.Button;

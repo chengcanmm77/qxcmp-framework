@@ -10,6 +10,15 @@ package com.qxcmp.core.extension;
 public interface Extension {
 
     /**
+     * 该插件是否可用
+     *
+     * @return 是否可用
+     */
+    default boolean isEnabled() {
+        return true;
+    }
+
+    /**
      * 排序
      * <p>
      * 越小越优先

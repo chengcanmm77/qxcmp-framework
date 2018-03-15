@@ -5,6 +5,7 @@ import com.google.common.reflect.TypeToken;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 平台抽象扩展点
@@ -28,7 +29,7 @@ public abstract class AbstractExtensionPoint<T extends Extension> implements Ext
 
     @Override
     public List<T> getExtensions() {
-        return extensions;
+        return extensions.stream().filter(Extension::isEnabled).collect(Collectors.toList());
     }
 
     @Override

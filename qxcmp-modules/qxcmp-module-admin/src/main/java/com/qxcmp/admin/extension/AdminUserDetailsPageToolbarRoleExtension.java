@@ -1,4 +1,4 @@
-package com.qxcmp.core.extension;
+package com.qxcmp.admin.extension;
 
 import org.springframework.stereotype.Component;
 
