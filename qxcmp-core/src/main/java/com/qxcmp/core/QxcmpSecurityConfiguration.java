@@ -31,15 +31,6 @@ public class QxcmpSecurityConfiguration implements SecurityLoader {
      * 新闻模块权限
      * */
 
-    public static final String PRIVILEGE_NEWS = "新闻管理权限";
-    public static final String PRIVILEGE_NEWS_DESCRIPTION = "可以查看新闻管理入口页面";
-    public static final String PRIVILEGE_NEWS_CHANNEL = "栏目管理权限";
-    public static final String PRIVILEGE_NEWS_CHANNEL_DESCRIPTION = "可以对栏目进行管理";
-    public static final String PRIVILEGE_NEWS_ARTICLE_AUDIT = "文章审核权限";
-    public static final String PRIVILEGE_NEWS_ARTICLE_AUDIT_DESCRIPTION = "可以对平台申请审核的文章进行审核，决定发布或驳回";
-    public static final String PRIVILEGE_NEWS_ARTICLE_MANAGEMENT = "文章管理权限";
-    public static final String PRIVILEGE_NEWS_ARTICLE_MANAGEMENT_DESCRIPTION = "可以对平台已发布文章进行管理，禁用或者删除";
-
     /*
      * 商城模块权限
      * */

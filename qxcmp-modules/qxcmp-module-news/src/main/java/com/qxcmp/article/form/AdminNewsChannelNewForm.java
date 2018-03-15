@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.util.Set;
 
+/**
+ * @author Aaric
+ */
 @Form(value = "新建栏目", submitText = "确认创建")
 @Data
 public class AdminNewsChannelNewForm {

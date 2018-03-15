@@ -13,6 +13,14 @@ import java.util.Set;
 @Repository
 interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpecificationExecutor<Article> {
 
+    /**
+     * 获取某个状态的文章数量
+     *
+     * @param status 文章状态
+     * @return 某个状态的文章数量
+     */
+    Long countByStatus(ArticleStatus status);
+
     Page<Article> findByStatus(ArticleStatus status, Pageable pageable);
 
     @Query("select article from Article article inner join article.channels channel where channel = :channel")

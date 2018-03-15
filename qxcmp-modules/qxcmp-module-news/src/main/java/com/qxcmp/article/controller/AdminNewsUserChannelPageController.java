@@ -1,13 +1,13 @@
 package com.qxcmp.article.controller;
 
 import com.google.common.collect.ImmutableSet;
+import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.article.*;
 import com.qxcmp.article.form.AdminNewsUserChannelAdminEditForm;
 import com.qxcmp.article.form.AdminNewsUserChannelOwnerEditForm;
 import com.qxcmp.article.support.AdminNewsPageHelper;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.user.User;
-import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;
 import com.qxcmp.web.view.Component;
 import com.qxcmp.web.view.elements.grid.AbstractGrid;
@@ -21,7 +21,6 @@ import com.qxcmp.web.view.elements.image.Image;
 import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.support.Wide;
-import com.qxcmp.web.view.support.utils.TableHelper;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -41,21 +40,21 @@ import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
+import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
+import static com.qxcmp.article.NewsModuleNavigation.ADMIN_MENU_ARTICLE;
+import static com.qxcmp.article.NewsModuleNavigation.ADMIN_MENU_ARTICLE_USER_CHANNEL;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_NEWS;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.NAVIGATION_ADMIN_NEWS_USER_CHANNEL;
 
+/**
+ * @author Aaric
+ */
 @Controller
-@RequestMapping(QXCMP_ADMIN_URL + "/news/user/channel")
+@RequestMapping(ADMIN_NEWS_URL + "/user/channel")
 @RequiredArgsConstructor
-public class AdminNewsUserChannelPageController extends QxcmpController {
+public class AdminNewsUserChannelPageController extends QxcmpAdminController {
 
     private final ChannelService channelService;
-
     private final ArticleService articleService;
-
-    private final TableHelper tableHelper;
-
     private final AdminNewsPageHelper adminNewsPageHelper;
 
     @GetMapping("")
@@ -67,7 +66,7 @@ public class AdminNewsUserChannelPageController extends QxcmpController {
 
         return page().addComponent(convertToTable("user", Channel.class, channels))
                 .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目")
-                .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_USER_CHANNEL)
+                .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
                 .build();
     }
 
@@ -84,7 +83,7 @@ public class AdminNewsUserChannelPageController extends QxcmpController {
                         .addComponent(new HtmlText(channel.getContent()))
                         .addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel"))
                         .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", "栏目查看")
-                        .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_USER_CHANNEL)
+                        .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
                         .build()).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build());
     }
 
@@ -126,7 +125,7 @@ public class AdminNewsUserChannelPageController extends QxcmpController {
 
                     return page().addComponent(new Segment().addComponent(convertToForm(form)))
                             .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", "栏目编辑")
-                            .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_USER_CHANNEL)
+                            .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
                             .addObject(form)
                             .addObject("selection_items_owner", userService.findAll())
                             .addObject("selection_items_admins", userService.findAll())
@@ -148,7 +147,7 @@ public class AdminNewsUserChannelPageController extends QxcmpController {
                     if (bindingResult.hasErrors()) {
                         return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                                 .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", "栏目编辑")
-                                .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_USER_CHANNEL)
+                                .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
                                 .addObject(form)
                                 .addObject("selection_items_owner", userService.findAll())
                                 .addObject("selection_items_admins", userService.findAll())
@@ -187,7 +186,7 @@ public class AdminNewsUserChannelPageController extends QxcmpController {
                     if (bindingResult.hasErrors()) {
                         return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                                 .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", "栏目编辑")
-                                .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_USER_CHANNEL)
+                                .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
                                 .addObject(form)
                                 .addObject("selection_items_owner", userService.findAll())
                                 .addObject("selection_items_admins", userService.findAll())
@@ -226,7 +225,7 @@ public class AdminNewsUserChannelPageController extends QxcmpController {
 
                     return page().addComponent(convertToTable("userChannel", String.format(QXCMP_ADMIN_URL + "/news/user/channel/%d/article", channel.getId()), Article.class, articles))
                             .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", channel.getName())
-                            .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_USER_CHANNEL)
+                            .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
                             .build();
                 }).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build());
     }
@@ -245,7 +244,7 @@ public class AdminNewsUserChannelPageController extends QxcmpController {
                         .addLink("我的栏目", QXCMP_ADMIN_URL + "/news/user/channel")
                         .addLink("栏目文章", String.format(QXCMP_ADMIN_URL + "/news/user/channel/%d/article", channel.getId())))
                         .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", channel.getName(), String.format("news/user/channel/%d/article", channel.getId()), "文章预览")
-                        .setVerticalNavigation(NAVIGATION_ADMIN_NEWS, NAVIGATION_ADMIN_NEWS_USER_CHANNEL)
+                        .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
                         .build()).orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build())
                 ).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build());
     }

@@ -503,7 +503,8 @@ public class TableHelper {
                 tableData.addComponents(components);
             } else {
                 if (entityTableField.isImage()) {
-                    tableData.setCollapsing().addComponent(new Avatar(Objects.nonNull(value) ? value.toString() : "").setCentered());
+                    String imageSrc = Objects.nonNull(value) ? value.toString() : "";
+                    tableData.setCollapsing().addComponent(new Avatar(StringUtils.isNotBlank(imageSrc) ? imageSrc : "/assets/images/placeholder-square.png").setCentered());
                 } else if (entityTableField.isEnableUrl()) {
                     String textValue = getTableCellTextValue(typeDescriptor, value);
 

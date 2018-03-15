@@ -26,7 +26,7 @@ public class WeixinModuleNavigation implements NavigationLoader {
     @Override
     public void configNavigation(NavigationService navigationService) {
         navigationService.get(NAVIGATION_ADMIN_SIDEBAR)
-                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_WEIXIN, "微信平台", ADMIN_WEIXIN_URL).setIcon(new Icon("wechat")).setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_WEIXIN)));
+                .addItem(new Navigation(NAVIGATION_ADMIN_SIDEBAR_WEIXIN, "微信平台", ADMIN_WEIXIN_URL).setIcon(new Icon("wechat")).setOrder(50).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_WEIXIN)));
         navigationService.add(new Navigation(ADMIN_MENU_WEIXIN, "微信平台设置导航栏")
                 .addItem(new Navigation(ADMIN_MENU_WEIXIN_SETTINGS, "微信平台参数", ADMIN_WEIXIN_URL + "/settings").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_WEIXIN)))
                 .addItem(new Navigation(ADMIN_MENU_WEIXIN_MENU, "公众号菜单", ADMIN_WEIXIN_URL + "/menu").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_WEIXIN)))

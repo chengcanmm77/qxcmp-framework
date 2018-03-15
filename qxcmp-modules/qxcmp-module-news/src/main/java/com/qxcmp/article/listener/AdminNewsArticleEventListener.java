@@ -1,7 +1,15 @@
-package com.qxcmp.article.event;
+package com.qxcmp.article.listener;
 
 import com.qxcmp.article.Article;
+import com.qxcmp.article.Channel;
+import com.qxcmp.article.event.AdminNewsArticleDisableEvent;
+import com.qxcmp.article.event.AdminNewsArticleEnableEvent;
+import com.qxcmp.article.event.AdminNewsArticlePublishEvent;
 import com.qxcmp.config.SiteService;
+import com.qxcmp.core.entity.EntityCreateEvent;
+import com.qxcmp.core.entity.EntityDeleteEvent;
+import com.qxcmp.core.entity.EntityUpdateEvent;
+import com.qxcmp.message.FeedService;
 import com.qxcmp.message.MessageService;
 import com.qxcmp.user.User;
 import com.qxcmp.user.UserService;
@@ -12,7 +20,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.qxcmp.core.QxcmpSecurityConfiguration.PRIVILEGE_NEWS_ARTICLE_MANAGEMENT;
+import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
+import static com.qxcmp.article.NewsModuleSecurity.PRIVILEGE_NEWS_ARTICLE_MANAGEMENT;
+import static com.qxcmp.article.NewsModuleSecurity.PRIVILEGE_NEWS_CHANNEL;
+
 
 /**
  * @author Aaric
@@ -21,9 +32,42 @@ import static com.qxcmp.core.QxcmpSecurityConfiguration.PRIVILEGE_NEWS_ARTICLE_M
 @RequiredArgsConstructor
 public class AdminNewsArticleEventListener {
 
+    private final FeedService feedService;
     private final MessageService messageService;
     private final UserService userService;
     private final SiteService siteService;
+
+    @EventListener
+    public void onChannelCreate(EntityCreateEvent<Channel> event) {
+        feedService.feedForUserGroup(PRIVILEGE_NEWS_CHANNEL, event.getUser(),
+                String.format("%s 新建了栏目 <a href='https://%s%s/channel/%d/edit'>%s</a>",
+                        event.getUser().getDisplayName(),
+                        siteService.getDomain(),
+                        ADMIN_NEWS_URL,
+                        event.getEntity().getId(),
+                        event.getEntity().getName()));
+    }
+
+    @EventListener
+    public void onChannelUpdate(EntityUpdateEvent<Channel> event) {
+        feedService.feedForUserGroup(PRIVILEGE_NEWS_CHANNEL, event.getUser(),
+                String.format("%s 编辑了栏目 <a href='https://%s%s/channel/%d/edit'>%s</a>",
+                        event.getUser().getDisplayName(),
+                        siteService.getDomain(),
+                        ADMIN_NEWS_URL,
+                        event.getEntity().getId(),
+                        event.getEntity().getName()));
+    }
+
+    @EventListener
+    public void onChannelDelete(EntityDeleteEvent<Channel> event) {
+        feedService.feedForUserGroup(PRIVILEGE_NEWS_CHANNEL, event.getUser(),
+                String.format("%s 删除了栏目 <a href='https://%s%s/channel'>%s</a>",
+                        event.getUser().getDisplayName(),
+                        siteService.getDomain(),
+                        ADMIN_NEWS_URL,
+                        event.getEntity().getName()));
+    }
 
     @EventListener
     public void onDisableEvent(AdminNewsArticleDisableEvent event) {

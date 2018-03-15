@@ -104,7 +104,6 @@ public abstract class QxcmpController {
      * @param tClass 页面类型
      * @param models 页面数据
      * @param <T>    页面类型
-     *
      * @return 渲染后的页面
      */
     protected <T extends QxcmpPage> ModelAndView page(Class<T> tClass, Object... models) {
@@ -126,7 +125,6 @@ public abstract class QxcmpController {
      * 获取错误页面
      *
      * @param errors 错误信息
-     *
      * @return 错误页面
      */
     protected ModelAndView errorPage(Map<String, Object> errors) {
@@ -137,7 +135,6 @@ public abstract class QxcmpController {
      * 获取一个概览页面
      *
      * @param overview 概览页面
-     *
      * @return 概览页面
      */
     protected ModelAndView overviewPage(Overview overview) {
@@ -150,7 +147,6 @@ public abstract class QxcmpController {
      * @param title   操作名称
      * @param action  要执行的操作
      * @param context 执行上下文
-     *
      * @return 操作结果页面
      */
     protected ModelAndView execute(String title, Action action, BiConsumer<Map<String, Object>, Overview> context) {
@@ -182,7 +178,6 @@ public abstract class QxcmpController {
      *
      * @param title  操作名称
      * @param action 要执行的操作
-     *
      * @return 操作结果相应
      */
     protected ResponseEntity<RestfulResponse> execute(String title, Action action) {
@@ -216,7 +211,6 @@ public abstract class QxcmpController {
      * @param form          创建表单
      * @param bindingResult 错误结果
      * @param <Q>           页面类型
-     *
      * @return 实体创建页面
      */
     protected <Q extends QxcmpPage> ModelAndView entityCreatePage(Class<Q> qClass, Object form, BindingResult bindingResult) {
@@ -235,10 +229,24 @@ public abstract class QxcmpController {
      * @param form          表单
      * @param <T>           实体类型
      * @param <ID>          实体主键类型
-     *
      * @return 操作结果页面
      */
     protected <T, ID extends Serializable> ModelAndView createEntity(EntityService<T, ID> entityService, Object form) {
+        return createEntity(entityService, form, overview -> {
+        });
+    }
+
+    /**
+     * 使用表单创建一个实体对象
+     *
+     * @param entityService 实体服务
+     * @param form          表单
+     * @param consumer      结果页面自定义
+     * @param <T>           实体类型
+     * @param <ID>          实体主键类型
+     * @return 操作结果页面
+     */
+    protected <T, ID extends Serializable> ModelAndView createEntity(EntityService<T, ID> entityService, Object form, Consumer<Overview> consumer) {
         return execute(getFormSubmitActionTitle(form), context -> {
             try {
                 T t = entityService.create(() -> {
@@ -252,11 +260,14 @@ public abstract class QxcmpController {
                 throw new ActionException(e.getMessage(), e);
             }
         }, (stringObjectMap, overview) -> {
-            overview.addLink("继续新建", "");
-            if (Objects.nonNull(stringObjectMap.get("entity-id"))) {
-                overview.addLink("重新编辑", stringObjectMap.get("entity-id").toString() + "/edit");
+            consumer.accept(overview);
+            if (overview.getLinks().isEmpty()) {
+                overview.addLink("继续新建", "");
+                if (Objects.nonNull(stringObjectMap.get("entity-id"))) {
+                    overview.addLink("重新编辑", stringObjectMap.get("entity-id").toString() + "/edit");
+                }
+                overview.addLink("返回", request.getRequestURL().toString().replaceAll("/new", ""));
             }
-            overview.addLink("返回", request.getRequestURL().toString().replaceAll("/new", ""));
         });
     }
 
@@ -269,7 +280,6 @@ public abstract class QxcmpController {
      * @param <Q>           页面类型
      * @param <T>           实体类型
      * @param <ID>          实体主键类型
-     *
      * @return 实体详情页面
      */
     protected <Q extends QxcmpPage, T, ID extends Serializable> ModelAndView entityDetailsPage(Class<Q> qClass, ID id, EntityService<T, ID> entityService) {
@@ -289,7 +299,6 @@ public abstract class QxcmpController {
      * @param <Q>           编辑页面类型
      * @param <T>           实体类型
      * @param <ID>          主键类型
-     *
      * @return 实体编辑页面
      */
     protected <Q extends QxcmpPage, T, ID extends Serializable> ModelAndView entityUpdatePage(Class<Q> qClass, ID id, EntityService<T, ID> entityService, Object form, BindingResult bindingResult) {
@@ -312,7 +321,6 @@ public abstract class QxcmpController {
      * @param form          表单
      * @param <T>           实体类型
      * @param <ID>          实体主键类型
-     *
      * @return 操作结果页面
      */
     protected <T, ID extends Serializable> ModelAndView updateEntity(ID id, EntityService<T, ID> entityService, Object form) {
@@ -337,7 +345,6 @@ public abstract class QxcmpController {
      * @param entityService 实体服务
      * @param <T>           实体类型
      * @param <ID>          实体主键类型
-     *
      * @return 删除结果
      */
     protected <T, ID extends Serializable> ResponseEntity<RestfulResponse> deleteEntity(String title, ID id, EntityService<T, ID> entityService) {
@@ -380,7 +387,6 @@ public abstract class QxcmpController {
      * 根据请求获取一个页面
      *
      * @return 由页面解析器解析出来的页面
-     *
      * @deprecated
      */
     protected AbstractLegacyPage page() {
@@ -391,9 +397,7 @@ public abstract class QxcmpController {
      * 根据请求获取一个页面并设置概览视图
      *
      * @param overview 概览组件
-     *
      * @return 概览视图页面
-     *
      * @see Overview
      * @deprecated
      */
@@ -405,7 +409,6 @@ public abstract class QxcmpController {
      * 获取一个重定向页面
      *
      * @param url 重定向链接
-     *
      * @return 重定向页面
      */
     protected ModelAndView redirect(String url) {
@@ -414,9 +417,7 @@ public abstract class QxcmpController {
 
     /**
      * @param object
-     *
      * @return
-     *
      * @deprecated
      */
     protected AbstractForm convertToForm(Object object) {
@@ -426,9 +427,7 @@ public abstract class QxcmpController {
     /**
      * @param bindingResult
      * @param object
-     *
      * @return
-     *
      * @deprecated
      */
     protected ErrorMessage convertToErrorMessage(BindingResult bindingResult, Object object) {
@@ -438,9 +437,7 @@ public abstract class QxcmpController {
     /**
      * @param pageable
      * @param entityService
-     *
      * @return
-     *
      * @deprecated
      */
     protected EntityTable convertToTable(Pageable pageable, EntityService entityService) {
@@ -451,9 +448,7 @@ public abstract class QxcmpController {
      * @param tableName
      * @param pageable
      * @param entityService
-     *
      * @return
-     *
      * @deprecated
      */
     protected EntityTable convertToTable(String tableName, Pageable pageable, EntityService entityService) {
@@ -465,9 +460,7 @@ public abstract class QxcmpController {
      * @param action
      * @param pageable
      * @param entityService
-     *
      * @return
-     *
      * @deprecated
      */
     @SuppressWarnings("unchecked")
@@ -500,9 +493,7 @@ public abstract class QxcmpController {
      * @param tClass
      * @param tPage
      * @param <T>
-     *
      * @return
-     *
      * @deprecated
      */
     protected <T> EntityTable convertToTable(Class<T> tClass, Page<T> tPage) {
@@ -514,9 +505,7 @@ public abstract class QxcmpController {
      * @param tClass
      * @param tPage
      * @param <T>
-     *
      * @return
-     *
      * @deprecated
      */
     protected <T> EntityTable convertToTable(String tableName, Class<T> tClass, Page<T> tPage) {
@@ -529,9 +518,7 @@ public abstract class QxcmpController {
      * @param tClass
      * @param tPage
      * @param <T>
-     *
      * @return
-     *
      * @deprecated
      */
     protected <T> EntityTable convertToTable(String tableName, String action, Class<T> tClass, Page<T> tPage) {
@@ -540,9 +527,7 @@ public abstract class QxcmpController {
 
     /**
      * @param dictionary
-     *
      * @return
-     *
      * @deprecated
      */
     protected Table convertToTable(Map<Object, Object> dictionary) {
@@ -551,9 +536,7 @@ public abstract class QxcmpController {
 
     /**
      * @param consumer
-     *
      * @return
-     *
      * @deprecated
      */
     protected Table convertToTable(Consumer<Map<Object, Object>> consumer) {
@@ -631,9 +614,7 @@ public abstract class QxcmpController {
      * @param form       要提交的表单
      * @param action     要执行的操作
      * @param biConsumer 返回的结果页面
-     *
      * @return 提交后的页面
-     *
      * @deprecated
      */
     protected ModelAndView submitForm(String title, Object form, Action action, BiConsumer<Map<String, Object>, Overview> biConsumer) {
@@ -674,9 +655,7 @@ public abstract class QxcmpController {
      *
      * @param title  操作名称
      * @param action 要执行的操作
-     *
      * @return 操作结果实体
-     *
      * @deprecated
      */
     protected RestfulResponse audit(String title, Action action) {
@@ -697,7 +676,6 @@ public abstract class QxcmpController {
      * 获取上传后的文件
      *
      * @param keys 临时文件标识
-     *
      * @return 文件列表
      */
     protected List<File> getUploadFiles(List<String> keys) {
@@ -712,7 +690,6 @@ public abstract class QxcmpController {
      * 获取单个上传后的文件
      *
      * @param key 临时文件标识
-     *
      * @return 单个文件
      */
     protected File getUploadFile(String key) {
@@ -733,7 +710,6 @@ public abstract class QxcmpController {
      * 获取表单提交操作标题
      *
      * @param form 表单
-     *
      * @return 表单标题
      */
     private String getFormSubmitActionTitle(Object form) {

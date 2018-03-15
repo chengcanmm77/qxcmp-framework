@@ -28,6 +28,10 @@ public class ArticleService extends AbstractEntityService<Article, Long, Article
         }
     }
 
+    public Long countByStatus(ArticleStatus status) {
+        return repository.countByStatus(status);
+    }
+
     public Page<Article> findByStatus(ArticleStatus status, Pageable pageable) {
         return repository.findByStatus(status, pageable);
     }
