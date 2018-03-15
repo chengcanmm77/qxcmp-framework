@@ -2,15 +2,19 @@ package com.qxcmp.weixin.page;
 
 import com.google.common.collect.ImmutableList;
 import com.qxcmp.admin.page.AbstractQxcmpAdminPage;
+import com.qxcmp.web.view.elements.button.Button;
 import com.qxcmp.web.view.elements.divider.HorizontalDivider;
+import com.qxcmp.web.view.elements.message.InfoMessage;
 import com.qxcmp.web.view.modules.table.AbstractTable;
 import com.qxcmp.weixin.WeixinModuleSystemConfig;
+import com.qxcmp.weixin.WeixinSyncService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.qxcmp.weixin.WeixinModule.ADMIN_WEIXIN_URL;
 import static com.qxcmp.weixin.WeixinModuleNavigation.ADMIN_MENU_WEIXIN;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
@@ -22,10 +26,18 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @RequiredArgsConstructor
 public class AdminWeixinOverviewPage extends AbstractQxcmpAdminPage {
 
+    private final WeixinSyncService weixinSyncService;
+
     @Override
     public void render() {
         setMenu(ADMIN_MENU_WEIXIN, "");
         addComponent(viewHelper.nextInfoOverview("微信平台配置")
+                .addComponent(() -> {
+                    if (weixinSyncService.isWeixinUserSync()) {
+                        return new InfoMessage("微信用户同步中", String.format("同步进度：%d/%d", weixinSyncService.getCurrentUserSync(), weixinSyncService.getTotalUserSync())).setCloseable();
+                    }
+                    return new Button("同步微信用户", ADMIN_WEIXIN_URL + "/sync").setBasic();
+                })
                 .addComponent(new HorizontalDivider("公众号配置"))
                 .addComponent(getMpOverviewDetailsTable())
                 .addComponent(new HorizontalDivider("微信支付配置"))

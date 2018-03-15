@@ -31,7 +31,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_FILE_UPLOAD_TEMP_FOLDER;
  */
 @Controller
 @RequestMapping("/api/file/")
-public class FileUploadAPI extends QxcmpController {
+public class FileUploadApi extends QxcmpController {
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam MultipartFile file) {

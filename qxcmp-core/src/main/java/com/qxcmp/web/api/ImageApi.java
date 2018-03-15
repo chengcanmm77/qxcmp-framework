@@ -29,7 +29,7 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/api/image/")
 @RequiredArgsConstructor
-public class ImageAPI extends QxcmpController {
+public class ImageApi extends QxcmpController {
 
     private final ImageService imageService;
 
