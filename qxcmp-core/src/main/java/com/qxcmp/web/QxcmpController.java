@@ -324,6 +324,11 @@ public abstract class QxcmpController {
      * @return 操作结果页面
      */
     protected <T, ID extends Serializable> ModelAndView updateEntity(ID id, EntityService<T, ID> entityService, Object form) {
+        return updateEntity(id, entityService, form, overview -> {
+        });
+    }
+
+    protected <T, ID extends Serializable> ModelAndView updateEntity(ID id, EntityService<T, ID> entityService, Object form, Consumer<Overview> consumer) {
         return execute(getFormSubmitActionTitle(form), context -> {
             try {
                 T origin = entityService.findOne(id).orElse(null);
@@ -332,8 +337,11 @@ public abstract class QxcmpController {
                 throw new ActionException(e.getMessage(), e);
             }
         }, (stringObjectMap, overview) -> {
-            overview.addLink("重新编辑", "");
-            overview.addLink("返回", StringUtils.substringBeforeLast(request.getRequestURL().toString().replaceAll("/edit", ""), "/"));
+            consumer.accept(overview);
+            if (overview.getLinks().isEmpty()) {
+                overview.addLink("重新编辑", "");
+                overview.addLink("返回", StringUtils.substringBeforeLast(request.getRequestURL().toString().replaceAll("/edit", ""), "/"));
+            }
         });
     }
 

@@ -10,8 +10,8 @@ import org.springframework.validation.BindingResult;
 import java.util.List;
 
 import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
-import static com.qxcmp.article.NewsModuleNavigation.ADMIN_MENU_ARTICLE;
-import static com.qxcmp.article.NewsModuleNavigation.ADMIN_MENU_ARTICLE_CHANNEL;
+import static com.qxcmp.article.NewsModuleNavigation.ADMIN_MENU_NEWS;
+import static com.qxcmp.article.NewsModuleNavigation.ADMIN_MENU_NEWS_CHANNEL;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
@@ -26,7 +26,7 @@ public class AdminNewsChannelNewPage extends AbstractQxcmpAdminFormPage<AdminNew
 
     @Override
     protected void postRender() {
-        setMenu(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_CHANNEL);
+        setMenu(ADMIN_MENU_NEWS, ADMIN_MENU_NEWS_CHANNEL);
     }
 
     @Override

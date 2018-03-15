@@ -14,7 +14,7 @@ public abstract class AbstractNewsPage extends AbstractQxcmpAdminPage {
             if (count > MAX_COUNT) {
                 setMenuBadge(menuId, MAX_COUNT + "+");
             } else {
-                setMenuBadge(menuId, count);
+                setMenuBadge(menuId, String.valueOf(count));
             }
         }
     }

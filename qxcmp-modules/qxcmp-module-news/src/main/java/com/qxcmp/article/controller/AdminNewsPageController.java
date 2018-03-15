@@ -2,6 +2,7 @@ package com.qxcmp.article.controller;
 
 import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.article.ArticleService;
+import com.qxcmp.article.ChannelService;
 import com.qxcmp.article.page.AdminNewsPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,10 +21,11 @@ import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
 public class AdminNewsPageController extends QxcmpAdminController {
 
     private final ArticleService articleService;
+    private final ChannelService channelService;
 
     @GetMapping("")
     public ModelAndView newsPage() {
-        return page(AdminNewsPage.class, articleService);
+        return page(AdminNewsPage.class, articleService, channelService);
     }
 
 }

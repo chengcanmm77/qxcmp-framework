@@ -5,6 +5,9 @@ import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.article.*;
 import com.qxcmp.article.form.AdminNewsUserChannelAdminEditForm;
 import com.qxcmp.article.form.AdminNewsUserChannelOwnerEditForm;
+import com.qxcmp.article.page.AdminUserChannelDetailsPage;
+import com.qxcmp.article.page.AdminUserChannelEditPage;
+import com.qxcmp.article.page.AdminUserChannelTablePage;
 import com.qxcmp.article.support.AdminNewsPageHelper;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.user.User;
@@ -18,7 +21,6 @@ import com.qxcmp.web.view.elements.header.IconHeader;
 import com.qxcmp.web.view.elements.html.HtmlText;
 import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.image.Image;
-import com.qxcmp.web.view.elements.segment.Segment;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.support.Wide;
 import com.qxcmp.web.view.views.Overview;
@@ -29,7 +31,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,8 +42,9 @@ import java.util.Date;
 import java.util.List;
 
 import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
-import static com.qxcmp.article.NewsModuleNavigation.ADMIN_MENU_ARTICLE;
-import static com.qxcmp.article.NewsModuleNavigation.ADMIN_MENU_ARTICLE_USER_CHANNEL;
+import static com.qxcmp.article.NewsModuleNavigation.ADMIN_MENU_NEWS;
+import static com.qxcmp.article.NewsModuleNavigation.ADMIN_MENU_NEWS_USER_CHANNEL;
+import static com.qxcmp.article.NewsModuleSecurity.PRIVILEGE_NEWS;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
 /**
@@ -59,175 +61,74 @@ public class AdminNewsUserChannelPageController extends QxcmpAdminController {
 
     @GetMapping("")
     public ModelAndView userChannelPage(Pageable pageable) {
-
         User user = currentUser().orElseThrow(RuntimeException::new);
-
         Page<Channel> channels = channelService.findByUser(user, pageable);
-
-        return page().addComponent(convertToTable("user", Channel.class, channels))
-                .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目")
-                .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
-                .build();
+        return page(AdminUserChannelTablePage.class, channels);
     }
 
     @GetMapping("/{id}/details")
-    public ModelAndView userChannelDetailsPage(@PathVariable String id) {
-
+    public ModelAndView userChannelDetailsPage(@PathVariable Long id) {
         User user = currentUser().orElseThrow(RuntimeException::new);
-
-        List<Channel> channels = channelService.findByUser(user);
-
         return channelService.findOne(id)
-                .filter(channels::contains)
-                .map(channel -> page().addComponent(new Overview(channel.getName()).setAlignment(Alignment.CENTER)
-                        .addComponent(new HtmlText(channel.getContent()))
-                        .addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel"))
-                        .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", "栏目查看")
-                        .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
-                        .build()).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build());
+                .filter(channel -> channel.getOwner().equals(user) || channel.getAdmins().contains(user))
+                .map(channel -> entityDetailsPage(AdminUserChannelDetailsPage.class, id, channelService))
+                .orElse(overviewPage(viewHelper.nextWarningOverview("栏目不存在").addLink("返回", ADMIN_NEWS_URL + "/user/channel")));
     }
 
     @GetMapping("/{id}/edit")
-    public ModelAndView userChannelEditPage(@PathVariable String id) {
-
+    public ModelAndView userChannelEditPage(@PathVariable Long id) {
         User user = currentUser().orElseThrow(RuntimeException::new);
-
-        List<Channel> channels = channelService.findByUser(user);
-
         return channelService.findOne(id)
-                .filter(channels::contains)
+                .filter(channel -> channel.getOwner().equals(user) || channel.getAdmins().contains(user))
                 .map(channel -> {
-
                     Object form;
-
                     if (StringUtils.equals(channel.getOwner().getId(), user.getId())) {
                         form = new AdminNewsUserChannelOwnerEditForm();
-                        AdminNewsUserChannelOwnerEditForm editForm = (AdminNewsUserChannelOwnerEditForm) form;
-                        editForm.setId(channel.getId());
-                        editForm.setCover(channel.getCover());
-                        editForm.setName(channel.getName());
-                        editForm.setDescription(channel.getDescription());
-                        editForm.setOwner(channel.getOwner());
-                        editForm.setAdmins(channel.getAdmins());
-                        editForm.setContent(channel.getContent());
-                        editForm.setContentQuill(channel.getContentQuill());
+                        channelService.mergeToObject(channel, form);
                     } else {
                         form = new AdminNewsUserChannelAdminEditForm();
-                        AdminNewsUserChannelAdminEditForm editForm = (AdminNewsUserChannelAdminEditForm) form;
-                        editForm.setId(channel.getId());
-                        editForm.setCover(channel.getCover());
-                        editForm.setName(channel.getName());
-                        editForm.setDescription(channel.getDescription());
-                        editForm.setAdmins(channel.getAdmins());
-                        editForm.setContent(channel.getContent());
-                        editForm.setContentQuill(channel.getContentQuill());
+                        channelService.mergeToObject(channel, form);
                     }
-
-                    return page().addComponent(new Segment().addComponent(convertToForm(form)))
-                            .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", "栏目编辑")
-                            .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
+                    return page(AdminUserChannelEditPage.class, form, null)
                             .addObject(form)
-                            .addObject("selection_items_owner", userService.findAll())
-                            .addObject("selection_items_admins", userService.findAll())
-                            .build();
-                }).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build());
+                            .addObject("selection_items_owner", userService.findByAuthority(PRIVILEGE_NEWS))
+                            .addObject("selection_items_admins", userService.findByAuthority(PRIVILEGE_NEWS));
+                })
+                .orElse(overviewPage(viewHelper.nextWarningOverview("栏目不存在").addLink("返回", ADMIN_NEWS_URL + "/user/channel")));
     }
 
     @PostMapping("/owner/edit")
-    public ModelAndView userChannelOwnerPage(@Valid final AdminNewsUserChannelOwnerEditForm form, BindingResult bindingResult) {
-
+    public ModelAndView userChannelOwnerPage(@Valid final AdminNewsUserChannelOwnerEditForm form) {
         User user = currentUser().orElseThrow(RuntimeException::new);
-
-        List<Channel> channels = channelService.findByOwner(user);
-
         return channelService.findOne(form.getId())
-                .filter(channels::contains)
-                .map(channel -> {
-
-                    if (bindingResult.hasErrors()) {
-                        return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
-                                .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", "栏目编辑")
-                                .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
-                                .addObject(form)
-                                .addObject("selection_items_owner", userService.findAll())
-                                .addObject("selection_items_admins", userService.findAll())
-                                .build();
-                    }
-
-                    return submitForm(form, context -> {
-                        try {
-                            channelService.update(channel.getId(), c -> {
-                                c.setCover(form.getCover());
-                                c.setName(form.getName());
-                                c.setDescription(form.getDescription());
-                                c.setOwner(form.getOwner());
-                                c.setAdmins(form.getAdmins());
-                                c.setContent(form.getContent());
-                                c.setContentQuill(form.getContentQuill());
-                            });
-                        } catch (Exception e) {
-                            throw new ActionException(e.getMessage(), e);
-                        }
-                    }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel"));
-                }).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build());
+                .filter(channel -> channel.getOwner().equals(user) || channel.getAdmins().contains(user))
+                .map(channel -> updateEntity(form.getId(), channelService, form, overview -> overview.addLink("返回", ADMIN_NEWS_URL + "/user/channel")))
+                .orElse(overviewPage(viewHelper.nextWarningOverview("栏目不存在").addLink("返回", ADMIN_NEWS_URL + "/user/channel")));
     }
 
     @PostMapping("/admin/edit")
-    public ModelAndView userChannelAdminPage(@Valid final AdminNewsUserChannelAdminEditForm form, BindingResult bindingResult) {
-
+    public ModelAndView userChannelAdminPage(@Valid final AdminNewsUserChannelAdminEditForm form) {
         User user = currentUser().orElseThrow(RuntimeException::new);
-
-        List<Channel> channels = channelService.findByAdmin(user);
-
         return channelService.findOne(form.getId())
-                .filter(channels::contains)
-                .map(channel -> {
-
-                    if (bindingResult.hasErrors()) {
-                        return page().addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
-                                .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", "栏目编辑")
-                                .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
-                                .addObject(form)
-                                .addObject("selection_items_owner", userService.findAll())
-                                .addObject("selection_items_admins", userService.findAll())
-                                .build();
-                    }
-
-                    return submitForm(form, context -> {
-                        try {
-                            channelService.update(channel.getId(), c -> {
-                                c.setCover(form.getCover());
-                                c.setName(form.getName());
-                                c.setDescription(form.getDescription());
-                                c.setAdmins(form.getAdmins());
-                                c.setContent(form.getContent());
-                                c.setContentQuill(form.getContentQuill());
-                            });
-                        } catch (Exception e) {
-                            throw new ActionException(e.getMessage(), e);
-                        }
-                    }, (stringObjectMap, overview) -> overview.addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel"));
-                }).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build());
+                .filter(channel -> channel.getOwner().equals(user) || channel.getAdmins().contains(user))
+                .map(channel -> updateEntity(form.getId(), channelService, form, overview -> overview.addLink("返回", ADMIN_NEWS_URL + "/user/channel")))
+                .orElse(overviewPage(viewHelper.nextWarningOverview("栏目不存在").addLink("返回", ADMIN_NEWS_URL + "/user/channel")));
     }
 
     @GetMapping("/{id}/article")
     public ModelAndView userChannelArticlePage(@PathVariable String id, Pageable pageable) {
-
         User user = currentUser().orElseThrow(RuntimeException::new);
-
-        List<Channel> channels = channelService.findByUser(user);
-
         return channelService.findOne(id)
-                .filter(channels::contains)
+                .filter(channel -> channel.getOwner().equals(user) || channel.getAdmins().contains(user))
                 .map(channel -> {
 
                     Page<Article> articles = articleService.findByChannelsAndStatuses(ImmutableSet.of(channel), ImmutableSet.of(ArticleStatus.PUBLISHED, ArticleStatus.DISABLED), pageable);
 
                     return page().addComponent(convertToTable("userChannel", String.format(QXCMP_ADMIN_URL + "/news/user/channel/%d/article", channel.getId()), Article.class, articles))
                             .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", channel.getName())
-                            .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
+                            .setVerticalNavigation(ADMIN_MENU_NEWS, ADMIN_MENU_NEWS_USER_CHANNEL)
                             .build();
-                }).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build());
+                }).orElse(overviewPage(viewHelper.nextWarningOverview("栏目不存在").addLink("返回", ADMIN_NEWS_URL + "/user/channel")));
     }
 
     @GetMapping("/{id}/article/{articleId}/preview")
@@ -244,7 +145,7 @@ public class AdminNewsUserChannelPageController extends QxcmpAdminController {
                         .addLink("我的栏目", QXCMP_ADMIN_URL + "/news/user/channel")
                         .addLink("栏目文章", String.format(QXCMP_ADMIN_URL + "/news/user/channel/%d/article", channel.getId())))
                         .setBreadcrumb("控制台", "", "新闻管理", "news", "我的栏目", "news/user/channel", channel.getName(), String.format("news/user/channel/%d/article", channel.getId()), "文章预览")
-                        .setVerticalNavigation(ADMIN_MENU_ARTICLE, ADMIN_MENU_ARTICLE_USER_CHANNEL)
+                        .setVerticalNavigation(ADMIN_MENU_NEWS, ADMIN_MENU_NEWS_USER_CHANNEL)
                         .build()).orElse(page(new Overview(new IconHeader("文章不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build())
                 ).orElse(page(new Overview(new IconHeader("栏目不存在", new Icon("warning circle"))).addLink("返回", QXCMP_ADMIN_URL + "/news/user/channel")).build());
     }
