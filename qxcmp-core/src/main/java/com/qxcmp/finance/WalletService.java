@@ -5,12 +5,10 @@ import com.qxcmp.core.support.IDGenerator;
 import com.qxcmp.exception.NoBalanceException;
 import com.qxcmp.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * 钱包实体服务
@@ -32,7 +30,7 @@ public class WalletService extends AbstractEntityService<Wallet, String, WalletR
      *
      * @return 属于用于的钱包，如果用于不存在则返回empty
      */
-    public Optional<Wallet> getByUserId(String userId) {
+    public Optional<Wallet> findByUserId(String userId) {
         return userService.findOne(userId)
                 .map(user -> repository.findByUserId(userId)
                         .orElseGet(() -> create(() -> {
@@ -53,12 +51,10 @@ public class WalletService extends AbstractEntityService<Wallet, String, WalletR
      * @return 修改后的钱包
      */
     public Wallet changeBalance(String userId, int amount, String comments, String url) throws NoBalanceException {
-        Wallet wallet = getByUserId(userId).orElseThrow(() -> new RuntimeException("Can't get user wallet"));
-
+        Wallet wallet = findByUserId(userId).orElseThrow(() -> new RuntimeException("Can't get user wallet"));
         if (amount < 0 && wallet.getBalance() < Math.abs(amount)) {
             throw new NoBalanceException("Not enough balance");
         }
-
         if (amount != 0) {
             walletRecordService.create(() -> {
                 WalletRecord walletRecord = walletRecordService.next();
@@ -71,7 +67,6 @@ public class WalletService extends AbstractEntityService<Wallet, String, WalletR
                 return walletRecord;
             });
         }
-
         return update(wallet.getId(), w -> w.setBalance(w.getBalance() + amount));
     }
 
@@ -86,12 +81,10 @@ public class WalletService extends AbstractEntityService<Wallet, String, WalletR
      * @return 修改后的钱包
      */
     public Wallet changePoints(String userId, int amount, String comments, String url) throws NoBalanceException {
-        Wallet wallet = getByUserId(userId).orElseThrow(() -> new RuntimeException("Can't get user wallet"));
-
+        Wallet wallet = findByUserId(userId).orElseThrow(() -> new RuntimeException("Can't get user wallet"));
         if (amount < 0 && wallet.getPoints() < Math.abs(amount)) {
             throw new NoBalanceException("Not enough points");
         }
-
         if (amount != 0) {
             walletRecordService.create(() -> {
                 WalletRecord walletRecord = walletRecordService.next();
@@ -104,20 +97,12 @@ public class WalletService extends AbstractEntityService<Wallet, String, WalletR
                 return walletRecord;
             });
         }
-
         return update(wallet.getId(), w -> w.setPoints(w.getPoints() + amount));
     }
 
     @Override
-    public Wallet create(Supplier<Wallet> supplier) {
-        Wallet wallet = supplier.get();
-
-        if (StringUtils.isNotEmpty(wallet.getId())) {
-            return null;
-        }
-
-        wallet.setId(IDGenerator.next());
-
-        return super.create(() -> wallet);
+    public Wallet create(Wallet entity) {
+        entity.setId(IDGenerator.next());
+        return super.create(entity);
     }
 }

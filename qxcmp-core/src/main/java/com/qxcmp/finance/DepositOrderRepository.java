@@ -6,8 +6,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 interface DepositOrderRepository extends JpaRepository<DepositOrder, String>, JpaSpecificationExecutor<DepositOrder> {
+
+    /**
+     * 查询某一状态的订单
+     *
+     * @param status 状态
+     *
+     * @return 某一状态的订单
+     */
+    List<DepositOrder> findByStatusOrderByDateFinishedDesc(OrderStatusEnum status);
 
     /**
      * 查询某一状态的订单

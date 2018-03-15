@@ -32,9 +32,14 @@ public class WalletRecord {
     private String userId;
 
     /**
-     * 消费类型，用于扩展业务
+     * 修改类型，余额还是点数
      */
     private String type;
+
+    /**
+     * 消费类别，用于业务扩展
+     */
+    private String catalog;
 
     /**
      * 消费数量，整数为增加，负数为减少

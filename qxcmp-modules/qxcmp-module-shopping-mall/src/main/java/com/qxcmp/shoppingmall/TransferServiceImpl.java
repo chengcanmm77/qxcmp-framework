@@ -29,9 +29,9 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public TransferRecord transfer(String from, String to, int fee, String feeType) throws FinanceException {
         checkArgument(StringUtils.equals(feeType, "CNY"), "Current only support CNY fee type");
-        Optional<Wallet> sourceWallet = walletService.getByUserId(from);
+        Optional<Wallet> sourceWallet = walletService.findByUserId(from);
         checkState(sourceWallet.isPresent(), "Source wallet not exist");
-        Optional<Wallet> targetWallet = walletService.getByUserId(to);
+        Optional<Wallet> targetWallet = walletService.findByUserId(to);
         checkState(targetWallet.isPresent(), "Target wallet not exist");
 
         if (sourceWallet.get().getBalance() < 0) {

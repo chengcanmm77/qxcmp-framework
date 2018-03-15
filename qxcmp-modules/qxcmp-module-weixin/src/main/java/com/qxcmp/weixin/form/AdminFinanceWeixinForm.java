@@ -1,4 +1,4 @@
-package com.qxcmp.web.form;
+package com.qxcmp.weixin.form;
 
 import com.qxcmp.web.view.annotation.form.BooleanField;
 import com.qxcmp.web.view.annotation.form.Form;

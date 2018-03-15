@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.core.QxcmpSystemConfig;
-import com.qxcmp.web.form.AdminFinanceWeixinForm;
 import com.qxcmp.web.model.RestfulResponse;
 import com.qxcmp.web.view.elements.button.Button;
 import com.qxcmp.web.view.elements.grid.Col;
@@ -23,6 +22,7 @@ import com.qxcmp.weixin.WeixinMpMaterialService;
 import com.qxcmp.weixin.WeixinMpMaterialType;
 import com.qxcmp.weixin.WeixinService;
 import com.qxcmp.weixin.event.AdminWeixinSettingsEvent;
+import com.qxcmp.weixin.form.AdminFinanceWeixinForm;
 import com.qxcmp.weixin.form.AdminWeixinMenuForm;
 import com.qxcmp.weixin.form.AdminWeixinSettingsForm;
 import com.qxcmp.weixin.page.AdminWeixinOverviewPage;
@@ -49,8 +49,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
-import static com.qxcmp.admin.QxcmpAdminModuleNavigation.ADMIN_MENU_FINANCE;
-import static com.qxcmp.admin.QxcmpAdminModuleNavigation.ADMIN_MENU_FINANCE_WEIXIN_SETTINGS;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 import static com.qxcmp.weixin.WeixinModule.ADMIN_WEIXIN_URL;
 import static me.chanjar.weixin.common.api.WxConsts.OAuth2Scope.SNSAPI_USERINFO;
@@ -228,7 +226,6 @@ public class AdminWeixinPageController extends QxcmpAdminController {
         return page()
                 .addComponent(new Segment().addComponent(convertToForm(form)))
                 .setBreadcrumb("控制台", "", "财务管理", "finance", "微信支付配置")
-                .setVerticalNavigation(ADMIN_MENU_FINANCE, ADMIN_MENU_FINANCE_WEIXIN_SETTINGS)
                 .addObject("selection_items_tradeType", SUPPORT_WEIXIN_PAYMENT)
                 .build();
     }
@@ -239,7 +236,6 @@ public class AdminWeixinPageController extends QxcmpAdminController {
             return page()
                     .addComponent(new Segment().addComponent(convertToForm(form).setErrorMessage(convertToErrorMessage(bindingResult, form))))
                     .setBreadcrumb("控制台", "", "财务管理", "finance", "微信支付配置")
-                    .setVerticalNavigation(ADMIN_MENU_FINANCE, ADMIN_MENU_FINANCE_WEIXIN_SETTINGS)
                     .addObject("selection_items_tradeType", SUPPORT_WEIXIN_PAYMENT)
                     .build();
         }

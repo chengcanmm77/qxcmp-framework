@@ -44,6 +44,7 @@ public class DepositOrder {
     /**
      * 订单类型，用户业务拓展
      */
+    @TableField("类型")
     private String type;
 
     /**
@@ -79,7 +80,7 @@ public class DepositOrder {
     /**
      * 订单完成时间
      */
-    @TableField("完成时间")
+    @TableField(value = "完成时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dateFinished;
 

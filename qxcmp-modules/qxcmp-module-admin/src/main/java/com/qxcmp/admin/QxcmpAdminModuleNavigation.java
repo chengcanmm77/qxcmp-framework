@@ -33,9 +33,8 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
     public static final String NAVIGATION_ADMIN_PROFILE_INFO = NAVIGATION_ADMIN_PROFILE + "-INFO";
 
     public static final String ADMIN_MENU_FINANCE = "ADMIN-FINANCE";
-    public static final String ADMIN_MENU_FINANCE_WEIXIN_SETTINGS = ADMIN_MENU_FINANCE + "-WEIXIN-SETTINGS";
-    public static final String ADMIN_MENU_FINANCE_WALLET_MANAGEMENT = ADMIN_MENU_FINANCE + "-WALLET-MANAGEMENT";
-    public static final String ADMIN_MENU_FINANCE_DEPOSIT = ADMIN_MENU_FINANCE + "-WALLET-DEPOSIT";
+    public static final String ADMIN_MENU_FINANCE_DEPOSIT = ADMIN_MENU_FINANCE + "-DEPOSIT";
+    public static final String ADMIN_MENU_FINANCE_WALLET = ADMIN_MENU_FINANCE + "-WALLET";
 
     public static final String ADMIN_MENU_SECURITY = "ADMIN-SECURITY";
     public static final String ADMIN_MENU_SECURITY_ROLE = ADMIN_MENU_SECURITY + "-ROLE";
@@ -67,7 +66,7 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
         );
         navigationService.add(new Navigation(ADMIN_MENU_FINANCE, "财务管理导航栏")
                 .addItem(new Navigation(ADMIN_MENU_FINANCE_DEPOSIT, "充值订单", ADMIN_FINANCE_URL + "/deposit").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_DEPOSIT)))
-                .addItem(new Navigation(ADMIN_MENU_FINANCE_WALLET_MANAGEMENT, "用户钱包", ADMIN_FINANCE_URL + "/wallet").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WALLET_MANAGEMENT)))
+                .addItem(new Navigation(ADMIN_MENU_FINANCE_WALLET, "用户钱包", ADMIN_FINANCE_URL + "/wallet").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_FINANCE_WALLET)))
         );
         navigationService.add(new Navigation(ADMIN_MENU_SECURITY, "安全配置导航栏")
                 .addItem(new Navigation(ADMIN_MENU_SECURITY_ROLE, "角色管理", ADMIN_SECURITY_URL + "/role").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))

@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Aaric
+ */
 @Service
 public class WalletRecordService extends AbstractEntityService<WalletRecord, Long, WalletRecordRepository> {
 

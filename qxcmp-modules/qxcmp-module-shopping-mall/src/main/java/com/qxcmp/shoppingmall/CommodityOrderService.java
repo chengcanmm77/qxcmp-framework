@@ -107,7 +107,7 @@ public class CommodityOrderService extends AbstractEntityService<CommodityOrder,
             throw new OrderStatusException("Order status is not paying");
         }
 
-        Optional<Wallet> walletOptional = walletService.getByUserId(commodityOrder.getUserId());
+        Optional<Wallet> walletOptional = walletService.findByUserId(commodityOrder.getUserId());
 
         if (!walletOptional.isPresent()) {
             throw new OrderStatusException("User not exist");
