@@ -3,6 +3,7 @@ package com.qxcmp.web.view.elements.statistic;
 import com.google.common.collect.Lists;
 import com.qxcmp.web.view.AbstractComponent;
 import com.qxcmp.web.view.support.ItemCount;
+import com.qxcmp.web.view.support.Size;
 import lombok.Getter;
 
 import java.util.Collection;
@@ -16,6 +17,7 @@ public class Statistics extends AbstractComponent {
 
     private boolean horizontal;
     private ItemCount count = ItemCount.NONE;
+    private Size size = Size.NONE;
 
     private List<Statistic> statistics = Lists.newArrayList();
 
@@ -52,7 +54,7 @@ public class Statistics extends AbstractComponent {
             stringBuilder.append(" horizontal");
         }
 
-        return stringBuilder.append(count.toString()).toString();
+        return stringBuilder.append(count.toString()).append(size).toString();
     }
 
     @Override
@@ -67,6 +69,11 @@ public class Statistics extends AbstractComponent {
 
     public Statistics setCount(ItemCount count) {
         this.count = count;
+        return this;
+    }
+
+    public Statistics setSize(Size size) {
+        this.size = size;
         return this;
     }
 }

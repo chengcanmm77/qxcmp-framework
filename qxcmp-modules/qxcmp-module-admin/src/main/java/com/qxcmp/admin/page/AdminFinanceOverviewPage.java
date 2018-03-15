@@ -6,6 +6,7 @@ import com.qxcmp.web.view.elements.statistic.Statistic;
 import com.qxcmp.web.view.elements.statistic.Statistics;
 import com.qxcmp.web.view.support.Color;
 import com.qxcmp.web.view.support.ItemCount;
+import com.qxcmp.web.view.support.Size;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
@@ -37,7 +38,7 @@ public class AdminFinanceOverviewPage extends AbstractQxcmpAdminPage {
     }
 
     private Statistics getBalanceDetails() {
-        return new Statistics().setCount(ItemCount.FIVE)
+        return new Statistics().setCount(ItemCount.FIVE).setSize(Size.TINY)
                 .addStatistic(new Statistic("充值总额", getTotalBalance()).setColor(Color.GREEN))
                 .addStatistic(new Statistic("消费总额", getConsumedBalance()).setColor(Color.GREY))
                 .addStatistic(new Statistic("消费点数", getConsumedPoints()).setColor(Color.GREY))
@@ -47,23 +48,23 @@ public class AdminFinanceOverviewPage extends AbstractQxcmpAdminPage {
     }
 
     private String getTotalBalance() {
-        return depositOrders.stream().filter(depositOrder -> depositOrder.getStatus().equals(OrderStatusEnum.FINISHED)).map(DepositOrder::getFee).reduce(Integer::sum).map(integer -> new DecimalFormat("￥0.00").format((double) integer / 100)).orElse("没有记录");
+        return depositOrders.stream().filter(depositOrder -> depositOrder.getStatus().equals(OrderStatusEnum.FINISHED)).map(DepositOrder::getFee).reduce(Integer::sum).map(integer -> new DecimalFormat("￥0.00").format((double) integer / 100)).orElse("-");
     }
 
     private String getConsumedBalance() {
-        return walletRecords.stream().filter(walletRecord -> StringUtils.equals(walletRecord.getType(), WalletRecordType.BALANCE.name())).map(WalletRecord::getAmount).reduce(Integer::sum).map(integer -> new DecimalFormat("￥0.00").format((double) integer / 100)).orElse("没有记录");
+        return walletRecords.stream().filter(walletRecord -> StringUtils.equals(walletRecord.getType(), WalletRecordType.BALANCE.name())).map(WalletRecord::getAmount).reduce(Integer::sum).map(integer -> new DecimalFormat("￥0.00").format((double) integer / 100)).orElse("-");
     }
 
     private String getConsumedPoints() {
-        return walletRecords.stream().filter(walletRecord -> StringUtils.equals(walletRecord.getType(), WalletRecordType.POINT.name())).map(WalletRecord::getAmount).reduce(Integer::sum).map(String::valueOf).orElse("没有记录");
+        return walletRecords.stream().filter(walletRecord -> StringUtils.equals(walletRecord.getType(), WalletRecordType.POINT.name())).map(WalletRecord::getAmount).reduce(Integer::sum).map(String::valueOf).orElse("-");
     }
 
     private String getRemainBalance() {
-        return wallets.stream().map(Wallet::getBalance).reduce(Integer::sum).map(integer -> new DecimalFormat("￥0.00").format((double) integer / 100)).orElse("没有记录");
+        return wallets.stream().map(Wallet::getBalance).reduce(Integer::sum).map(integer -> new DecimalFormat("￥0.00").format((double) integer / 100)).orElse("-");
     }
 
     private String getRemainPoints() {
-        return wallets.stream().map(Wallet::getPoints).reduce(Integer::sum).map(String::valueOf).orElse("没有记录");
+        return wallets.stream().map(Wallet::getPoints).reduce(Integer::sum).map(String::valueOf).orElse("-");
     }
 
     @Override
