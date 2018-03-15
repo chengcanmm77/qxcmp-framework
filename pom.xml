@@ -20,7 +20,7 @@
     <artifactId>qxcmp-framework</artifactId>
     <version>1.0.0.RELEASE</version>
 
-    <name>QingXing Content Management Platform Framework</name>
+    <name>QingXing Content Management Platform</name>
     <url>https://github.com/AaricChen/qxcmp-framework</url>
 
     <scm>

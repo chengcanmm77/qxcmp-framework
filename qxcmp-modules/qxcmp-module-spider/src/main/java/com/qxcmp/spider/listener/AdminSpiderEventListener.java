@@ -16,7 +16,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.qxcmp.core.QxcmpSecurityConfiguration.PRIVILEGE_ADMIN_SPIDER;
+import static com.qxcmp.spider.SpiderModuleSecurity.PRIVILEGE_ADMIN_SPIDER;
+
 
 /**
  * @author Aaric

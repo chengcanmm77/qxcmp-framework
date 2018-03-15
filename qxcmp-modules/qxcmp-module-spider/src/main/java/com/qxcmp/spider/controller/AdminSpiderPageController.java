@@ -9,9 +9,13 @@ import com.qxcmp.spider.SpiderRuntime;
 import com.qxcmp.spider.event.AdminSpiderDisableEvent;
 import com.qxcmp.spider.event.AdminSpiderEnableEvent;
 import com.qxcmp.spider.event.AdminSpiderStopEvent;
+import com.qxcmp.spider.page.AdminSpiderLogPage;
+import com.qxcmp.spider.page.AdminSpiderStatusPage;
+import com.qxcmp.spider.page.AdminSpiderTablePage;
 import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,14 +27,13 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 import java.util.Optional;
 
-import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
-import static com.qxcmp.core.QxcmpNavigationConfiguration.*;
+import static com.qxcmp.spider.SpiderModule.ADMIN_SPIDER_URL;
 
 /**
  * @author Aaric
  */
 @Controller
-@RequestMapping(QXCMP_ADMIN_URL + "/spider")
+@RequestMapping(ADMIN_SPIDER_URL)
 @RequiredArgsConstructor
 public class AdminSpiderPageController extends QxcmpController {
 
@@ -39,15 +42,13 @@ public class AdminSpiderPageController extends QxcmpController {
 
     @GetMapping("")
     public ModelAndView spiderPage() {
-        return page().addComponent(convertToTable(SpiderDefinition.class, new PageImpl<>(Lists.newArrayList(spiderContextHolder.getSpiderDefinitions().values()), new PageRequest(0, 100), spiderContextHolder.getSpiderDefinitions().values().size())))
-                .setBreadcrumb("控制台", "", "系统工具", "tools", "蜘蛛管理")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SPIDER, "")
-                .build();
+        Page<SpiderDefinition> spiderDefinitions = new PageImpl<>(Lists.newArrayList(spiderContextHolder.getSpiderDefinitions().values()), PageRequest.of(0, spiderContextHolder.getSpiderDefinitions().size()), spiderContextHolder.getSpiderDefinitions().size());
+        return page(AdminSpiderTablePage.class, spiderDefinitions);
     }
 
     @PostMapping("/remove")
     public ResponseEntity<RestfulResponse> roleBatchRemove(@RequestParam("keys[]") List<String> keys) {
-        RestfulResponse restfulResponse = audit("批量禁用蜘蛛", context -> {
+        return execute("批量禁用蜘蛛", context -> {
             try {
                 for (String key : keys) {
                     spiderContextHolder.getSpiderDefinitions().values().stream().filter(definition -> definition.getName().equals(key)).findAny()
@@ -60,12 +61,11 @@ public class AdminSpiderPageController extends QxcmpController {
                 throw new ActionException(e.getMessage(), e);
             }
         });
-        return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
     }
 
     @PostMapping("/{name}/enable")
     public ResponseEntity<RestfulResponse> spiderEnable(@PathVariable String name) {
-        RestfulResponse restfulResponse = audit("启用蜘蛛", context -> {
+        return execute("启用蜘蛛", context -> {
             try {
                 spiderContextHolder.getSpiderDefinitions().values().stream().filter(definition -> definition.getName().equals(name)).findAny()
                         .ifPresent(spiderDefinition -> {
@@ -76,12 +76,11 @@ public class AdminSpiderPageController extends QxcmpController {
                 throw new ActionException(e.getMessage(), e);
             }
         });
-        return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
     }
 
     @PostMapping("/{name}/disable")
     public ResponseEntity<RestfulResponse> spiderDisable(@PathVariable String name) {
-        RestfulResponse restfulResponse = audit("禁用蜘蛛", context -> {
+        return execute("禁用蜘蛛", context -> {
             try {
                 spiderContextHolder.getSpiderDefinitions().values().stream().filter(definition -> definition.getName().equals(name)).findAny()
                         .ifPresent(spiderDefinition -> {
@@ -92,23 +91,18 @@ public class AdminSpiderPageController extends QxcmpController {
                 throw new ActionException(e.getMessage(), e);
             }
         });
-        return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
     }
 
     @GetMapping("/status")
     public ModelAndView spiderStatusPage() {
-        return page().addComponent(convertToTable(SpiderRuntime.class, new PageImpl<>(Lists.newArrayList(spiderContextHolder.getSpiderRuntimeInfo()), new PageRequest(0, 100), spiderContextHolder.getSpiderRuntimeInfo().size())))
-                .setBreadcrumb("控制台", "", "系统工具", "tools", "蜘蛛管理", "spider", "运行状态")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SPIDER, NAVIGATION_ADMIN_SPIDER_STATUS)
-                .build();
+        Page<SpiderRuntime> spiderRuntimes = new PageImpl<>(Lists.newArrayList(spiderContextHolder.getSpiderRuntimeInfo()), PageRequest.of(0, spiderContextHolder.getSpiderRuntimeInfo().size()), spiderContextHolder.getSpiderRuntimeInfo().size());
+        return page(AdminSpiderStatusPage.class, spiderRuntimes);
     }
 
     @PostMapping("/status/{name}/stop")
     public ResponseEntity<RestfulResponse> spiderStatusStop(@PathVariable String name) {
-        RestfulResponse restfulResponse = audit("停止蜘蛛", context -> {
-
+        return execute("停止蜘蛛", context -> {
             Optional<SpiderRuntime> spiderRuntime = spiderContextHolder.getSpiderRuntimeInfo().stream().filter(runtime -> runtime.getName().equals(name)).findAny();
-
             if (spiderRuntime.isPresent()) {
                 try {
                     spiderRuntime.get().getSpider().stop();
@@ -121,14 +115,10 @@ public class AdminSpiderPageController extends QxcmpController {
             }
 
         });
-        return ResponseEntity.status(restfulResponse.getStatus()).body(restfulResponse);
     }
 
     @GetMapping("/log")
     public ModelAndView spiderLogPage(Pageable pageable) {
-        return page().addComponent(convertToTable(pageable, spiderLogService))
-                .setBreadcrumb("控制台", "", "系统工具", "tools", "蜘蛛管理", "spider", "蜘蛛日志")
-                .setVerticalNavigation(NAVIGATION_ADMIN_SPIDER, NAVIGATION_ADMIN_SPIDER_LOG)
-                .build();
+        return page(AdminSpiderLogPage.class, spiderLogService, pageable);
     }
 }

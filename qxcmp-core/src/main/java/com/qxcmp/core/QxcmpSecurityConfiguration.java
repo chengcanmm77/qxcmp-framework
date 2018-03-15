@@ -13,17 +13,6 @@ import org.springframework.context.annotation.Configuration;
 public class QxcmpSecurityConfiguration implements SecurityLoader {
 
     /*
-     * 基本权限
-     * */
-
-    /*
-     * 系统工具权限
-     * */
-
-    public static final String PRIVILEGE_ADMIN_SPIDER = "蜘蛛管理权限";
-    public static final String PRIVILEGE_ADMIN_SPIDER_DESCRIPTION = "可以管理平台蜘蛛";
-
-    /*
      * 用户管理模块
      * */
 
