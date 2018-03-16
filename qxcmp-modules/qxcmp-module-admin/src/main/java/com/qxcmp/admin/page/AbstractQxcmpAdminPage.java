@@ -27,9 +27,7 @@ import com.qxcmp.web.view.page.AbstractQxcmpPage;
 import com.qxcmp.web.view.support.Color;
 import com.qxcmp.web.view.support.Fixed;
 import com.qxcmp.web.view.support.Wide;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.*;
@@ -38,16 +36,12 @@ import java.util.function.Supplier;
 import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
 import static com.qxcmp.admin.QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_PROFILE;
 import static com.qxcmp.admin.QxcmpAdminModuleNavigation.NAVIGATION_ADMIN_SIDEBAR;
-import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
  * 后台页面抽象类
  *
  * @author Aaric
  */
-@Scope(SCOPE_PROTOTYPE)
-@org.springframework.stereotype.Component
-@RequiredArgsConstructor
 public abstract class AbstractQxcmpAdminPage extends AbstractQxcmpPage {
 
     private AbstractSidebar sidebar = new AccordionMenuSidebar().setAttachEventsSelector(".ui.bottom.fixed.menu .sidebar.item");
