@@ -1,4 +1,4 @@
-package com.qxcmp.web.view.components.weixin;
+package com.qxcmp.weixin.view;
 
 import com.qxcmp.finance.DepositOrder;
 import com.qxcmp.web.view.AbstractComponent;
@@ -6,14 +6,16 @@ import lombok.Getter;
 
 import java.util.Map;
 
+import static com.qxcmp.weixin.WeixinModule.WEIXIN_FRAGMENT;
 
+/**
+ * @author Aaric
+ */
+@Getter
 public class WeixinPayScript extends AbstractComponent {
 
-    @Getter
-    private Map<String, String> payInfo;
-
-    @Getter
-    private DepositOrder depositOrder;
+    private final Map<String, String> payInfo;
+    private final DepositOrder depositOrder;
 
     public WeixinPayScript(Map<String, String> payInfo, DepositOrder depositOrder) {
         this.payInfo = payInfo;
@@ -22,7 +24,7 @@ public class WeixinPayScript extends AbstractComponent {
 
     @Override
     public String getFragmentFile() {
-        return "qxcmp/components/weixin/weixin-mp";
+        return WEIXIN_FRAGMENT;
     }
 
     @Override

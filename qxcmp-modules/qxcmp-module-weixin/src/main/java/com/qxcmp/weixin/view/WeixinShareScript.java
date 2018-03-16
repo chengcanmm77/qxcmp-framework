@@ -1,7 +1,9 @@
-package com.qxcmp.web.view.components.weixin;
+package com.qxcmp.weixin.view;
 
 import com.qxcmp.web.view.AbstractComponent;
 import lombok.Getter;
+
+import static com.qxcmp.weixin.WeixinModule.WEIXIN_FRAGMENT;
 
 /**
  * @author Aaric
@@ -23,7 +25,7 @@ public class WeixinShareScript extends AbstractComponent {
 
     @Override
     public String getFragmentFile() {
-        return "qxcmp/components/weixin/weixin-mp";
+        return WEIXIN_FRAGMENT;
     }
 
     @Override

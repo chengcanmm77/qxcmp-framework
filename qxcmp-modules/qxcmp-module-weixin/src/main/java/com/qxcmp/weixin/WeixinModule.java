@@ -23,6 +23,7 @@ import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_URL;
 public class WeixinModule {
 
     public static final String ADMIN_WEIXIN_URL = ADMIN_URL + "/weixin";
+    public static final String WEIXIN_FRAGMENT = "qxcmp/weixin/weixin-mp";
 
     private final SystemConfigService systemConfigService;
     private final WeixinMpMessageHandler defaultMessageHandler;

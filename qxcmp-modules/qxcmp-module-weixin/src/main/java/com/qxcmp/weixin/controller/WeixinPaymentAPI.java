@@ -12,7 +12,7 @@ import com.qxcmp.finance.DepositOrderService;
 import com.qxcmp.finance.OrderStatusEnum;
 import com.qxcmp.user.User;
 import com.qxcmp.web.QxcmpController;
-import com.qxcmp.web.view.components.weixin.WeixinPayScript;
+import com.qxcmp.weixin.view.WeixinPayScript;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

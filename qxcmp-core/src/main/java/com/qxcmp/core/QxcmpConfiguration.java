@@ -12,6 +12,7 @@ import org.springframework.mobile.device.LiteDeviceResolver;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Properties;
@@ -28,6 +29,7 @@ import java.util.Properties;
 @Configuration
 @EnableAsync
 @EnableScheduling
+@EnableWebSecurity
 @EnableTransactionManagement
 @RequiredArgsConstructor
 public class QxcmpConfiguration {
