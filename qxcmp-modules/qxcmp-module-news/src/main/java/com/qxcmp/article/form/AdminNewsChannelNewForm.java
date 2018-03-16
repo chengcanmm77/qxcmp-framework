@@ -24,7 +24,7 @@ public class AdminNewsChannelNewForm {
     private String description;
 
     @TextSelectionField("栏目类别")
-    private Set<String> catalogs = Sets.newHashSet();
+    private Set<String> catalog = Sets.newHashSet();
 
     @TextSelectionField(value = "所有者", itemValueIndex = "id", itemTextIndex = "username")
     private User owner;

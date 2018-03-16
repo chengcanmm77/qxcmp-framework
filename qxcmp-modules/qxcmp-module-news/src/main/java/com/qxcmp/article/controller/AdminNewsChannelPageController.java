@@ -46,7 +46,7 @@ public class AdminNewsChannelPageController extends AbstractNewsPageController {
         return page(AdminNewsChannelNewPage.class, form, bindingResult)
                 .addObject("selection_items_owner", userService.findByAuthority(PRIVILEGE_NEWS))
                 .addObject("selection_items_admins", userService.findByAuthority(PRIVILEGE_NEWS))
-                .addObject("selection_items_catalogs", systemConfigService.getList(ARTICLE_CHANNEL_CATALOG));
+                .addObject("selection_items_catalog", systemConfigService.getList(ARTICLE_CHANNEL_CATALOG));
     }
 
     @PostMapping("/new")
@@ -65,7 +65,7 @@ public class AdminNewsChannelPageController extends AbstractNewsPageController {
         return entityUpdatePage(AdminNewsChannelEditPage.class, id, channelService, form, bindingResult)
                 .addObject("selection_items_owner", userService.findByAuthority(PRIVILEGE_NEWS))
                 .addObject("selection_items_admins", userService.findByAuthority(PRIVILEGE_NEWS))
-                .addObject("selection_items_catalogs", systemConfigService.getList(ARTICLE_CHANNEL_CATALOG));
+                .addObject("selection_items_catalog", systemConfigService.getList(ARTICLE_CHANNEL_CATALOG));
     }
 
     @PostMapping("/{id}/edit")
