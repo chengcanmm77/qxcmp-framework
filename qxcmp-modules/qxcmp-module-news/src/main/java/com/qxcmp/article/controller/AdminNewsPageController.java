@@ -1,7 +1,5 @@
 package com.qxcmp.article.controller;
 
-import com.qxcmp.article.ArticleService;
-import com.qxcmp.article.ChannelService;
 import com.qxcmp.article.page.AdminNewsPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,9 +16,6 @@ import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
 @RequestMapping(ADMIN_NEWS_URL)
 @RequiredArgsConstructor
 public class AdminNewsPageController extends AbstractNewsPageController {
-
-    private final ArticleService articleService;
-    private final ChannelService channelService;
 
     @GetMapping("")
     public ModelAndView newsPage() {

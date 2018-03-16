@@ -2,14 +2,10 @@ package com.qxcmp.article.controller;
 
 import com.google.common.collect.ImmutableList;
 import com.qxcmp.article.Article;
-import com.qxcmp.article.ArticleService;
 import com.qxcmp.article.ArticleStatus;
-import com.qxcmp.article.event.AdminNewsArticleDisableEvent;
-import com.qxcmp.article.event.AdminNewsArticleEnableEvent;
 import com.qxcmp.article.event.AdminNewsArticlePublishEvent;
 import com.qxcmp.article.form.AdminNewsArticleAuditForm;
 import com.qxcmp.article.page.*;
-import com.qxcmp.article.support.AdminNewsPageHelper;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.user.User;
 import com.qxcmp.web.model.RestfulResponse;
@@ -19,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +32,6 @@ import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
 @RequestMapping(ADMIN_NEWS_URL + "/article")
 @RequiredArgsConstructor
 public class AdminNewsArticlePageController extends AbstractNewsPageController {
-
-    private final ArticleService articleService;
-    private final AdminNewsPageHelper adminNewsPageHelper;
 
     @GetMapping("/auditing")
     public ModelAndView auditing(Pageable pageable) {
@@ -102,57 +94,33 @@ public class AdminNewsArticlePageController extends AbstractNewsPageController {
                 .orElse(overviewPage(viewHelper.nextWarningOverview("文章不存在")));
     }
 
-
     @PostMapping("/{id}/remove")
-    public ResponseEntity<RestfulResponse> articleRemove(@PathVariable String id) {
-        return articleService.findOne(id)
-                .filter(article -> !article.getStatus().equals(ArticleStatus.PUBLISHED))
-                .map(article -> execute("删除文章", context -> {
-                    try {
-                        articleService.delete(article);
-                    } catch (Exception e) {
-                        throw new ActionException(e.getMessage(), e);
-                    }
-                })).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
+    public ResponseEntity<RestfulResponse> delete(@PathVariable Long id) {
+        return deleteArticle(id, true);
     }
 
     @PostMapping("/{id}/disable")
-    public ResponseEntity<RestfulResponse> articleDisable(@PathVariable String id) {
-        User user = currentUser().orElseThrow(RuntimeException::new);
-        return articleService.findOne(id)
-                .filter(article -> article.getStatus().equals(ArticleStatus.PUBLISHED))
-                .map(article -> execute("禁用文章", context -> {
-                    try {
-                        applicationContext.publishEvent(new AdminNewsArticleDisableEvent(user, articleService.update(article.getId(), a -> {
-                            a.setDatePublished(new Date());
-                            a.setStatus(ArticleStatus.DISABLED);
-                            a.setDisableUser(user.getId());
-                        })));
-                    } catch (Exception e) {
-                        throw new ActionException(e.getMessage(), e);
-                    }
-                })).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
+    public ResponseEntity<RestfulResponse> disable(@PathVariable Long id) {
+        return disableArticle(id, true);
     }
 
     @PostMapping("/{id}/enable")
-    public ResponseEntity<RestfulResponse> articleEnable(@PathVariable String id) {
-        return articleService.findOne(id)
-                .filter(article -> article.getStatus().equals(ArticleStatus.DISABLED))
-                .map(article -> execute("启用文章", context -> {
-                    try {
-                        applicationContext.publishEvent(new AdminNewsArticleEnableEvent(currentUser().orElseThrow(RuntimeException::new), articleService.update(article.getId(), a -> {
-                            a.setDatePublished(new Date());
-                            a.setStatus(ArticleStatus.PUBLISHED);
-                        })));
-                    } catch (Exception e) {
-                        throw new ActionException(e.getMessage(), e);
-                    }
-                })).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
+    public ResponseEntity<RestfulResponse> enable(@PathVariable Long id) {
+        return enableArticle(id, true);
     }
 
+    @PostMapping("/remove")
+    public ResponseEntity<RestfulResponse> batchDelete(@RequestParam("keys[]") List<String> keys) {
+        return batchDelete(keys, true);
+    }
+
+    @PostMapping("/disable")
+    public ResponseEntity<RestfulResponse> batchDisable(@RequestParam("keys[]") List<String> keys) {
+        return batchDisable(keys, true);
+    }
 
     @PostMapping("/publish")
-    public ResponseEntity<RestfulResponse> articleBatchPublish(@RequestParam("keys[]") List<String> keys) {
+    public ResponseEntity<RestfulResponse> batchPublish(@RequestParam("keys[]") List<String> keys) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         return execute("批量发布文章", context -> {
             try {
@@ -175,9 +143,8 @@ public class AdminNewsArticlePageController extends AbstractNewsPageController {
         });
     }
 
-
     @PostMapping("/reject")
-    public ResponseEntity<RestfulResponse> userArticleBatchReject(@RequestParam("keys[]") List<String> keys) {
+    public ResponseEntity<RestfulResponse> batchReject(@RequestParam("keys[]") List<String> keys) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         return execute("批量驳回文章", context -> {
             try {
@@ -190,45 +157,6 @@ public class AdminNewsArticlePageController extends AbstractNewsPageController {
                                 a.setDateRejected(new Date());
                                 a.setStatus(ArticleStatus.REJECT);
                             }));
-                }
-            } catch (Exception e) {
-                throw new ActionException(e.getMessage(), e);
-            }
-        });
-    }
-
-    @PostMapping("/remove")
-    public ResponseEntity<RestfulResponse> userArticleBatchRemove(@RequestParam("keys[]") List<String> keys) {
-        return execute("批量删除文章", context -> {
-            try {
-                for (String key : keys) {
-                    articleService.findOne(key)
-                            .filter(article -> !article.getStatus().equals(ArticleStatus.PUBLISHED))
-                            .ifPresent(articleService::delete);
-                }
-            } catch (Exception e) {
-                throw new ActionException(e.getMessage(), e);
-            }
-        });
-    }
-
-    @PostMapping("/disable")
-    public ResponseEntity<RestfulResponse> userArticleBatchDisable(@RequestParam("keys[]") List<String> keys) {
-        User user = currentUser().orElseThrow(RuntimeException::new);
-        return execute("批量禁用文章", context -> {
-            try {
-                for (String key : keys) {
-                    articleService.findOne(key)
-                            .filter(article -> StringUtils.equals(article.getUserId(), user.getId()))
-                            .filter(article -> article.getStatus().equals(ArticleStatus.PUBLISHED))
-                            .ifPresent(article -> {
-                                articleService.update(article.getId(), a -> {
-                                    a.setDatePublished(new Date());
-                                    a.setStatus(ArticleStatus.DISABLED);
-                                    a.setDisableUser(user.getId());
-                                });
-                                applicationContext.publishEvent(new AdminNewsArticleDisableEvent(user, article));
-                            });
                 }
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);

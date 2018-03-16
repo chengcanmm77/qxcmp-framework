@@ -1,6 +1,5 @@
 package com.qxcmp.article.controller;
 
-import com.qxcmp.article.ChannelService;
 import com.qxcmp.article.form.AdminNewsChannelEditForm;
 import com.qxcmp.article.form.AdminNewsChannelNewForm;
 import com.qxcmp.article.page.AdminNewsChannelDetailsPage;
@@ -33,8 +32,6 @@ import static com.qxcmp.core.QxcmpSystemConfig.ARTICLE_CHANNEL_CATALOG;
 @RequestMapping(ADMIN_NEWS_URL + "/channel")
 @RequiredArgsConstructor
 public class AdminNewsChannelPageController extends AbstractNewsPageController {
-
-    private final ChannelService channelService;
 
     @GetMapping("")
     public ModelAndView table(Pageable pageable) {

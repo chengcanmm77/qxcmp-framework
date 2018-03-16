@@ -1,12 +1,12 @@
 package com.qxcmp.article.controller;
 
 import com.google.common.collect.ImmutableSet;
-import com.qxcmp.article.*;
+import com.qxcmp.article.Article;
+import com.qxcmp.article.ArticleStatus;
+import com.qxcmp.article.Channel;
 import com.qxcmp.article.form.AdminNewsUserChannelAdminEditForm;
 import com.qxcmp.article.form.AdminNewsUserChannelOwnerEditForm;
 import com.qxcmp.article.page.*;
-import com.qxcmp.article.support.AdminNewsPageHelper;
-import com.qxcmp.audit.ActionException;
 import com.qxcmp.user.User;
 import com.qxcmp.web.model.RestfulResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.List;
 
 import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
@@ -36,10 +35,6 @@ import static com.qxcmp.article.NewsModuleSecurity.PRIVILEGE_NEWS;
 @RequestMapping(ADMIN_NEWS_URL + "/user/channel")
 @RequiredArgsConstructor
 public class AdminNewsUserChannelPageController extends AbstractNewsPageController {
-
-    private final ChannelService channelService;
-    private final ArticleService articleService;
-    private final AdminNewsPageHelper adminNewsPageHelper;
 
     @GetMapping("")
     public ModelAndView userChannelPage(Pageable pageable) {
@@ -110,11 +105,8 @@ public class AdminNewsUserChannelPageController extends AbstractNewsPageControll
 
     @GetMapping("/{id}/article/{articleId}/preview")
     public ModelAndView userChannelArticlePreviewPage(@PathVariable String id, @PathVariable String articleId) {
-
         User user = currentUser().orElseThrow(RuntimeException::new);
-
         List<Channel> channels = channelService.findByUser(user);
-
         return channelService.findOne(id)
                 .filter(channels::contains)
                 .map(channel -> articleService.findOne(articleId)
@@ -124,45 +116,22 @@ public class AdminNewsUserChannelPageController extends AbstractNewsPageControll
     }
 
     @PostMapping("/{id}/article/{articleId}/disable")
-    public ResponseEntity<RestfulResponse> userChannelArticleDisable(@PathVariable String id, @PathVariable String articleId) {
+    public ResponseEntity<RestfulResponse> userChannelArticleDisable(@PathVariable Long id, @PathVariable Long articleId) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         List<Channel> channels = channelService.findByUser(user);
         return channelService.findOne(id)
                 .filter(channels::contains)
-                .map(channel -> articleService.findOne(articleId).filter(article -> article.getChannels().contains(channel))
-                        .filter(article -> article.getStatus().equals(ArticleStatus.PUBLISHED))
-                        .map(article -> execute("禁用栏目文章", context -> {
-                            try {
-                                articleService.update(article.getId(), a -> {
-                                    a.setDatePublished(new Date());
-                                    a.setStatus(ArticleStatus.DISABLED);
-                                    a.setDisableUser(user.getId());
-                                });
-                            } catch (Exception e) {
-                                throw new ActionException(e.getMessage(), e);
-                            }
-                        })).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build())))
+                .map(channel -> disableArticle(articleId, false))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
     }
 
     @PostMapping("/{id}/article/{articleId}/enable")
-    public ResponseEntity<RestfulResponse> userChannelArticleEnable(@PathVariable String id, @PathVariable String articleId) {
+    public ResponseEntity<RestfulResponse> userChannelArticleEnable(@PathVariable Long id, @PathVariable Long articleId) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         List<Channel> channels = channelService.findByUser(user);
         return channelService.findOne(id)
                 .filter(channels::contains)
-                .map(channel -> articleService.findOne(articleId).filter(article -> article.getChannels().contains(channel))
-                        .filter(article -> article.getStatus().equals(ArticleStatus.DISABLED))
-                        .map(article -> execute("启用栏目文章", context -> {
-                            try {
-                                articleService.update(article.getId(), a -> {
-                                    a.setDatePublished(new Date());
-                                    a.setStatus(ArticleStatus.PUBLISHED);
-                                });
-                            } catch (Exception e) {
-                                throw new ActionException(e.getMessage(), e);
-                            }
-                        })).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build())))
+                .map(channel -> enableArticle(articleId, false))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(RestfulResponse.builder().status(HttpStatus.NOT_FOUND.value()).build()));
     }
 }
