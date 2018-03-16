@@ -4,18 +4,14 @@ import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.article.ArticleService;
 import com.qxcmp.article.ArticleStatus;
 import com.qxcmp.article.ChannelService;
-import com.qxcmp.article.event.AdminNewsArticleDisableEvent;
-import com.qxcmp.article.event.AdminNewsArticleEnableEvent;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.user.User;
 import com.qxcmp.web.model.RestfulResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,11 +62,7 @@ public abstract class AbstractNewsPageController extends QxcmpAdminController {
                     articleService.findOne(Long.parseLong(key))
                             .filter(article -> force || StringUtils.equals(article.getUserId(), user.getId()))
                             .filter(article -> article.getStatus().equals(ArticleStatus.PUBLISHED))
-                            .ifPresent(article -> applicationContext.publishEvent(new AdminNewsArticleDisableEvent(user, articleService.update(article.getId(), a -> {
-                                a.setDatePublished(new Date());
-                                a.setStatus(ArticleStatus.DISABLED);
-                                a.setDisableUser(user.getId());
-                            }))));
+                            .ifPresent(article -> articleService.disable(user, article));
                 }
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
@@ -93,11 +85,7 @@ public abstract class AbstractNewsPageController extends QxcmpAdminController {
                 .filter(article -> force || StringUtils.equals(article.getUserId(), user.getId()))
                 .map(article -> execute("启用文章", context -> {
                     try {
-                        applicationContext.publishEvent(new AdminNewsArticleEnableEvent(user, articleService.update(article.getId(), a -> {
-                            a.setDatePublished(new Date());
-                            a.setStatus(ArticleStatus.PUBLISHED);
-                            a.setAuditor(user.getId());
-                        })));
+                        articleService.enable(user, article);
                     } catch (Exception e) {
                         throw new ActionException(e.getMessage(), e);
                     }
@@ -119,11 +107,7 @@ public abstract class AbstractNewsPageController extends QxcmpAdminController {
                 .filter(article -> force || StringUtils.equals(article.getUserId(), user.getId()))
                 .map(article -> execute("禁用文章", context -> {
                     try {
-                        applicationContext.publishEvent(new AdminNewsArticleDisableEvent(user, articleService.update(article.getId(), a -> {
-                            a.setDateDisabled(DateTime.now().toDate());
-                            a.setStatus(ArticleStatus.DISABLED);
-                            a.setDisableUser(user.getId());
-                        })));
+                        articleService.disable(user, article);
                     } catch (Exception e) {
                         throw new ActionException(e.getMessage(), e);
                     }

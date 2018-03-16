@@ -93,7 +93,7 @@ public class AdminNewsUserChannelPageController extends AbstractNewsPageControll
     }
 
     @GetMapping("/{id}/article")
-    public ModelAndView userChannelArticlePage(@PathVariable String id, Pageable pageable) {
+    public ModelAndView userChannelArticlePage(@PathVariable Long id, Pageable pageable) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         return channelService.findOne(id)
                 .filter(channel -> channel.getOwner().equals(user) || channel.getAdmins().contains(user))
@@ -104,7 +104,7 @@ public class AdminNewsUserChannelPageController extends AbstractNewsPageControll
     }
 
     @GetMapping("/{id}/article/{articleId}/preview")
-    public ModelAndView userChannelArticlePreviewPage(@PathVariable String id, @PathVariable String articleId) {
+    public ModelAndView userChannelArticlePreviewPage(@PathVariable Long id, @PathVariable Long articleId) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         List<Channel> channels = channelService.findByUser(user);
         return channelService.findOne(id)

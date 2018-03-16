@@ -66,15 +66,6 @@ public class ChannelService extends AbstractEntityService<Channel, Long, Channel
         return repository.findByCatalogContains(catalogs);
     }
 
-    public Optional<Channel> findOne(String id) {
-        try {
-            Long cId = Long.parseLong(id);
-            return findOne(cId);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
-
     public Optional<Channel> findByName(String name) {
         return repository.findByName(name);
     }

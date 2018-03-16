@@ -3,7 +3,6 @@ package com.qxcmp.article.controller;
 import com.google.common.collect.ImmutableList;
 import com.qxcmp.article.Article;
 import com.qxcmp.article.ArticleStatus;
-import com.qxcmp.article.event.AdminNewsArticlePublishEvent;
 import com.qxcmp.article.form.AdminNewsArticleAuditForm;
 import com.qxcmp.article.page.*;
 import com.qxcmp.audit.ActionException;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Date;
 import java.util.List;
 
 import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
@@ -57,7 +55,7 @@ public class AdminNewsArticlePageController extends AbstractNewsPageController {
     }
 
     @GetMapping("/{id}/audit")
-    public ModelAndView auditGet(@PathVariable String id, final AdminNewsArticleAuditForm form) {
+    public ModelAndView auditGet(@PathVariable Long id, final AdminNewsArticleAuditForm form) {
         return articleService.findOne(id)
                 .filter(article -> article.getStatus().equals(ArticleStatus.AUDITING))
                 .map(article -> page(AdminNewsArticleAuditPage.class, article, form)
@@ -66,32 +64,20 @@ public class AdminNewsArticlePageController extends AbstractNewsPageController {
     }
 
     @PostMapping("/{id}/audit")
-    public ModelAndView auditPost(@PathVariable String id, final AdminNewsArticleAuditForm form) {
-        User user = currentUser().orElseThrow(RuntimeException::new);
-        return articleService.findOne(id)
-                .filter(article -> article.getStatus().equals(ArticleStatus.AUDITING))
-                .map(article -> execute("审核文章", context -> {
-                    try {
-                        if (StringUtils.equals("通过文章", form.getOperation())) {
-                            applicationContext.publishEvent(new AdminNewsArticlePublishEvent(user, articleService.update(article.getId(), a -> {
-                                a.setAuditor(user.getId());
-                                a.setAuditResponse(form.getResponse());
-                                a.setDatePublished(new Date());
-                                a.setStatus(ArticleStatus.PUBLISHED);
-                            })));
-                        } else {
-                            articleService.update(article.getId(), a -> {
-                                a.setAuditor(user.getId());
-                                a.setAuditResponse(form.getResponse());
-                                a.setDateRejected(new Date());
-                                a.setStatus(ArticleStatus.REJECT);
-                            });
-                        }
-                    } catch (Exception e) {
-                        throw new ActionException(e.getMessage(), e);
-                    }
-                }, (stringObjectMap, overview) -> overview.addLink("返回", ADMIN_NEWS_URL + "/article/auditing")))
-                .orElse(overviewPage(viewHelper.nextWarningOverview("文章不存在")));
+    public ModelAndView auditPost(@PathVariable Long id, final AdminNewsArticleAuditForm form) {
+        return execute("审核文章", context -> {
+            try {
+                User user = currentUser().orElseThrow(RuntimeException::new);
+                Article article = articleService.findOne(id).orElseThrow(RuntimeException::new);
+                if (StringUtils.equals("通过文章", form.getOperation())) {
+                    articleService.publish(user, article, form.getResponse());
+                } else {
+                    articleService.reject(user, article, form.getResponse());
+                }
+            } catch (Exception e) {
+                throw new ActionException(e.getMessage(), e);
+            }
+        }, (stringObjectMap, overview) -> overview.addLink("返回", ADMIN_NEWS_URL + "/article/auditing"));
     }
 
     @PostMapping("/{id}/remove")
@@ -125,17 +111,9 @@ public class AdminNewsArticlePageController extends AbstractNewsPageController {
         return execute("批量发布文章", context -> {
             try {
                 for (String key : keys) {
-                    articleService.findOne(key)
+                    articleService.findOne(Long.parseLong(key))
                             .filter(article -> article.getStatus().equals(ArticleStatus.AUDITING))
-                            .ifPresent(article -> {
-                                articleService.update(article.getId(), a -> {
-                                    a.setAuditor(user.getId());
-                                    a.setAuditResponse("批量发布");
-                                    a.setDatePublished(new Date());
-                                    a.setStatus(ArticleStatus.PUBLISHED);
-                                });
-                                applicationContext.publishEvent(new AdminNewsArticlePublishEvent(user, article));
-                            });
+                            .ifPresent(article -> articleService.publish(user, article, "批量发布"));
                 }
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
@@ -149,14 +127,9 @@ public class AdminNewsArticlePageController extends AbstractNewsPageController {
         return execute("批量驳回文章", context -> {
             try {
                 for (String key : keys) {
-                    articleService.findOne(key)
+                    articleService.findOne(Long.parseLong(key))
                             .filter(article -> article.getStatus().equals(ArticleStatus.AUDITING))
-                            .ifPresent(article -> articleService.update(article.getId(), a -> {
-                                a.setAuditor(user.getId());
-                                a.setAuditResponse("批量驳回");
-                                a.setDateRejected(new Date());
-                                a.setStatus(ArticleStatus.REJECT);
-                            }));
+                            .ifPresent(article -> articleService.reject(user, article, "批量驳回"));
                 }
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);

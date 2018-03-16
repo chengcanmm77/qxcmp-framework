@@ -135,7 +135,7 @@ public class AdminNewsUserArticlePageController extends AbstractNewsPageControll
     }
 
     @GetMapping("/{id}/preview")
-    public ModelAndView preview(@PathVariable String id) {
+    public ModelAndView preview(@PathVariable Long id) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         return articleService.findOne(id)
                 .filter(article -> StringUtils.equals(article.getUserId(), user.getId()))
@@ -144,7 +144,7 @@ public class AdminNewsUserArticlePageController extends AbstractNewsPageControll
     }
 
     @GetMapping("/{id}/audit")
-    public ModelAndView auditGet(@PathVariable String id, final AdminNewsUserArticleAuditForm form) {
+    public ModelAndView auditGet(@PathVariable Long id, final AdminNewsUserArticleAuditForm form) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         return articleService.findOne(id)
                 .filter(article -> StringUtils.equals(article.getUserId(), user.getId()))
@@ -154,18 +154,14 @@ public class AdminNewsUserArticlePageController extends AbstractNewsPageControll
     }
 
     @PostMapping("/{id}/audit")
-    public ModelAndView auditPost(@PathVariable String id, final AdminNewsUserArticleAuditForm form) {
+    public ModelAndView auditPost(@PathVariable Long id, final AdminNewsUserArticleAuditForm form) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         return articleService.findOne(id)
                 .filter(article -> StringUtils.equals(article.getUserId(), user.getId()))
                 .filter(article -> article.getStatus().equals(ArticleStatus.NEW) || article.getStatus().equals(ArticleStatus.REJECT))
                 .map(article -> execute("申请文章审核", context -> {
                             try {
-                                articleService.update(article.getId(), a -> {
-                                    a.setAuditRequest(form.getAuditRequest());
-                                    a.setDateAuditing(new Date());
-                                    a.setStatus(ArticleStatus.AUDITING);
-                                });
+                                articleService.audit(user, article, form.getAuditRequest());
                             } catch (Exception e) {
                                 throw new ActionException(e.getMessage(), e);
                             }
@@ -178,7 +174,7 @@ public class AdminNewsUserArticlePageController extends AbstractNewsPageControll
     }
 
     @PostMapping("/{id}/repeal")
-    public ResponseEntity<RestfulResponse> repeal(@PathVariable String id) {
+    public ResponseEntity<RestfulResponse> repeal(@PathVariable Long id) {
         User user = currentUser().orElseThrow(RuntimeException::new);
         return articleService.findOne(id)
                 .filter(article -> StringUtils.equals(article.getUserId(), user.getId()))
@@ -223,17 +219,13 @@ public class AdminNewsUserArticlePageController extends AbstractNewsPageControll
     @PostMapping("/audit")
     public ResponseEntity<RestfulResponse> batchAudit(@RequestParam("keys[]") List<String> keys) {
         User user = currentUser().orElseThrow(RuntimeException::new);
-        return execute("批量申请文章", context -> {
+        return execute("批量申请文章审核", context -> {
             try {
                 for (String key : keys) {
-                    articleService.findOne(key)
+                    articleService.findOne(Long.parseLong(key))
                             .filter(article -> StringUtils.equals(article.getUserId(), user.getId()))
                             .filter(article -> article.getStatus().equals(ArticleStatus.NEW) || article.getStatus().equals(ArticleStatus.REJECT))
-                            .ifPresent(article -> articleService.update(article.getId(), a -> {
-                                a.setAuditRequest("批量申请文章");
-                                a.setDateAuditing(new Date());
-                                a.setStatus(ArticleStatus.AUDITING);
-                            }));
+                            .ifPresent(article -> articleService.audit(user, article, "批量申请文章审核"));
                 }
             } catch (Exception e) {
                 throw new ActionException(e.getMessage(), e);
