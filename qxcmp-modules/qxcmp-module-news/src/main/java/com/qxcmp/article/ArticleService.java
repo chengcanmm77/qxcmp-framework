@@ -39,24 +39,16 @@ public class ArticleService extends AbstractEntityService<Article, Long, Article
         return repository.findByStatus(status, pageable);
     }
 
-    public Page<Article> findByChannel(Channel channel, Pageable pageable) {
-        return repository.findByChannelsContains(channel, pageable);
-    }
-
-    public Page<Article> findByChannelAndStatus(Channel channel, ArticleStatus status, Pageable pageable) {
-        return repository.findByChannelsAndStatus(channel, status, pageable);
-    }
-
-    public Page<Article> findByChannelContainsAndStatus(Set<Channel> channels, ArticleStatus status, Pageable pageable) {
-        return repository.findByChannelsContainingAndStatus(channels, status, pageable);
-    }
-
     public Page<Article> findByUserId(String userId, Pageable pageable) {
         return repository.findByUserIdOrderByDateModifiedDesc(userId, pageable);
     }
 
     public Page<Article> findByUserIdAndStatus(String userId, ArticleStatus status, Pageable pageable) {
         return repository.findByUserIdAndStatusOrderByDateModifiedDesc(userId, status, pageable);
+    }
+
+    public Page<Article> findByChannelAndStatus(Channel channel, ArticleStatus status, Pageable pageable) {
+        return repository.findByChannelsAndStatus(channel, status, pageable);
     }
 
     public Page<Article> findByChannelsAndStatuses(Set<Channel> channels, Set<ArticleStatus> statuses, Pageable pageable) {
