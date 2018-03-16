@@ -12,7 +12,7 @@
 
     <modules>
         <module>qxcmp-module-shopping-mall</module>
-        <module>qxcmp-module-article</module>
+        <module>qxcmp-module-news</module>
         <module>qxcmp-module-spider</module>
         <module>qxcmp-module-admin</module>
         <module>qxcmp-module-advertisement</module>

@@ -18,7 +18,8 @@ spring:
         content:
           enabled: true
     cache:
-      period: 365d
+      cachecontrol:
+        max-age: 30d
   messages:
     basename: i18n/qxcmp, i18n/ValidationMessages
   data:
