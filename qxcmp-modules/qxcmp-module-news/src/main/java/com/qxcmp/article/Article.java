@@ -210,7 +210,7 @@ public class Article {
      * 文章所属的栏目
      */
     @ManyToMany
-    @TableField(value = "所属栏目", collectionEntityIndex = "name", maxCollectionCount = 3, enableUrl = true, urlPrefix = ADMIN_NEWS_URL + "/news/user/channel/", urlEntityIndex = "id", urlSuffix = "article")
+    @TableField(value = "所属栏目", collectionEntityIndex = "name", maxCollectionCount = 3, enableUrl = true, urlPrefix = ADMIN_NEWS_URL + "/user/channel/", urlEntityIndex = "id", urlSuffix = "article")
     private List<Channel> channels = Lists.newArrayList();
 
     /**

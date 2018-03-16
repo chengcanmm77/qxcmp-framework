@@ -2,8 +2,15 @@ package com.qxcmp.article.page;
 
 import com.qxcmp.admin.page.AbstractQxcmpAdminPage;
 import com.qxcmp.article.Article;
+import com.qxcmp.web.view.elements.grid.Col;
+import com.qxcmp.web.view.elements.grid.Row;
+import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
+import com.qxcmp.web.view.elements.html.HtmlText;
+import com.qxcmp.web.view.elements.image.Image;
 import com.qxcmp.web.view.modules.table.AbstractTable;
 import com.qxcmp.web.view.modules.table.dictionary.CollectionValueCell;
+import com.qxcmp.web.view.support.Wide;
+import com.qxcmp.web.view.views.Overview;
 
 import java.text.SimpleDateFormat;
 
@@ -14,6 +21,12 @@ public abstract class AbstractNewsPage extends AbstractQxcmpAdminPage {
 
     private static final int MAX_COUNT = 99;
 
+    /**
+     * 为菜单设置徽章
+     *
+     * @param menuId 菜单ID
+     * @param count  徽章数量
+     */
     protected void setMenuBadge(String menuId, Long count) {
         if (count > 0) {
             if (count > MAX_COUNT) {
@@ -64,5 +77,14 @@ public abstract class AbstractNewsPage extends AbstractQxcmpAdminPage {
                     break;
             }
         });
+    }
+
+    protected Overview getArticleDetailsOverview(Article article) {
+        return viewHelper.nextOverview(article.getTitle(), article.getAuthor())
+                .addComponent(new VerticallyDividedGrid().setVerticallyPadded()
+                        .addItem(new Row()
+                                .addCol(new Col().setComputerWide(Wide.FOUR).setMobileWide(Wide.SIXTEEN).addComponent(new Image(article.getCover()).setCentered().setBordered().setRounded()))
+                                .addCol(new Col().setComputerWide(Wide.TWELVE).setMobileWide(Wide.SIXTEEN).addComponent(getArticleDetailsTable(article))))
+                        .addItem(new Row().addCol(new Col(Wide.SIXTEEN).addComponent(new HtmlText(article.getContent())))));
     }
 }

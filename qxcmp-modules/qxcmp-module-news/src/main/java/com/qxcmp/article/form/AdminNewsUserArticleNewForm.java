@@ -3,10 +3,13 @@ package com.qxcmp.article.form;
 import com.qxcmp.article.Channel;
 import com.qxcmp.web.view.annotation.form.*;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
+/**
+ * @author Aaric
+ */
 @Form(value = "新建文章", submitText = "立即创建")
 @Data
 public class AdminNewsUserArticleNewForm {

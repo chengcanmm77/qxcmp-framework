@@ -1,6 +1,5 @@
 package com.qxcmp.article.controller;
 
-import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.article.ChannelService;
 import com.qxcmp.article.form.AdminNewsChannelEditForm;
 import com.qxcmp.article.form.AdminNewsChannelNewForm;
@@ -33,7 +32,7 @@ import static com.qxcmp.core.QxcmpSystemConfig.ARTICLE_CHANNEL_CATALOG;
 @Controller
 @RequestMapping(ADMIN_NEWS_URL + "/channel")
 @RequiredArgsConstructor
-public class AdminNewsChannelPageController extends QxcmpAdminController {
+public class AdminNewsChannelPageController extends AbstractNewsPageController {
 
     private final ChannelService channelService;
 

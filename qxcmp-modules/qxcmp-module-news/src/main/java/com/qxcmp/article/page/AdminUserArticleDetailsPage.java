@@ -5,12 +5,6 @@ import com.qxcmp.article.Article;
 import com.qxcmp.article.ArticleService;
 import com.qxcmp.article.ArticleStatus;
 import com.qxcmp.user.User;
-import com.qxcmp.web.view.elements.grid.Col;
-import com.qxcmp.web.view.elements.grid.Row;
-import com.qxcmp.web.view.elements.grid.VerticallyDividedGrid;
-import com.qxcmp.web.view.elements.html.HtmlText;
-import com.qxcmp.web.view.elements.image.Image;
-import com.qxcmp.web.view.support.Wide;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -41,12 +35,7 @@ public class AdminUserArticleDetailsPage extends AbstractNewsPage {
         setMenuBadge(ADMIN_MENU_USER_ARTICLE_REJECTED, articleService.countByUserIdAndStatus(user.getId(), ArticleStatus.REJECT));
         setMenuBadge(ADMIN_MENU_USER_ARTICLE_PUBLISHED, articleService.countByUserIdAndStatus(user.getId(), ArticleStatus.PUBLISHED));
         setMenuBadge(ADMIN_MENU_USER_ARTICLE_DISABLED, articleService.countByUserIdAndStatus(user.getId(), ArticleStatus.DISABLED));
-        addComponent(viewHelper.nextOverview(article.getTitle(), article.getAuthor())
-                .addComponent(new VerticallyDividedGrid().setVerticallyPadded()
-                        .addItem(new Row()
-                                .addCol(new Col().setComputerWide(Wide.FOUR).setMobileWide(Wide.SIXTEEN).addComponent(new Image(article.getCover()).setCentered().setBordered().setRounded()))
-                                .addCol(new Col().setComputerWide(Wide.TWELVE).setMobileWide(Wide.SIXTEEN).addComponent(getArticleDetailsTable(article))))
-                        .addItem(new Row().addCol(new Col(Wide.SIXTEEN).addComponent(new HtmlText(article.getContent())))))
+        addComponent(getArticleDetailsOverview(article)
                 .addLink("我的文章", ADMIN_NEWS_URL + "/user/article")
                 .addLink("草稿箱", ADMIN_NEWS_URL + "/user/article/draft")
                 .addLink("新建文章", ADMIN_NEWS_URL + "/user/article/new")

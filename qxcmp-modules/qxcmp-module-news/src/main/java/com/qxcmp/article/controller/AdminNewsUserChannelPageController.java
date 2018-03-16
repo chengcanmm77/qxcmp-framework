@@ -1,7 +1,6 @@
 package com.qxcmp.article.controller;
 
 import com.google.common.collect.ImmutableSet;
-import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.article.*;
 import com.qxcmp.article.form.AdminNewsUserChannelAdminEditForm;
 import com.qxcmp.article.form.AdminNewsUserChannelOwnerEditForm;
@@ -36,7 +35,7 @@ import static com.qxcmp.article.NewsModuleSecurity.PRIVILEGE_NEWS;
 @Controller
 @RequestMapping(ADMIN_NEWS_URL + "/user/channel")
 @RequiredArgsConstructor
-public class AdminNewsUserChannelPageController extends QxcmpAdminController {
+public class AdminNewsUserChannelPageController extends AbstractNewsPageController {
 
     private final ChannelService channelService;
     private final ArticleService articleService;

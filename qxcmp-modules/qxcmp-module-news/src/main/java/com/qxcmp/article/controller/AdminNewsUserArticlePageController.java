@@ -1,6 +1,5 @@
 package com.qxcmp.article.controller;
 
-import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.article.*;
 import com.qxcmp.article.event.AdminNewsArticleDisableEvent;
 import com.qxcmp.article.event.AdminNewsArticleEnableEvent;
@@ -36,7 +35,7 @@ import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
 @Controller
 @RequestMapping(ADMIN_NEWS_URL + "/user/article")
 @RequiredArgsConstructor
-public class AdminNewsUserArticlePageController extends QxcmpAdminController {
+public class AdminNewsUserArticlePageController extends AbstractNewsPageController {
 
     private final ArticleService articleService;
     private final ChannelService channelService;
