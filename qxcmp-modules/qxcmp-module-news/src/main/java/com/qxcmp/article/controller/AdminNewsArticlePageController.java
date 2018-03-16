@@ -1,6 +1,7 @@
 package com.qxcmp.article.controller;
 
 import com.google.common.collect.ImmutableList;
+import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.article.Article;
 import com.qxcmp.article.ArticleService;
 import com.qxcmp.article.ArticleStatus;
@@ -11,7 +12,6 @@ import com.qxcmp.article.form.AdminNewsArticleAuditForm;
 import com.qxcmp.article.support.AdminNewsPageHelper;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.user.User;
-import com.qxcmp.web.QxcmpController;
 import com.qxcmp.web.model.RestfulResponse;
 import com.qxcmp.web.page.AbstractLegacyPage;
 import com.qxcmp.web.view.Component;
@@ -45,10 +45,13 @@ import java.util.List;
 import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
 import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
 
+/**
+ * @author Aaric
+ */
 @Controller
 @RequestMapping(ADMIN_NEWS_URL + "/article")
 @RequiredArgsConstructor
-public class AdminNewsArticlePageController extends QxcmpController {
+public class AdminNewsArticlePageController extends QxcmpAdminController {
 
     private final ArticleService articleService;
     private final AdminNewsPageHelper adminNewsPageHelper;

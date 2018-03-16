@@ -24,14 +24,11 @@ public enum ArticleStatus {
     }
 
     static ArticleStatus fromName(String name) {
-
         for (ArticleStatus version : values()) {
             if (version.getName().equals(name)) {
                 return version;
             }
         }
-
-
         return null;
     }
 

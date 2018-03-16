@@ -17,25 +17,96 @@ interface ArticleRepository extends JpaRepository<Article, Long>, JpaSpecificati
      * 获取某个状态的文章数量
      *
      * @param status 文章状态
+     *
      * @return 某个状态的文章数量
      */
     Long countByStatus(ArticleStatus status);
 
+    /**
+     * 查询某状态的文章
+     *
+     * @param status   状态
+     * @param pageable 分页信息
+     *
+     * @return 某状态的文章
+     */
     Page<Article> findByStatus(ArticleStatus status, Pageable pageable);
 
+    /**
+     * 查询一个栏目中的文章
+     *
+     * @param channel  栏目
+     * @param pageable 分页信息
+     *
+     * @return 一个栏目中的文章
+     */
     @Query("select article from Article article inner join article.channels channel where channel = :channel")
     Page<Article> findByChannelsContains(@Param("channel") Channel channel, Pageable pageable);
 
+    /**
+     * 查询一个栏目中指定状态的文章
+     *
+     * @param channel  栏目
+     * @param status   状态
+     * @param pageable 分页信息
+     *
+     * @return 一个栏目中指定状态的文章
+     */
     @Query("select article from Article article inner join article.channels channel where channel = :channel and article.status = :status")
     Page<Article> findByChannelsAndStatus(@Param("channel") Channel channel, @Param("status") ArticleStatus status, Pageable pageable);
 
+    /**
+     * 查询指定栏目中指定状态的文章
+     *
+     * @param channels 栏目
+     * @param status   状态
+     * @param pageable 分页信息
+     *
+     * @return 指定栏目中指定状态的文章
+     */
     @Query("select distinct article from Article article join article.channels channel where channel in :channels and article.status = :status")
     Page<Article> findByChannelsContainingAndStatus(@Param("channels") Set<Channel> channels, @Param("status") ArticleStatus status, Pageable pageable);
 
-    @Query("select distinct article from Article article join article.channels channel where  channel in :channels and article.status in :status")
+    /**
+     * 查询指定栏目中指定状态的文章
+     *
+     * @param channels 栏目
+     * @param statuses 状态
+     * @param pageable 分页信息
+     *
+     * @return 指定栏目中指定状态的文章
+     */
+    @Query("select distinct article from Article article join article.channels channel where channel in :channels and article.status in :status")
     Page<Article> findByChannelsAndStatuses(@Param("channels") Set<Channel> channels, @Param("status") Set<ArticleStatus> statuses, Pageable pageable);
 
-    Page<Article> findByUserId(String userId, Pageable pageable);
+    /**
+     * 查询用户拥有的文章
+     *
+     * @param userId   用户ID
+     * @param pageable 分页信息
+     *
+     * @return 用户拥有的文章
+     */
+    Page<Article> findByUserIdOrderByDateModifiedDesc(String userId, Pageable pageable);
 
-    Page<Article> findByUserIdAndStatus(String userId, ArticleStatus status, Pageable pageable);
+    /**
+     * 查询用户某状态的文章
+     *
+     * @param userId   用户ID
+     * @param status   状态
+     * @param pageable 分页信息
+     *
+     * @return 用户某状态的文章
+     */
+    Page<Article> findByUserIdAndStatusOrderByDateModifiedDesc(String userId, ArticleStatus status, Pageable pageable);
+
+    /**
+     * 计算用户某状态文章数量
+     *
+     * @param userId 用户ID
+     * @param status 状态
+     *
+     * @return 用户某状态文章数量
+     */
+    Long countByUserIdAndStatus(String userId, ArticleStatus status);
 }

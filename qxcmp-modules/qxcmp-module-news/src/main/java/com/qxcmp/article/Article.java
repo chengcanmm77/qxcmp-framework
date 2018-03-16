@@ -2,7 +2,6 @@ package com.qxcmp.article;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.qxcmp.core.QxcmpConfiguration;
 import com.qxcmp.web.view.annotation.table.*;
 import com.qxcmp.web.view.modules.form.FormMethod;
 import com.qxcmp.web.view.support.AnchorTarget;
@@ -15,15 +14,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import static com.qxcmp.article.NewsModule.ADMIN_NEWS_URL;
+
 /**
  * 平台文章实体
  *
  * @author aaric
  */
-@EntityTable(value = "我的文章", name = "user", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/user/article",
+@EntityTable(value = "我的文章", name = "user", action = ADMIN_NEWS_URL + "/user/article",
         tableActions = @TableAction(value = "新建文章", action = "new", primary = true),
         rowActions = {@RowAction(value = "预览", action = "preview", target = AnchorTarget.BLANK)})
-@EntityTable(value = "草稿箱", name = "userDraft", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/user/article",
+@EntityTable(value = "草稿箱", name = "userDraft", action = ADMIN_NEWS_URL + "/user/article",
         tableActions = @TableAction(value = "新建文章", action = "new", primary = true),
         batchActions = {
                 @BatchAction(value = "批量申请审核", action = "audit", secondary = true),
@@ -35,12 +36,12 @@ import java.util.Set;
                 @RowAction(value = "编辑", action = "edit"),
                 @RowAction(value = "删除", action = "remove", method = FormMethod.POST)
         })
-@EntityTable(value = "审核中文章", name = "userAuditing", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/user/article",
+@EntityTable(value = "审核中文章", name = "userAuditing", action = ADMIN_NEWS_URL + "/user/article",
         rowActions = {
                 @RowAction(value = "查看", action = "preview", target = AnchorTarget.BLANK),
                 @RowAction(value = "撤销申请", action = "repeal", method = FormMethod.POST)
         })
-@EntityTable(value = "未通过文章", name = "userRejected", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/user/article",
+@EntityTable(value = "未通过文章", name = "userRejected", action = ADMIN_NEWS_URL + "/user/article",
         batchActions = {
                 @BatchAction(value = "批量申请审核", action = "audit", secondary = true)
         },
@@ -49,7 +50,7 @@ import java.util.Set;
                 @RowAction(value = "编辑", action = "edit"),
                 @RowAction(value = "删除", action = "remove", method = FormMethod.POST)
         })
-@EntityTable(value = "已发布文章", name = "userPublished", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/user/article",
+@EntityTable(value = "已发布文章", name = "userPublished", action = ADMIN_NEWS_URL + "/user/article",
         batchActions = {
                 @BatchAction(value = "批量禁用", action = "disable", secondary = true)
         },
@@ -57,7 +58,7 @@ import java.util.Set;
                 @RowAction(value = "查看", action = "preview", target = AnchorTarget.BLANK),
                 @RowAction(value = "禁用", action = "disable", method = FormMethod.POST)
         })
-@EntityTable(value = "已禁用文章", name = "userDisabled", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/user/article",
+@EntityTable(value = "已禁用文章", name = "userDisabled", action = ADMIN_NEWS_URL + "/user/article",
         batchActions = {
                 @BatchAction(value = "批量删除", action = "remove", color = Color.RED)
         },
@@ -66,13 +67,13 @@ import java.util.Set;
                 @RowAction(value = "启用", action = "enable", method = FormMethod.POST),
                 @RowAction(value = "删除", action = "remove", method = FormMethod.POST)
         })
-@EntityTable(value = "待审核文章", name = "auditing", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/article",
+@EntityTable(value = "待审核文章", name = "auditing", action = ADMIN_NEWS_URL + "/article",
         batchActions = {
                 @BatchAction(value = "批量发布", action = "publish", color = Color.GREEN),
                 @BatchAction(value = "批量驳回", action = "reject", color = Color.RED)
         },
         rowActions = @RowAction(value = "开始审核", action = "audit"))
-@EntityTable(value = "已发布文章", name = "published", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/article",
+@EntityTable(value = "已发布文章", name = "published", action = ADMIN_NEWS_URL + "/article",
         batchActions = {
                 @BatchAction(value = "批量禁用", action = "disable", secondary = true)
         },
@@ -80,7 +81,7 @@ import java.util.Set;
                 @RowAction(value = "查看", action = "preview", target = AnchorTarget.BLANK),
                 @RowAction(value = "禁用", action = "disable", method = FormMethod.POST)
         })
-@EntityTable(value = "已禁用文章", name = "disabled", action = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/article",
+@EntityTable(value = "已禁用文章", name = "disabled", action = ADMIN_NEWS_URL + "/article",
         batchActions = {
                 @BatchAction(value = "批量删除", action = "remove", color = Color.RED)
         },
@@ -209,7 +210,7 @@ public class Article {
      * 文章所属的栏目
      */
     @ManyToMany
-    @TableField(value = "所属栏目", collectionEntityIndex = "name", maxCollectionCount = 3, enableUrl = true, urlPrefix = QxcmpConfiguration.QXCMP_ADMIN_URL + "/news/user/channel/", urlEntityIndex = "id", urlSuffix = "article")
+    @TableField(value = "所属栏目", collectionEntityIndex = "name", maxCollectionCount = 3, enableUrl = true, urlPrefix = ADMIN_NEWS_URL + "/news/user/channel/", urlEntityIndex = "id", urlSuffix = "article")
     private List<Channel> channels = Lists.newArrayList();
 
     /**

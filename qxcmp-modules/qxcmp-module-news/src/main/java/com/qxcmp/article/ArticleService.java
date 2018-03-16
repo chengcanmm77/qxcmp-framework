@@ -6,10 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * 文章服务
@@ -32,6 +30,10 @@ public class ArticleService extends AbstractEntityService<Article, Long, Article
         return repository.countByStatus(status);
     }
 
+    public Long countByUserIdAndStatus(String userId, ArticleStatus status) {
+        return repository.countByUserIdAndStatus(userId, status);
+    }
+
     public Page<Article> findByStatus(ArticleStatus status, Pageable pageable) {
         return repository.findByStatus(status, pageable);
     }
@@ -49,11 +51,11 @@ public class ArticleService extends AbstractEntityService<Article, Long, Article
     }
 
     public Page<Article> findByUserId(String userId, Pageable pageable) {
-        return repository.findByUserId(userId, pageable);
+        return repository.findByUserIdOrderByDateModifiedDesc(userId, pageable);
     }
 
     public Page<Article> findByUserIdAndStatus(String userId, ArticleStatus status, Pageable pageable) {
-        return repository.findByUserIdAndStatus(userId, status, pageable);
+        return repository.findByUserIdAndStatusOrderByDateModifiedDesc(userId, status, pageable);
     }
 
     public Page<Article> findByChannelsAndStatuses(Set<Channel> channels, Set<ArticleStatus> statuses, Pageable pageable) {
@@ -61,17 +63,10 @@ public class ArticleService extends AbstractEntityService<Article, Long, Article
     }
 
     @Override
-    public Article create(Supplier<Article> supplier) {
-
-        Article entity = supplier.get();
-
-        if (Objects.nonNull(entity.getId())) {
-            return null;
-        }
-
+    public Article create(Article entity) {
+        entity.setStatus(ArticleStatus.NEW);
         entity.setDateCreated(new Date());
         entity.setDateModified(new Date());
-
-        return super.create(() -> entity);
+        return super.create(entity);
     }
 }
