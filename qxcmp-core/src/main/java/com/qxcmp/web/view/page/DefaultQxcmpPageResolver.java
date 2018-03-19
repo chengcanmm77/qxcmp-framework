@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
  * @author Aaric
  */
 @Service
-public class DefaultQxcmpPageResovler implements QxcmpPageResolver {
+public class DefaultQxcmpPageResolver implements QxcmpPageResolver {
 
     @Override
-    public Class<? extends AbstractErrorPage> getErrorPage() {
+    public Class<? extends QxcmpPage> getErrorPage() {
         return DefaultErrorPage.class;
     }
 
     @Override
-    public Class<? extends AbstractOverviewPage> getOverviewPage() {
+    public Class<? extends QxcmpPage> getOverviewPage() {
         return DefaultOverviewPage.class;
     }
 }

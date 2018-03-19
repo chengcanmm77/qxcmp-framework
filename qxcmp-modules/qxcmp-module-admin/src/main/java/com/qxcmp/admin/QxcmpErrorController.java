@@ -33,9 +33,7 @@ public class QxcmpErrorController extends QxcmpAdminController implements ErrorC
     @RequestMapping("")
     public ModelAndView handleError(HttpServletRequest request) {
         Map<String, Object> errors = errorAttributes.getErrorAttributes(new ServletWebRequest(request), true);
-
         String path = errors.get("path").toString();
-
         if (StringUtils.startsWith(path, ADMIN_URL)) {
             return adminErrorPage(errors);
         } else {

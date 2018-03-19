@@ -14,13 +14,13 @@ public interface QxcmpPageResolver {
      *
      * @return 错误页面类型
      */
-    Class<? extends AbstractErrorPage> getErrorPage();
+    Class<? extends QxcmpPage> getErrorPage();
 
     /**
      * 解析平台概览页面
      *
      * @return 概览页面类型
      */
-    Class<? extends AbstractOverviewPage> getOverviewPage();
+    Class<? extends QxcmpPage> getOverviewPage();
 
 }
