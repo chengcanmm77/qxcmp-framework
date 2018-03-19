@@ -135,27 +135,16 @@ public class FeedService extends AbstractEntityService<Feed, Long, FeedRepositor
         create(next);
     }
 
-    /**
-     * 查询用户的Feed流
-     *
-     * @param userId 用户ID
-     *
-     * @return 用户Feed流列表
-     */
     public Page<Feed> findByOwner(String userId, Pageable pageable) {
         return repository.findByOwnerOrderByDateCreatedDesc(userId, pageable);
     }
 
-    /**
-     * 查询某一类型的动态
-     *
-     * @param type     动态类型
-     * @param pageable 分页信息
-     *
-     * @return 查询结果
-     */
     public Page<Feed> findByType(String type, Pageable pageable) {
         return repository.findByTypeOrderByDateCreatedDesc(type, pageable);
+    }
+
+    public List<Feed> findByType(String type) {
+        return repository.findByTypeOrderByDateCreatedDesc(type);
     }
 
 }

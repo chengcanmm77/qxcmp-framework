@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 interface FeedRepository extends JpaRepository<Feed, Long>, JpaSpecificationExecutor<Feed> {
 
@@ -28,4 +30,13 @@ interface FeedRepository extends JpaRepository<Feed, Long>, JpaSpecificationExec
      * @return 某类型的Feed流
      */
     Page<Feed> findByTypeOrderByDateCreatedDesc(String type, Pageable pageable);
+
+    /**
+     * 查询某类型的动态
+     *
+     * @param type 类型
+     *
+     * @return 某类型的动态
+     */
+    List<Feed> findByTypeOrderByDateCreatedDesc(String type);
 }

@@ -10,6 +10,7 @@ import com.qxcmp.web.view.elements.header.HeaderType;
 import com.qxcmp.web.view.elements.header.PageHeader;
 import com.qxcmp.web.view.support.Alignment;
 import com.qxcmp.web.view.support.AnchorTarget;
+import com.qxcmp.web.view.support.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,6 +34,11 @@ public class Overview extends AbstractComponent {
     private AbstractHeader header;
 
     /**
+     * 动作按钮
+     */
+    private List<AbstractButton> actions = Lists.newArrayList();
+
+    /**
      * 底部超链接
      */
     private List<AbstractButton> links = Lists.newArrayList();
@@ -46,6 +52,11 @@ public class Overview extends AbstractComponent {
      * 内容对齐方式
      */
     private Alignment alignment = Alignment.CENTER;
+
+    public Overview addAction(String text, String url) {
+        actions.add(new Button(text, url).setBasic().setSize(Size.SMALL));
+        return this;
+    }
 
     public Overview addLink(AbstractButton button) {
         links.add(button);

@@ -55,7 +55,7 @@ public abstract class AbstractQxcmpPage extends AbstractPage {
     @Override
     public void renderToMobile() {
         super.renderToMobile();
-        QxcmpMobilePage qxcmpMobilePage = this.getClass().getAnnotation(QxcmpMobilePage.class);
+        MobilePage qxcmpMobilePage = this.getClass().getAnnotation(MobilePage.class);
         if (Objects.nonNull(qxcmpMobilePage)) {
             buildMobileSidebar();
         }
