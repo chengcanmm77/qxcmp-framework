@@ -26,7 +26,7 @@ spring:
     rest:
       max-page-size: 100
   datasource:
-    url: jdbc:mysql://localhost:3306/${platform.database.name}?useSSL=false
+    url: jdbc:mysql://${platform.database.url}/${platform.database.name}?useSSL=false
     username: ${platform.database.username}
     password: ${platform.database.password}
     driverClassName: com.mysql.jdbc.Driver
