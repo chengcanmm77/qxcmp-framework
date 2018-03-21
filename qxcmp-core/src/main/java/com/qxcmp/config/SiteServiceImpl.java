@@ -1,9 +1,10 @@
 package com.qxcmp.config;
 
-import com.qxcmp.core.QxcmpSystemConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import static com.qxcmp.core.QxcmpSystemConfig.*;
 
 /**
  * @author Aaric
@@ -24,31 +25,41 @@ public class SiteServiceImpl implements SiteService {
 
     @Override
     public String getTitle() {
-        return systemConfigService.getString(QxcmpSystemConfig.SITE_TITLE).orElse(applicationName);
+        return systemConfigService.getString(SITE_TITLE).orElse(applicationName);
+    }
+
+    @Override
+    public String getProtocol() {
+        return systemConfigService.getString(SITE_PROTOCOL).orElse(SITE_PROTOCOL_DEFAULT);
     }
 
     @Override
     public String getDomain() {
-        return systemConfigService.getString(QxcmpSystemConfig.SITE_DOMAIN).orElse("");
+        return systemConfigService.getString(SITE_DOMAIN).orElse("");
+    }
+
+    @Override
+    public String getHomeUrl() {
+        return getProtocol() + getDomain();
     }
 
     @Override
     public String getLogo() {
-        return systemConfigService.getString(QxcmpSystemConfig.SITE_LOGO).orElse(QxcmpSystemConfig.SITE_LOGO_DEFAULT);
+        return systemConfigService.getString(SITE_LOGO).orElse(SITE_LOGO_DEFAULT);
     }
 
     @Override
     public String getFavicon() {
-        return systemConfigService.getString(QxcmpSystemConfig.SITE_FAVICON).orElse(QxcmpSystemConfig.SITE_FAVICON_DEFAULT);
+        return systemConfigService.getString(SITE_FAVICON).orElse(SITE_FAVICON_DEFAULT);
     }
 
     @Override
     public String getKeywords() {
-        return systemConfigService.getString(QxcmpSystemConfig.SITE_KEYWORDS).orElse("");
+        return systemConfigService.getString(SITE_KEYWORDS).orElse("");
     }
 
     @Override
     public String getDescription() {
-        return systemConfigService.getString(QxcmpSystemConfig.SITE_DESCRIPTION).orElse("");
+        return systemConfigService.getString(SITE_DESCRIPTION).orElse("");
     }
 }

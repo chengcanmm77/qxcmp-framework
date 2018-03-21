@@ -20,6 +20,9 @@ public class AdminSettingsSiteForm {
     @AvatarField(value = "网站图标", section = "网站配置")
     private String siteFavicon;
 
+    @TextInputField(value = "网站协议", section = "网站配置")
+    private String siteProtocol;
+
     @TextInputField(value = "网站域名", autoFocus = true, section = "网站配置")
     private String siteDomain;
 

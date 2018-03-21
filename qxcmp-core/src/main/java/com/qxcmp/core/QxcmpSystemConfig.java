@@ -57,6 +57,8 @@ public class QxcmpSystemConfig implements SystemConfigLoader {
      * 网站配置
      * */
 
+    public static String SITE_PROTOCOL = "";
+    public static String SITE_PROTOCOL_DEFAULT = "https://";
     public static String SITE_DOMAIN = "";
     public static String SITE_TITLE = "";
     public static String SITE_KEYWORDS = "";
