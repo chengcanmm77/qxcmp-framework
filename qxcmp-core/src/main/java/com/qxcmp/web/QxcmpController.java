@@ -609,6 +609,7 @@ public abstract class QxcmpController {
         });
     }
 
+    @Deprecated
     protected ModelAndView submitForm(Object form, Action action, BiConsumer<Map<String, Object>, Overview> biConsumer) {
         return submitForm("", form, action, biConsumer);
     }
