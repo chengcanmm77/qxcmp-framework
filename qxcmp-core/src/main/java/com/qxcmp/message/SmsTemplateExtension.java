@@ -2,9 +2,6 @@ package com.qxcmp.message;
 
 import com.qxcmp.core.extension.Extension;
 
-import java.util.Collections;
-import java.util.Set;
-
 /**
  * 短信业务扩展
  * <p>
@@ -15,11 +12,27 @@ import java.util.Set;
 public interface SmsTemplateExtension extends Extension {
 
     /**
+     * 获取业务名称
+     * <p>
+     * 业务应该唯一
+     *
+     * @return 业务名称
+     */
+    String getName();
+
+    /**
      * 获取业务的短信模板
      *
      * @return 短信模板
      */
     String getTemplateCode();
+
+    /**
+     * 获取短信模板内容
+     *
+     * @return 短信模板内容
+     */
+    String getContent();
 
     /**
      * 获取业务的短信签名
@@ -30,17 +43,6 @@ public interface SmsTemplateExtension extends Extension {
      */
     default String getSignName() {
         return "";
-    }
-
-    ;
-
-    /**
-     * 获取短信参数
-     *
-     * @return 短信参数
-     */
-    default Set<String> getParameters() {
-        return Collections.emptySet();
     }
 
     /**

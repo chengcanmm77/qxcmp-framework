@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Set;
 
 import static com.qxcmp.core.QxcmpSystemConfig.*;
@@ -39,16 +38,14 @@ public class SmsAliyunService extends AbstractSmsService implements QxcmpInitial
     private String defaultSignName;
 
     @Override
-    public void send(Set<String> phones, Class<? extends SmsTemplateExtension> tClass, Map<String, String> parameter) {
+    public void send(Set<String> phones, Class<? extends SmsTemplateExtension> tClass, Object parameter) {
         SmsTemplateExtension templateExtension = getTemplateExtension(tClass);
         SendSmsRequest request = new SendSmsRequest();
         request.setMethod(MethodType.POST);
         request.setPhoneNumbers(StringUtils.join(phones, ","));
         request.setSignName(StringUtils.isNotBlank(templateExtension.getSignName()) ? templateExtension.getSignName() : defaultSignName);
         request.setTemplateCode(templateExtension.getTemplateCode());
-        if (!parameter.isEmpty()) {
-            request.setTemplateParam(new Gson().toJson(parameter));
-        }
+        request.setTemplateParam(new Gson().toJson(parameter));
         try {
             SendSmsResponse response = client.getAcsResponse(request);
         } catch (ClientException e) {

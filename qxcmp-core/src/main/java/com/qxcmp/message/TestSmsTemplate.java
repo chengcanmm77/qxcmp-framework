@@ -1,12 +1,15 @@
 package com.qxcmp.message;
 
-import com.google.common.collect.ImmutableSet;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 @Component
 public class TestSmsTemplate implements SmsTemplateExtension {
+
+    @Override
+    public String getName() {
+        return "验证码短信";
+    }
+
     @Override
     public String getSignName() {
         return "挚友旅游";
@@ -14,11 +17,16 @@ public class TestSmsTemplate implements SmsTemplateExtension {
 
     @Override
     public String getTemplateCode() {
-        return "78325270";
+        return "SMS_78730104";
     }
 
     @Override
-    public Set<String> getParameters() {
-        return ImmutableSet.of("captcha");
+    public String getContent() {
+        return "尊敬的用户：您的验证码是：${captcha}，请在5分钟之内输入。工作人员不会索取，请勿泄露。";
+    }
+
+    @Override
+    public boolean isCaptcha() {
+        return true;
     }
 }

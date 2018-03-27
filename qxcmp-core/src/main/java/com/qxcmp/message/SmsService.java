@@ -3,9 +3,7 @@ package com.qxcmp.message;
 
 import com.qxcmp.user.User;
 
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * 短信服务平台统一接口
@@ -21,27 +19,13 @@ import java.util.function.Consumer;
 public interface SmsService {
 
     /**
-     * 验证码短信参数
-     */
-    String CAPTCHA_PARAMETER = "captcha";
-
-    /**
      * 向手机发送指定短信
      *
      * @param phones    手机号
      * @param tClass    短信模板业务
      * @param parameter 短信参数
      */
-    void send(Set<String> phones, Class<? extends SmsTemplateExtension> tClass, Map<String, String> parameter);
-
-    /**
-     * 向手机发送指定短信
-     *
-     * @param phones    手机号
-     * @param tClass    短信模板业务
-     * @param parameter 短信参数
-     */
-    void send(Set<String> phones, Class<? extends SmsTemplateExtension> tClass, Consumer<Map<String, String>> parameter);
+    void send(Set<String> phones, Class<? extends SmsTemplateExtension> tClass, Object parameter);
 
     /**
      * 向手机发送指定短信
@@ -50,16 +34,7 @@ public interface SmsService {
      * @param tClass    短信模板业务
      * @param parameter 短信参数
      */
-    void send(String phone, Class<? extends SmsTemplateExtension> tClass, Map<String, String> parameter);
-
-    /**
-     * 向手机发送指定短信
-     *
-     * @param phone     手机号
-     * @param tClass    短信模板业务
-     * @param parameter 短信参数
-     */
-    void send(String phone, Class<? extends SmsTemplateExtension> tClass, Consumer<Map<String, String>> parameter);
+    void send(String phone, Class<? extends SmsTemplateExtension> tClass, Object parameter);
 
     /**
      * 向用户发送指定短信
@@ -68,16 +43,7 @@ public interface SmsService {
      * @param tClass    短信模板业务
      * @param parameter 短信参数
      */
-    void sendToUsers(Set<User> users, Class<? extends SmsTemplateExtension> tClass, Map<String, String> parameter);
-
-    /**
-     * 向用户发送指定短信
-     *
-     * @param users     用户
-     * @param tClass    短信模板业务
-     * @param parameter 短信参数
-     */
-    void sendToUsers(Set<User> users, Class<? extends SmsTemplateExtension> tClass, Consumer<Map<String, String>> parameter);
+    void sendToUsers(Set<User> users, Class<? extends SmsTemplateExtension> tClass, Object parameter);
 
     /**
      * 向用户发送指定短信
@@ -86,16 +52,7 @@ public interface SmsService {
      * @param tClass    短信模板业务
      * @param parameter 短信参数
      */
-    void sendToUser(User user, Class<? extends SmsTemplateExtension> tClass, Map<String, String> parameter);
-
-    /**
-     * 向用户发送指定短信
-     *
-     * @param user      用户
-     * @param tClass    短信模板业务
-     * @param parameter 短信参数
-     */
-    void sendToUser(User user, Class<? extends SmsTemplateExtension> tClass, Consumer<Map<String, String>> parameter);
+    void sendToUser(User user, Class<? extends SmsTemplateExtension> tClass, Object parameter);
 
     /**
      * 发送短信验证码到指定手机

@@ -1,11 +1,18 @@
 package com.qxcmp.admin.controller;
 
 import com.qxcmp.admin.QxcmpAdminController;
+import com.qxcmp.admin.form.AdminSmsSendForm;
 import com.qxcmp.admin.form.AdminSmsSettingsForm;
 import com.qxcmp.admin.page.AdminSmsOverviewPage;
+import com.qxcmp.admin.page.AdminSmsSendPage;
 import com.qxcmp.admin.page.AdminSmsSettingsPage;
+import com.qxcmp.audit.ActionException;
 import com.qxcmp.core.QxcmpSystemConfig;
+import com.qxcmp.message.SmsService;
+import com.qxcmp.message.SmsTemplateExtension;
+import com.qxcmp.message.SmsTemplateExtensionPoint;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_SMS_URL;
 
@@ -25,9 +35,33 @@ import static com.qxcmp.admin.QxcmpAdminModule.ADMIN_SMS_URL;
 @RequiredArgsConstructor
 public class AdminSmsPageController extends QxcmpAdminController {
 
+    private final SmsService smsService;
+    private final SmsTemplateExtensionPoint smsTemplateExtensionPoint;
+
     @GetMapping("")
     public ModelAndView overviewPage() {
         return page(AdminSmsOverviewPage.class);
+    }
+
+    @GetMapping("/send")
+    public ModelAndView sendGet(final AdminSmsSendForm form, BindingResult bindingResult) {
+        return page(AdminSmsSendPage.class, form, bindingResult)
+                .addObject("selection_items_name", smsTemplateExtensionPoint.getExtensions().stream().map(SmsTemplateExtension::getName).collect(Collectors.toList()));
+    }
+
+    @PostMapping("/send")
+    public ModelAndView sendPost(@Valid final AdminSmsSendForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return sendGet(form, bindingResult);
+        }
+        return execute("发送短信", context -> {
+            try {
+                Set<String> phones = Arrays.stream(form.getPhones().split("\n")).map(String::trim).collect(Collectors.toSet());
+                smsService.send(phones, smsTemplateExtensionPoint.getExtensions().stream().filter(extension -> StringUtils.equals(extension.getName(), form.getName())).map(SmsTemplateExtension::getClass).findAny().orElseThrow(RuntimeException::new), form.getParameter());
+            } catch (Exception e) {
+                throw new ActionException(e.getMessage(), e);
+            }
+        }, (stringObjectMap, overview) -> overview.addLink("继续发送", "").addLink("返回", ADMIN_SMS_URL));
     }
 
     @GetMapping("/settings")

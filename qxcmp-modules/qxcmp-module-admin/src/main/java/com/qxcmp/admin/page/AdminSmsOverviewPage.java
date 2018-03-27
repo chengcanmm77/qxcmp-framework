@@ -34,8 +34,8 @@ public class AdminSmsOverviewPage extends AbstractQxcmpAdminPage {
                 }))
                 .addComponent(new HorizontalDivider("业务配置"))
                 .addComponent(viewHelper.nextTable(objectObjectMap -> {
-                    objectObjectMap.put("短信签名和模板", "短信参数列表");
-                    smsTemplateExtensionPoint.getExtensions().forEach(extension -> objectObjectMap.put(extension.getSignName() + "-" + extension.getTemplateCode(), extension.getParameters()));
+                    objectObjectMap.put("业务名称", "模板内容");
+                    smsTemplateExtensionPoint.getExtensions().forEach(extension -> objectObjectMap.put(extension.getName() + "-" + extension.getTemplateCode(), extension.getContent()));
                 }))
                 .addComponent(new HorizontalDivider("最近发送"))
                 .addComponent(new Feed(feedService.findByType(ADMIN_SMS_FEED, PageRequest.of(0, 20)).getContent()))

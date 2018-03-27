@@ -38,7 +38,6 @@ import static com.qxcmp.core.QxcmpSystemConfig.AUTHENTICATION_CAPTCHA_LENGTH_DEF
 public class CaptchaApi extends QxcmpController {
 
     private final CaptchaService captchaComponent;
-
     private final SmsService smsService;
 
     @GetMapping("image")
