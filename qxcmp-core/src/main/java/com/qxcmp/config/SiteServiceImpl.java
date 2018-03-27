@@ -40,7 +40,7 @@ public class SiteServiceImpl implements SiteService {
 
     @Override
     public String getHomeUrl() {
-        return getProtocol() + getDomain();
+        return getProtocol().toLowerCase() + "://" + getDomain();
     }
 
     @Override

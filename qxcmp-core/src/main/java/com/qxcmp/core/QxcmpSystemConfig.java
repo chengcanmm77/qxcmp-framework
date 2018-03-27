@@ -58,7 +58,7 @@ public class QxcmpSystemConfig implements SystemConfigLoader {
      * */
 
     public static String SITE_PROTOCOL = "";
-    public static String SITE_PROTOCOL_DEFAULT = "https://";
+    public static String SITE_PROTOCOL_DEFAULT = "https";
     public static String SITE_DOMAIN = "";
     public static String SITE_TITLE = "";
     public static String SITE_KEYWORDS = "";
@@ -99,10 +99,7 @@ public class QxcmpSystemConfig implements SystemConfigLoader {
 
     public static String MESSAGE_SMS_ACCESS_KEY = "qxcmp.message.sms.accessKey";
     public static String MESSAGE_SMS_ACCESS_SECRET = "qxcmp.message.sms.accessSecret";
-    public static String MESSAGE_SMS_END_POINT = "qxcmp.message.sms.endPoint";
-    public static String MESSAGE_SMS_TOPIC_REF = "qxcmp.message.sms.topicRef";
-    public static String MESSAGE_SMS_SIGN = "qxcmp.message.sms.sign";
-    public static String MESSAGE_SMS_CAPTCHA_TEMPLATE_CODE = "qxcmp.message.sms.captcha.template.code";
+    public static String MESSAGE_SMS_SIGN_NAME = "qxcmp.message.sms.sign.name";
 
     /*
      * 系统认证相关配置

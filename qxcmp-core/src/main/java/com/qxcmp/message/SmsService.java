@@ -1,9 +1,10 @@
 package com.qxcmp.message;
 
-import com.aliyun.mns.common.ServiceException;
 
-import java.util.List;
+import com.qxcmp.user.User;
+
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -20,25 +21,91 @@ import java.util.function.Consumer;
 public interface SmsService {
 
     /**
-     * 发送短信到指定手机号码
-     *
-     * @param phones       手机号码列表
-     * @param templateCode 短信模板Code
-     * @param parameters   短信模板用到的参数
-     *
-     * @throws ServiceException 如果发送短信失败，则抛出该异常
+     * 验证码短信参数
      */
-    void send(List<String> phones, String templateCode, Consumer<Map<String, String>> parameters) throws ServiceException;
+    String CAPTCHA_PARAMETER = "captcha";
+
+    /**
+     * 向手机发送指定短信
+     *
+     * @param phones    手机号
+     * @param tClass    短信模板业务
+     * @param parameter 短信参数
+     */
+    void send(Set<String> phones, Class<? extends SmsTemplateExtension> tClass, Map<String, String> parameter);
+
+    /**
+     * 向手机发送指定短信
+     *
+     * @param phones    手机号
+     * @param tClass    短信模板业务
+     * @param parameter 短信参数
+     */
+    void send(Set<String> phones, Class<? extends SmsTemplateExtension> tClass, Consumer<Map<String, String>> parameter);
+
+    /**
+     * 向手机发送指定短信
+     *
+     * @param phone     手机号
+     * @param tClass    短信模板业务
+     * @param parameter 短信参数
+     */
+    void send(String phone, Class<? extends SmsTemplateExtension> tClass, Map<String, String> parameter);
+
+    /**
+     * 向手机发送指定短信
+     *
+     * @param phone     手机号
+     * @param tClass    短信模板业务
+     * @param parameter 短信参数
+     */
+    void send(String phone, Class<? extends SmsTemplateExtension> tClass, Consumer<Map<String, String>> parameter);
+
+    /**
+     * 向用户发送指定短信
+     *
+     * @param users     用户
+     * @param tClass    短信模板业务
+     * @param parameter 短信参数
+     */
+    void sendToUsers(Set<User> users, Class<? extends SmsTemplateExtension> tClass, Map<String, String> parameter);
+
+    /**
+     * 向用户发送指定短信
+     *
+     * @param users     用户
+     * @param tClass    短信模板业务
+     * @param parameter 短信参数
+     */
+    void sendToUsers(Set<User> users, Class<? extends SmsTemplateExtension> tClass, Consumer<Map<String, String>> parameter);
+
+    /**
+     * 向用户发送指定短信
+     *
+     * @param user      用户
+     * @param tClass    短信模板业务
+     * @param parameter 短信参数
+     */
+    void sendToUser(User user, Class<? extends SmsTemplateExtension> tClass, Map<String, String> parameter);
+
+    /**
+     * 向用户发送指定短信
+     *
+     * @param user      用户
+     * @param tClass    短信模板业务
+     * @param parameter 短信参数
+     */
+    void sendToUser(User user, Class<? extends SmsTemplateExtension> tClass, Consumer<Map<String, String>> parameter);
 
     /**
      * 发送短信验证码到指定手机
+     * <p>
+     * 平台需要至少一个验证码短信业务扩展 {@link SmsTemplateExtension}
      *
      * @param phone   手机号
      * @param captcha 验证码
-     *
-     * @throws ServiceException 如果发送短信失败，则抛出该异常
      */
-    void sendCaptcha(String phone, String captcha) throws ServiceException;
+    void sendCaptcha(String phone, String captcha);
 
     /**
      * 配置短信服务

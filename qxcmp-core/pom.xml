@@ -18,9 +18,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.aliyun.mns</groupId>
-            <artifactId>aliyun-sdk-mns</artifactId>
-            <classifier>jar-with-dependencies</classifier>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.stuxuhai</groupId>

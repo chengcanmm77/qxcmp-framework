@@ -4,7 +4,6 @@ import com.qxcmp.admin.QxcmpAdminController;
 import com.qxcmp.admin.form.AdminSettingsDictionaryForm;
 import com.qxcmp.admin.form.AdminSettingsEmailForm;
 import com.qxcmp.admin.form.AdminSettingsSiteForm;
-import com.qxcmp.admin.form.AdminSettingsSmsForm;
 import com.qxcmp.admin.page.*;
 import com.qxcmp.audit.ActionException;
 import com.qxcmp.config.SystemDictionaryItem;
@@ -109,19 +108,6 @@ public class AdminSettingsPageController extends QxcmpAdminController {
     public ModelAndView emailPost(@Valid final AdminSettingsEmailForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return emailGet(form, bindingResult);
-        }
-        return updateSystemConfig(QxcmpSystemConfig.class, form);
-    }
-
-    @GetMapping("/sms")
-    public ModelAndView smsGet(final AdminSettingsSmsForm form, BindingResult bindingResult) {
-        return systemConfigPage(AdminSettingsSmsPage.class, form, bindingResult, QxcmpSystemConfig.class);
-    }
-
-    @PostMapping("/sms")
-    public ModelAndView smsPost(@Valid final AdminSettingsSmsForm form, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return smsGet(form, bindingResult);
         }
         return updateSystemConfig(QxcmpSystemConfig.class, form);
     }

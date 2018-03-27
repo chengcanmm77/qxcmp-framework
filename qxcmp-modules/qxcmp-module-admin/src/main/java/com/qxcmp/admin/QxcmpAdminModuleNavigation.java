@@ -44,12 +44,16 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
     public static final String ADMIN_MENU_TOOLS = "ADMIN-TOOLS";
     public static final String ADMIN_MENU_TOOLS_LOG = ADMIN_MENU_TOOLS + "-LOG";
     public static final String ADMIN_MENU_TOOLS_STATISTIC = ADMIN_MENU_TOOLS + "-STATISTIC";
+    public static final String ADMIN_MENU_TOOLS_SMS = ADMIN_MENU_TOOLS + "-SMS";
 
     public static final String ADMIN_MENU_SETTINGS = "ADMIN-SETTINGS";
     public static final String ADMIN_MENU_SETTINGS_SITE = ADMIN_MENU_SETTINGS + "-SITE";
     public static final String ADMIN_MENU_SETTINGS_DICTIONARY = ADMIN_MENU_SETTINGS + "-DICTIONARY";
     public static final String ADMIN_MENU_SETTINGS_EMAIL = ADMIN_MENU_SETTINGS + "-EMAIL";
-    public static final String ADMIN_MENU_SETTINGS_SMS = ADMIN_MENU_SETTINGS + "-SMS";
+
+    public static final String ADMIN_MENU_SMS = "ADMIN-SMS";
+    public static final String ADMIN_MENU_SMS_SEND = ADMIN_MENU_SMS + "-SEND";
+    public static final String ADMIN_MENU_SMS_SETTINGS = ADMIN_MENU_SMS + "-SETTINGS";
 
     @Override
     public void configNavigation(NavigationService navigationService) {
@@ -74,14 +78,18 @@ public class QxcmpAdminModuleNavigation implements NavigationLoader {
                 .addItem(new Navigation(ADMIN_MENU_SECURITY_AUTHENTICATION, "认证配置", ADMIN_SECURITY_URL + "/authentication").setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SECURITY)))
         );
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS, "系统工具菜单")
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS_LOG, "系统日志", ADMIN_AUDIT_LOG_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_LOG)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS_SMS, "短信服务", ADMIN_SMS_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_MESSAGE_SMS)))
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS_STATISTIC, "统计信息", ADMIN_STATISTIC_URL).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_LOG)))
+                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_TOOLS_LOG, "系统日志", ADMIN_AUDIT_LOG_URL).setOrder(Ordered.LOWEST_PRECEDENCE).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_LOG)))
         );
         navigationService.add(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS, "设置中心菜单")
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_SITE, "网站设置", ADMIN_SETTINGS_SITE_URL).setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_SITE)))
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_DICTIONARY, "字典设置", ADMIN_SETTINGS_DICTIONARY_URL).setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_DICTIONARY)))
                 .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_EMAIL, "邮件服务设置", ADMIN_SETTINGS_EMAIL_URL).setOrder(30).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_EMAIL)))
-                .addItem(new Navigation(QxcmpAdminModuleNavigation.ADMIN_MENU_SETTINGS_SMS, "短信服务设置", ADMIN_SETTINGS_SMS_URL).setOrder(40).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_SETTINGS_SMS)))
+        );
+        navigationService.add(new Navigation(ADMIN_MENU_SMS, "短信服务导航栏")
+                .addItem(new Navigation(ADMIN_MENU_SMS_SEND, "短信发送", ADMIN_SMS_URL + "/send").setOrder(10).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_MESSAGE_SMS_SEND)))
+                .addItem(new Navigation(ADMIN_MENU_SMS_SETTINGS, "短信设置", ADMIN_SMS_URL + "/settings").setOrder(20).setPrivilegesAnd(ImmutableSet.of(PRIVILEGE_ADMIN_MESSAGE_SMS)))
         );
     }
 }

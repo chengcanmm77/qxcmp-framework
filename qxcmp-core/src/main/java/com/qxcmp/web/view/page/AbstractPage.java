@@ -6,6 +6,7 @@ import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.config.SystemDictionaryService;
 import com.qxcmp.config.UserConfigService;
 import com.qxcmp.core.navigation.NavigationService;
+import com.qxcmp.message.FeedService;
 import com.qxcmp.user.UserService;
 import com.qxcmp.web.view.Component;
 import com.qxcmp.web.view.support.utils.ViewHelper;
@@ -42,6 +43,7 @@ public abstract class AbstractPage implements QxcmpPage {
     protected SystemDictionaryService systemDictionaryService;
     protected SiteService siteService;
     protected NavigationService navigationService;
+    protected FeedService feedService;
     protected ViewHelper viewHelper;
 
     private static final String PAGE = "qxcmp";
@@ -167,6 +169,11 @@ public abstract class AbstractPage implements QxcmpPage {
     @Autowired
     public void setNavigationService(NavigationService navigationService) {
         this.navigationService = navigationService;
+    }
+
+    @Autowired
+    public void setFeedService(FeedService feedService) {
+        this.feedService = feedService;
     }
 
     @Autowired
