@@ -7,5 +7,13 @@ package com.qxcmp.core.support;
  */
 @FunctionalInterface
 public interface ThrowingSupplier<T, E extends Exception> {
+
+    /**
+     * 获取一个提供者
+     *
+     * @return 提供者
+     *
+     * @throws E 异常类型
+     */
     T get() throws E;
 }

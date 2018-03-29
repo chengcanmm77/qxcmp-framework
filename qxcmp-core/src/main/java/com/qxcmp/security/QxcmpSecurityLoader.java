@@ -56,37 +56,36 @@ public class QxcmpSecurityLoader implements QxcmpInitializer {
      */
     private void loadPrivilege() {
         log.info("Start loading privilege");
-        applicationContext.getBeansOfType(SecurityLoader.class).values().forEach(bean -> {
-            Arrays.stream(bean.getClass().getFields())
-                    .filter(field -> field.getName().startsWith(DEFAULT_PREFIX) && !field.getName().endsWith(DEFAULT_SUFFIX))
-                    .filter(field -> Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
-                    .forEach(field -> {
-                        counter.incrementAndGet();
-                        try {
-                            field.setAccessible(true);
-
-                            String privilegeName = field.get(bean).toString();
-                            checkState(StringUtils.isNotEmpty(privilegeName), "Empty privilege name");
-                            String privilegeDescField = field.getName() + DEFAULT_SUFFIX;
-                            String privilegeDescription = "暂无描述";
-
+        applicationContext.getBeansOfType(SecurityLoader.class).values()
+                .forEach(bean -> Arrays.stream(bean.getClass().getFields())
+                        .filter(field -> field.getName().startsWith(DEFAULT_PREFIX) && !field.getName().endsWith(DEFAULT_SUFFIX))
+                        .filter(field -> Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
+                        .forEach(field -> {
+                            counter.incrementAndGet();
                             try {
-                                Field defaultPrivilegeDesc = bean.getClass().getField(privilegeDescField);
-                                defaultPrivilegeDesc.setAccessible(true);
-                                privilegeDescription = defaultPrivilegeDesc.get(bean).toString();
-                            } catch (NoSuchFieldException ignored) {
+                                field.setAccessible(true);
+
+                                String privilegeName = field.get(bean).toString();
+                                checkState(StringUtils.isNotEmpty(privilegeName), "Empty privilege name");
+                                String privilegeDescField = field.getName() + DEFAULT_SUFFIX;
+                                String privilegeDescription = "暂无描述";
+
+                                try {
+                                    Field defaultPrivilegeDesc = bean.getClass().getField(privilegeDescField);
+                                    defaultPrivilegeDesc.setAccessible(true);
+                                    privilegeDescription = defaultPrivilegeDesc.get(bean).toString();
+                                } catch (NoSuchFieldException ignored) {
+                                }
+
+                                log.info("Loading: {}({})", privilegeName, privilegeDescription);
+                                privilegeService.create(privilegeName, privilegeDescription);
+
+                            } catch (IllegalStateException e) {
+                                log.error("Can't create privilege {}:{}, cause: {}", bean.getClass().getSimpleName(), field.getName(), e.getMessage());
+                            } catch (IllegalAccessException e) {
+                                log.error("Can't get privilege information {}:{}", bean.getClass().getSimpleName(), field.getName());
                             }
-
-                            log.info("Loading: {}({})", privilegeName, privilegeDescription);
-                            privilegeService.create(privilegeName, privilegeDescription);
-
-                        } catch (IllegalStateException e) {
-                            log.error("Can't create privilege {}:{}, cause: {}", bean.getClass().getSimpleName(), field.getName(), e.getMessage());
-                        } catch (IllegalAccessException e) {
-                            log.error("Can't get privilege information {}:{}", bean.getClass().getSimpleName(), field.getName());
-                        }
-                    });
-        });
+                        }));
         log.info("Finish loading privilege, total {}", counter.intValue());
     }
 
