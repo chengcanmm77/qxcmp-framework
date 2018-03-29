@@ -310,7 +310,7 @@ public class User implements UserDetails {
         if (sexId == 2) {
             return "女";
         }
-        return "未知";
+        return "";
     }
 
     @TableFieldRender("subscribe")
