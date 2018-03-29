@@ -295,6 +295,24 @@ public class User implements UserDetails {
         return username;
     }
 
+    /**
+     * 获取用户性别文本
+     *
+     * @return 性别文本
+     */
+    public String getDisplaySex() {
+        if (StringUtils.isNotBlank(sex)) {
+            return sex;
+        }
+        if (sexId == 1) {
+            return "男";
+        }
+        if (sexId == 2) {
+            return "女";
+        }
+        return "未知";
+    }
+
     @TableFieldRender("subscribe")
     public TableData renderSubscribeField() {
         final TableData tableData = new TableData();
