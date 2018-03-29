@@ -23,7 +23,7 @@ import static com.qxcmp.core.QxcmpConfiguration.QXCMP_ADMIN_URL;
  *
  * @author Aaric
  */
-@EntityTable(value = "发送记录", action = QXCMP_ADMIN_URL + "/sms",
+@EntityTable(value = "发送记录", action = QXCMP_ADMIN_URL + "/sms", disableFilter = true,
         rowActions = @RowAction(value = "详情", action = "details"))
 @Entity
 @Table

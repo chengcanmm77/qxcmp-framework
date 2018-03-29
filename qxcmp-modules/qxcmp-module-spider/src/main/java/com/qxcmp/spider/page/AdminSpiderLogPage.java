@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.qxcmp.spider.SpiderModule.ADMIN_SPIDER_URL;
 import static com.qxcmp.spider.SpiderModuleNavigation.ADMIN_MENU_SPIDER;
-import static com.qxcmp.spider.SpiderModuleNavigation.ADMIN_MENU_SPIDER_STATUS;
+import static com.qxcmp.spider.SpiderModuleNavigation.ADMIN_MENU_SPIDER_LOG;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
 
 /**
@@ -29,7 +29,7 @@ public class AdminSpiderLogPage extends AbstractQxcmpAdminEntityTablePage {
 
     @Override
     protected EntityTable renderEntityTable() {
-        setMenu(ADMIN_MENU_SPIDER, ADMIN_MENU_SPIDER_STATUS);
+        setMenu(ADMIN_MENU_SPIDER, ADMIN_MENU_SPIDER_LOG);
         return viewHelper.nextEntityTable(pageable, spiderLogService, request);
     }
 
