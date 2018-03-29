@@ -13,6 +13,7 @@ import com.qxcmp.config.SystemConfigService;
 import com.qxcmp.core.init.QxcmpInitializer;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +28,13 @@ import static com.qxcmp.core.QxcmpSystemConfig.*;
 @RequiredArgsConstructor
 public class SmsAliyunService extends AbstractSmsService implements QxcmpInitializer {
 
+    public static final String ALIYUM_SMS_CODE_SUCCSEE = "OK";
     private static final String ALIYUN_SMS_PRODUCT = "Dysmsapi";
     private static final String ALIYUN_SMS_DOMAIN = "dysmsapi.aliyuncs.com";
     private static final String ALIYUN_SMS_REGION = "cn-hangzhou";
 
     private final SystemConfigService systemConfigService;
-    private final SmsTemplateExtensionPoint smsTemplateExtensionPoint;
+    private final SmsSendRecordService smsSendRecordService;
 
     private IAcsClient client;
     private String defaultSignName;
@@ -48,6 +50,7 @@ public class SmsAliyunService extends AbstractSmsService implements QxcmpInitial
         request.setTemplateParam(new Gson().toJson(parameter));
         try {
             SendSmsResponse response = client.getAcsResponse(request);
+            createSendRecord(request, response, templateExtension);
         } catch (ClientException e) {
             e.printStackTrace();
         }
@@ -75,6 +78,28 @@ public class SmsAliyunService extends AbstractSmsService implements QxcmpInitial
     @Override
     public void init() {
         config();
+    }
+
+    /**
+     * 保存发送记录
+     *
+     * @param request           发送请求
+     * @param response          发送结果
+     * @param templateExtension 短信业务模板
+     */
+    private void createSendRecord(SendSmsRequest request, SendSmsResponse response, SmsTemplateExtension templateExtension) {
+        SmsSendRecord next = smsSendRecordService.next();
+        next.setPhones(request.getPhoneNumbers());
+        next.setSignName(request.getSignName());
+        next.setTemplateCode(request.getTemplateCode());
+        next.setTemplateParameter(request.getTemplateParam());
+        next.setId(response.getRequestId());
+        next.setCode(response.getCode());
+        next.setMessage(response.getMessage());
+        next.setDateCreated(DateTime.now().toDate());
+        next.setTemplateName(templateExtension.getName());
+        next.setContent(templateExtension.getContent());
+        smsSendRecordService.create(next);
     }
 
 }

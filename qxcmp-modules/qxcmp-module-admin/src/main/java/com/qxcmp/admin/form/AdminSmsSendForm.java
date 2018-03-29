@@ -18,6 +18,6 @@ public class AdminSmsSendForm {
     @TextAreaField(value = "手机号", placeholder = "多个手机号用换行分割")
     private String phones;
 
-    @TextAreaField(value = "短信参数", placeholder = "JSON格式参数")
+    @TextAreaField(value = "短信参数", placeholder = "格式：每行一个参数，[参数：参数值]")
     private String parameter;
 }
