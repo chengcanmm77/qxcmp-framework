@@ -6,6 +6,7 @@ import com.qxcmp.web.view.annotation.table.EntityTable;
 import com.qxcmp.web.view.annotation.table.TableField;
 import com.qxcmp.web.view.annotation.table.TableFieldRender;
 import com.qxcmp.web.view.elements.html.Anchor;
+import com.qxcmp.web.view.elements.image.Avatar;
 import com.qxcmp.web.view.modules.table.TableData;
 import com.qxcmp.web.view.support.AnchorTarget;
 import lombok.Data;
@@ -14,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.text.DecimalFormat;
 import java.util.Date;
 
@@ -37,6 +39,13 @@ public class DepositOrder {
      */
     @Id
     private String id;
+
+    /**
+     * 额外列用于展示用户头像
+     */
+    @Transient
+    @TableField("头像")
+    private String portrait;
 
     /**
      * 订单对应的用户ID
@@ -101,5 +110,13 @@ public class DepositOrder {
     public TableData renderUserField(UserService userService) {
         User user = userService.findOne(userId).orElse(userService.next());
         return new TableData(new Anchor(user.getDisplayName(), QXCMP_ADMIN_URL + "/user/" + userId + "/details", AnchorTarget.BLANK.toString()));
+    }
+
+    @TableFieldRender("portrait")
+    public TableData renderUserPortrait(UserService userService) {
+        User user = userService.findOne(userId).orElse(userService.next());
+        TableData tableData = new TableData();
+        tableData.setCollapsing().addComponent(new Avatar(user.getPortrait()).setCentered());
+        return tableData;
     }
 }
