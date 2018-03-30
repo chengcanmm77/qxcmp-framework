@@ -1,8 +1,11 @@
 package com.qxcmp.finance;
 
+import com.qxcmp.user.User;
+import com.qxcmp.user.UserService;
 import com.qxcmp.web.view.annotation.table.EntityTable;
 import com.qxcmp.web.view.annotation.table.TableField;
 import com.qxcmp.web.view.annotation.table.TableFieldRender;
+import com.qxcmp.web.view.elements.html.Anchor;
 import com.qxcmp.web.view.modules.table.TableData;
 import com.qxcmp.web.view.support.AnchorTarget;
 import lombok.Data;
@@ -38,7 +41,7 @@ public class DepositOrder {
     /**
      * 订单对应的用户ID
      */
-    @TableField(value = "用户ID", enableUrl = true, urlPrefix = QXCMP_ADMIN_URL + "/user/", urlSuffix = "/details", urlTarget = AnchorTarget.BLANK)
+    @TableField(value = "用户ID")
     private String userId;
 
     /**
@@ -92,5 +95,11 @@ public class DepositOrder {
     @TableFieldRender("fee")
     public TableData renderFeeFiled() {
         return new TableData(new DecimalFormat("￥0.00").format((double) fee / 100));
+    }
+
+    @TableFieldRender("userId")
+    public TableData renderUserField(UserService userService) {
+        User user = userService.findOne(userId).orElse(userService.next());
+        return new TableData(new Anchor(user.getDisplayName(), QXCMP_ADMIN_URL + "/user/" + userId + "/details", AnchorTarget.BLANK.toString()));
     }
 }

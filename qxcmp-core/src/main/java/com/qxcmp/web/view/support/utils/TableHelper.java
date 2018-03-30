@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.PropertyAccessorFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.support.DefaultFormattingConversionService;
@@ -56,6 +57,7 @@ import static com.qxcmp.core.entity.EntityFieldSearchSpecification.*;
 @RequiredArgsConstructor
 public class TableHelper {
 
+    private final ApplicationContext applicationContext;
     private final DefaultFormattingConversionService conversionService;
 
     /**
@@ -469,7 +471,9 @@ public class TableHelper {
          * */
         if (Objects.nonNull(entityTableField.getRender())) {
             try {
-                tableData = (TableData) entityTableField.getRender().invoke(t);
+                Method render = entityTableField.getRender();
+                Class<?>[] parameterTypes = render.getParameterTypes();
+                tableData = (TableData) entityTableField.getRender().invoke(t, Arrays.stream(parameterTypes).map(applicationContext::getBean).toArray(Object[]::new));
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
