@@ -600,8 +600,16 @@ public class TableHelper {
 
         String queryString = "";
 
-        if (StringUtils.isNotBlank(request.getParameter("field")) && StringUtils.isNotBlank(request.getParameter("search"))) {
-            queryString += String.format("&field=%s&search=%s", request.getParameter("field"), request.getParameter("search"));
+        if (StringUtils.isNotBlank(request.getParameter(ENTITY_SEARCH_FILED_PARA)) &&
+                StringUtils.isNotBlank(request.getParameter(ENTITY_SEARCH_OPERATION_PARA)) &&
+                StringUtils.isNotBlank(request.getParameter(ENTITY_SEARCH_CONTENT_PARA))) {
+            queryString += String.format("&%s=%s&%s=%s&%s=%s",
+                    ENTITY_SEARCH_FILED_PARA,
+                    request.getParameter(ENTITY_SEARCH_FILED_PARA),
+                    ENTITY_SEARCH_OPERATION_PARA,
+                    request.getParameter(ENTITY_SEARCH_OPERATION_PARA),
+                    ENTITY_SEARCH_CONTENT_PARA,
+                    request.getParameter(ENTITY_SEARCH_CONTENT_PARA));
         }
 
         tableHead.setColSpan(colSpan);
