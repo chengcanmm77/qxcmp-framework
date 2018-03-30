@@ -38,6 +38,7 @@ public class QxcmpConfiguration {
     public static final String QXCMP_ADMIN_URL = "/admin";
     public static final String QXCMP_LOGIN_URL = "/login";
     public static final String QXCMP_FILE_UPLOAD_TEMP_FOLDER = "/tmp/";
+
     private final SystemConfigService systemConfigService;
 
     @Bean

@@ -1,5 +1,6 @@
 package com.qxcmp.web.view.support.utils;
 
+import com.qxcmp.core.entity.EntityFieldSearchSpecification;
 import com.qxcmp.core.entity.EntityService;
 import com.qxcmp.web.view.elements.icon.Icon;
 import com.qxcmp.web.view.elements.message.ErrorMessage;
@@ -10,6 +11,7 @@ import com.qxcmp.web.view.modules.table.EntityTable;
 import com.qxcmp.web.view.support.Color;
 import com.qxcmp.web.view.views.Overview;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import static com.qxcmp.core.entity.EntityFieldSearchSpecification.ENTITY_SEARCH_CONTENT_PARA;
+import static com.qxcmp.core.entity.EntityFieldSearchSpecification.ENTITY_SEARCH_OPERATION_PARA;
 
 /**
  * 视图生成工具
@@ -63,8 +68,12 @@ public class ViewHelper {
 
     @SuppressWarnings("unchecked")
     public EntityTable nextEntityTable(String tableName, String action, Pageable pageable, EntityService entityService, HttpServletRequest request) {
-        Page page = entityService.findAll(pageable);
-        return nextEntityTable(tableName, action, entityService.type(), page, request);
+        if (StringUtils.isNotBlank(request.getParameter(ENTITY_SEARCH_OPERATION_PARA)) && StringUtils.isNotBlank(request.getParameter(ENTITY_SEARCH_CONTENT_PARA))) {
+            return nextEntityTable(tableName, action, entityService.type(), entityService.findAll(new EntityFieldSearchSpecification(request, entityService.type()), pageable), request);
+        } else {
+
+            return nextEntityTable(tableName, action, entityService.type(), entityService.findAll(pageable), request);
+        }
     }
 
     public <T> EntityTable nextEntityTable(Class<T> tClass, Page<T> tPage, HttpServletRequest request) {

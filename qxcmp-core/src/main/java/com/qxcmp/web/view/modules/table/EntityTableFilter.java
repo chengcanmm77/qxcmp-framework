@@ -4,6 +4,7 @@ import com.qxcmp.web.view.elements.button.AbstractButton;
 import com.qxcmp.web.view.elements.input.Input;
 import com.qxcmp.web.view.modules.dropdown.Selection;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 实体表格过滤组件
@@ -11,17 +12,13 @@ import lombok.Getter;
  * @author Aaric
  */
 @Getter
+@RequiredArgsConstructor
 public class EntityTableFilter extends AbstractTableComponent {
 
-    private Selection selection;
-    private Input input;
-    private AbstractButton button;
-
-    public EntityTableFilter(Selection selection, Input input, AbstractButton button) {
-        this.selection = selection;
-        this.input = input;
-        this.button = button;
-    }
+    private final Selection fieldSelection;
+    private final Selection operationSelection;
+    private final Input input;
+    private final AbstractButton button;
 
     @Override
     public String getFragmentName() {

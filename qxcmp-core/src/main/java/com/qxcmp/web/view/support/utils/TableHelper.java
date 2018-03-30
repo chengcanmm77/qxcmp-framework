@@ -3,6 +3,7 @@ package com.qxcmp.web.view.support.utils;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.qxcmp.core.entity.EntityFieldSearchSpecification;
 import com.qxcmp.web.view.annotation.table.RowActionCheck;
 import com.qxcmp.web.view.annotation.table.TableField;
 import com.qxcmp.web.view.annotation.table.TableFieldRender;
@@ -44,6 +45,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.qxcmp.core.entity.EntityFieldSearchSpecification.*;
 
 /**
  * 表格视图生成工具类
@@ -62,6 +64,7 @@ public class TableHelper {
      * 字典表格视图包含两列，第一列为键，第二列为值
      *
      * @param dictionary 渲染的字典对象
+     *
      * @return 表格视图
      */
     public Table convert(Map<Object, Object> dictionary) {
@@ -348,23 +351,31 @@ public class TableHelper {
         int colSpan = getColSpan(table, entityTableFields);
         tableHead.setColSpan(colSpan);
 
-        Selection selection = new Selection();
+        Selection fieldSelection = new Selection();
         SelectionMenu menu = new SelectionMenu();
-        selection.setMenu(menu);
-        selection.setName("field");
+        fieldSelection.setMenu(menu);
+        fieldSelection.setName(EntityFieldSearchSpecification.ENTITY_SEARCH_FILED_PARA);
 
         entityTableFields.forEach(entityTableField -> {
             TextItem textItem = new TextItem(entityTableField.getTitle());
             textItem.setValue(entityTableField.getField().getName());
-
-            if (StringUtils.equals(entityTableField.getField().getName(), request.getParameter("field"))) {
-                selection.setText(entityTableField.getTitle());
-            }
-
             menu.addItem(textItem);
         });
 
-        tableHead.addComponent(new EntityTableFilter(selection, new Input(StringUtils.isNotBlank(request.getParameter("search")) ? request.getParameter("search") : "输入要查找的内容", "search"), new Button(StringUtils.isNotBlank(request.getParameter("search")) ? "清空" : "搜索").setBasic()));
+        Selection operationSelection = new Selection();
+        SelectionMenu opSelectionMenu = new SelectionMenu();
+        operationSelection.setMenu(opSelectionMenu);
+        operationSelection.setName(EntityFieldSearchSpecification.ENTITY_SEARCH_OPERATION_PARA);
+        opSelectionMenu.addItem(new TextItem("包含", OPERATION_CONTAINS));
+        opSelectionMenu.addItem(new TextItem("不包含", OPERATION_NOT_CONTAIN));
+        opSelectionMenu.addItem(new TextItem("相等", OPERATION_EQUAL));
+        opSelectionMenu.addItem(new TextItem("不相等", OPERATION_NOT_EQUAL));
+        opSelectionMenu.addItem(new TextItem("大于", OPERATION_GREAT_THAN));
+        opSelectionMenu.addItem(new TextItem("大于等于", OPERATION_GREAT_THAN_OR_EQUAL_TO));
+        opSelectionMenu.addItem(new TextItem("小于", OPERATION_LESS_THAN));
+        opSelectionMenu.addItem(new TextItem("小于等于", OPERATION_LESS_THAN_OR_EQUAL_TO));
+
+        tableHead.addComponent(new EntityTableFilter(fieldSelection, operationSelection, new Input("输入要查找的内容", EntityFieldSearchSpecification.ENTITY_SEARCH_CONTENT_PARA), new Button("搜索").setBasic()));
         tableRow.addCell(tableHead);
         tableHeader.addRow(tableRow);
     }

@@ -32,9 +32,7 @@ public class AdminUserTablePage extends AbstractQxcmpAdminPage {
     @Override
     public void render() {
         addComponent(viewHelper.nextOverview("用户管理")
-                .addComponent(new Segment()
-                        .addComponent(new HorizontalDivider("今日统计"))
-                        .addComponent(getStatistics()))
+                .addComponent(new Segment().addComponent(getStatistics()))
                 .addComponent(new HorizontalDivider("用户列表"))
                 .addComponent(viewHelper.nextEntityTable(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.DESC, "dateLogin"), userService, request))
         );

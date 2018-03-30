@@ -18,7 +18,8 @@
 <!--/*@thymesVar id="component" type="com.qxcmp.web.view.modules.table.EntityTableFilter"*/-->
 <form th:fragment="table-filter(component)">
     <b>过滤： </b>
-    <div th:replace="~{qxcmp/globals/components :: component(${component.selection})}"></div>
+    <div th:replace="~{qxcmp/globals/components :: component(${component.fieldSelection})}"></div>
+    <div th:replace="~{qxcmp/globals/components :: component(${component.operationSelection})}"></div>
     <div th:replace="~{qxcmp/globals/components :: component(${component.input})}"></div>
     <div th:replace="~{qxcmp/globals/components :: component(${component.button})}"></div>
 </form>
