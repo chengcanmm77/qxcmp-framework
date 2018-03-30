@@ -26,10 +26,6 @@
             <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.stuxuhai</groupId>
-            <artifactId>jpinyin</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
@@ -40,6 +36,10 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hankcs</groupId>
+            <artifactId>hanlp</artifactId>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
